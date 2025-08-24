@@ -1,0 +1,297 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/forms";
+@plugin "@tailwindcss/container-queries";
+
+@font-face {
+  font-family: "Space Grotesk";
+  src: url("./assets/fonts/Space_Grotesk/SpaceGrotesk-VariableFont-wght.ttf") format("truetype");
+  font-weight: 300 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Noto Sans";
+  src: url("./assets/fonts/Noto_Sans/NotoSans-VariableFont-wdth-wght.ttf") format("truetype");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@theme {
+  --font-sans: "Space Grotesk", "Noto Sans", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+
+  /* Light theme colors */
+  --color-background: #f8fafc;
+  /* slate-50 */
+  --color-foreground: #0d141c;
+  /* charcoal */
+  --color-muted: #e7edf4;
+  /* pale blue */
+  --color-muted-foreground: #49739c;
+  /* desaturated blue */
+  --color-primary: #0d80f2;
+  /* brand blue */
+  --color-primary-foreground: #ffffff;
+  --color-border: #d6e3f3;
+  --color-ring: var(--color-primary);
+  --radius: 0.75rem;
+}
+
+/* Dark theme palette */
+:root.dark,
+[data-theme="dark"] {
+  --color-background: #0b1220;
+  --color-foreground: #e6edf6;
+  --color-muted: #0f172a;
+  --color-muted-foreground: #93a4b7;
+  --color-primary: #60a5fa;
+  --color-primary-foreground: #0b1220;
+  --color-border: #1f2a44;
+  --color-ring: #60a5fa;
+}
+
+/* ===== Base layer ===== */
+@layer base {
+  html:focus-within {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "rlig" 1, "calt" 1;
+    font-family: var(--font-sans);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply tracking-tight text-foreground;
+  }
+
+  /* Prevent fixed nav from overlapping hash links */
+  :is(section, h2, h3, h4)[id] {
+    scroll-margin-top: 6rem;
+  }
+
+  /* Add top margin to main content to prevent header overlap */
+  .layout-content-container {
+    margin-top: 3rem;
+  }
+
+  /* Smooth scrolling for all elements */
+  * {
+    @apply transition-colors duration-200 ease-in-out;
+  }
+}
+
+/* ===== Components layer ===== */
+@layer components {
+
+  /* Reusable glass container for the floating nav */
+  .nav-glass {
+    @apply bg-background/60 border border-border/60 backdrop-blur-lg shadow-lg;
+  }
+
+  /* Enhanced button styles */
+  .btn-primary {
+    @apply inline-flex items-center justify-center rounded-xl bg-primary text-primary-foreground font-bold h-10 px-4 @[480px]:h-12 @[480px]:px-5 transition-all duration-200 ease-in-out hover:bg-primary/90 hover:transform hover:scale-105 hover:shadow-lg active:scale-95;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center rounded-xl bg-muted text-foreground font-bold h-10 px-4 @[480px]:h-12 @[480px]:px-5 transition-all duration-200 ease-in-out hover:bg-muted/80 hover:transform hover:scale-105 hover:shadow-md active:scale-95;
+  }
+
+  /* Filter button styles */
+  .filter-btn {
+    @apply flex h-8 shrink-0 items-center justify-center gap-x-2 rounded-xl bg-muted pl-4 pr-2 transition-all duration-200 ease-in-out hover:bg-muted/80 hover:scale-105 cursor-pointer;
+  }
+
+  .filter-btn.active {
+    @apply bg-primary text-primary-foreground shadow-md;
+  }
+
+  /* Enhanced form inputs */
+  .form-input {
+    @apply bg-muted text-foreground placeholder-muted-foreground rounded-xl border-none ring-0 focus:outline-none transition-all duration-200 ease-in-out;
+  }
+
+  .form-input:focus {
+    @apply ring-2 ring-primary/60 shadow-lg transform scale-[1.02];
+  }
+
+  /* Project card styles */
+  .project-card {
+    @apply flex flex-col gap-3 pb-3 transition-all duration-300 ease-in-out hover:transform hover:scale-105 hover:shadow-xl;
+  }
+
+  .project-image {
+    @apply w-full bg-center bg-no-repeat aspect-video bg-cover rounded-xl transition-transform duration-300 ease-in-out;
+  }
+
+  .project-card:hover .project-image {
+    @apply scale-110;
+  }
+
+  /* Skill tag styles */
+  .skill-tag {
+    @apply flex h-8 shrink-0 items-center justify-center gap-x-2 rounded-xl bg-muted pl-4 pr-4 transition-all duration-200 ease-in-out hover:bg-primary hover:text-primary-foreground hover:scale-110 hover:shadow-md cursor-pointer;
+  }
+
+  /* Social media icon styles */
+  .social-icon {
+    @apply flex flex-col items-center gap-2 bg-slate-50 py-2.5 text-center transition-all duration-200 ease-in-out hover:scale-110 hover:bg-primary hover:text-primary-foreground;
+  }
+
+  .social-icon:hover {
+    @apply transform rotate-3;
+  }
+
+  .social-icon-bg {
+    @apply rounded-full bg-muted p-2.5 transition-all duration-200 ease-in-out;
+  }
+
+  .social-icon:hover .social-icon-bg {
+    @apply bg-primary/20;
+  }
+
+  /* Navigation link styles */
+  .nav-link {
+    @apply relative inline-flex items-center gap-2 text-sm font-semibold px-3 sm:px-5 py-2 rounded-full transition-all duration-200 ease-in-out hover:transform hover:scale-105 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/60;
+  }
+
+  .nav-link:hover {
+    @apply transform scale-105;
+  }
+
+  .nav-link[aria-current="page"] {
+    @apply bg-muted text-primary shadow-lg;
+  }
+
+  /* Hero section styles */
+  .hero-content {
+    @apply flex flex-col gap-2 text-left;
+    animation: fade-in-up 0.6s ease-out forwards;
+  }
+
+  .hero-title {
+    @apply text-white text-4xl font-black leading-tight tracking-[-0.033em] @[480px]:text-5xl @[480px]:font-black @[480px]:leading-tight @[480px]:tracking-[-0.033em];
+    animation: slide-in-left 0.6s ease-out 0.2s both;
+  }
+
+  .hero-subtitle {
+    @apply text-white text-sm font-normal leading-normal @[480px]:text-base @[480px]:font-normal @[480px]:leading-normal;
+    animation: slide-in-right 0.6s ease-out 0.4s both;
+  }
+
+  .hero-buttons {
+    @apply flex flex-wrap gap-3 transition-all duration-300 ease-in-out;
+  }
+
+  .hero-buttons:hover {
+    @apply gap-4;
+  }
+
+  /* Section headers */
+  .section-header {
+    @apply text-foreground text-[22px] font-bold leading-tight tracking-[-0.015em] px-4 pb-3 pt-5 transition-all duration-200 ease-in-out hover:text-primary;
+  }
+}
+
+/* ===== Utilities layer ===== */
+@layer utilities {
+
+  /* Enable container queries on elements that use class="@container" */
+  .\@container {
+    container-type: inline-size;
+  }
+}
+
+/* ===== Animations ===== */
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slide-in-left {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slide-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* ===== Responsive improvements ===== */
+@media (max-width: 640px) {
+  .hero-title {
+    @apply text-3xl;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-buttons {
+    @apply flex-col items-stretch;
+  }
+
+  .btn-primary,
+  .btn-secondary {
+    @apply w-full;
+  }
+}
+
+/* ===== High contrast mode support ===== */
+@media (prefers-contrast: high) {
+
+  .btn-primary,
+  .btn-secondary {
+    @apply border-2 border-foreground;
+  }
+
+  .form-input {
+    @apply border-2 border-foreground;
+  }
+}
+
+/* ===== Reduced motion support ===== */
+@media (prefers-reduced-motion: reduce) {
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .hero-content,
+  .hero-title,
+  .hero-subtitle {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}
