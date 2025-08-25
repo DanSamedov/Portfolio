@@ -1,142 +1,146 @@
-import "./styles.css";
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+const norm = (s) => (s || "").toLowerCase().trim();
 
-// Portfolio functionality
-document.addEventListener('DOMContentLoaded', function() {
-  // Filter text elements (now just for display)
-  const filterTexts = document.querySelectorAll('.filter-text');
-  
-  // You can add filtering logic here later if needed
-  // For now, they're just display elements
-
-  // Smooth scrolling for navigation links
-  const navLinks = document.querySelectorAll('a[href^="#"]');
-  
-  navLinks.forEach(link => {
-    link.addEventListener('click', function(e) {
+document.addEventListener("DOMContentLoaded", () => {
+  $$('a[href^="#"]').forEach((link) => {
+    link.addEventListener("click", (e) => {
+      const id = link.getAttribute("href");
+      const target = id && id !== "#" ? $(id) : null;
+      if (!target) return;
       e.preventDefault();
-      
-      const targetId = this.getAttribute('href');
-      const targetSection = document.querySelector(targetId);
-      
-      if (targetSection) {
-        targetSection.scrollIntoView({
-          behavior: 'smooth',
-          block: 'start'
-        });
-      }
+      target.scrollIntoView({ behavior: "smooth", block: "start" });
     });
   });
 
-  // Form handling
-  const contactForm = document.querySelector('input[placeholder="Your Name"]')?.closest('form') || 
-                     document.querySelector('input[placeholder="Your Name"]')?.closest('div')?.parentElement;
-  
+  const contactForm =
+    $("#contact form") ||
+    $("[data-contact-form]") ||
+    $('input[placeholder="Your Name"]')?.closest("form") ||
+    $('input[placeholder="Your Name"]')?.closest("div")?.parentElement;
+
   if (contactForm) {
-    const inputs = contactForm.querySelectorAll('input, textarea');
-    
-    inputs.forEach(input => {
-      // Add focus effects
-      input.addEventListener('focus', function() {
-        this.classList.remove('error', 'success');
-      });
-      
-      // Add validation on blur
-      input.addEventListener('blur', function() {
-        validateInput(this);
-      });
+    const inputs = $$("input, textarea", contactForm);
+    inputs.forEach((el) => {
+      el.addEventListener("focus", () =>
+        el.classList.remove("error", "success")
+      );
+      el.addEventListener("blur", () => validateInput(el));
     });
   }
 
-  // Add scroll effects
-  window.addEventListener('scroll', function() {
-    const scrolled = window.pageYOffset;
-    const parallax = document.querySelector('.hero-content');
-    
-    if (parallax) {
-      const speed = scrolled * 0.5;
-      parallax.style.transform = `translateY(${speed}px)`;
-    }
-  });
-
-  // Add intersection observer for animations
-  const observerOptions = {
-    threshold: 0.1,
-    rootMargin: '0px 0px -50px 0px'
-  };
-
-  const observer = new IntersectionObserver(function(entries) {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.style.opacity = '1';
-        entry.target.style.transform = 'translateY(0)';
+  const parallax = $(".hero-content");
+  if (parallax) {
+    let ticking = false;
+    const onScroll = () => {
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          parallax.style.transform = `translateY(${window.scrollY * 0.5}px)`;
+          ticking = false;
+        });
+        ticking = true;
       }
-    });
-  }, observerOptions);
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+  }
 
-  // Observe elements for animation
-  const animatedElements = document.querySelectorAll('.project-card, .skill-tag, .section-header');
-  animatedElements.forEach(el => {
-    el.style.opacity = '0';
-    el.style.transform = 'translateY(20px)';
-    el.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
-    observer.observe(el);
-  });
+  const animated = $$(".project-card, .skill-tag, .section-header");
+  if (animated.length) {
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting) {
+            e.target.style.opacity = "1";
+            e.target.style.transform = "translateY(0)";
+            io.unobserve(e.target);
+          }
+        }
+      },
+      { threshold: 0.1, rootMargin: "0px 0px -50px 0px" }
+    );
+    for (const el of animated) {
+      el.style.opacity = "0";
+      el.style.transform = "translateY(20px)";
+      el.style.transition = "opacity 0.6s ease-out, transform 0.6s ease-out";
+      io.observe(el);
+    }
+  }
+
+  const dd = $("#project-filter");
+  if (dd) {
+    const label = $("[data-label]", dd);
+    const options = $$("[data-filter]", dd);
+    const grid =
+      $("#projects-grid") || dd.parentElement?.nextElementSibling || document;
+    let cards = $$(".project-card", grid);
+
+    const applyFilter = (val) => {
+      const v = norm(val);
+      const matching = [];
+      const rest = [];
+      for (const c of cards) {
+        const cats = norm(c.dataset.project).split(/\s+/);
+        if (v === "all" || cats.includes(v)) {
+          c.classList.remove("hidden");
+          matching.push(c);
+        } else {
+          c.classList.add("hidden");
+          rest.push(c);
+        }
+      }
+      const parent = matching[0]?.parentElement || rest[0]?.parentElement;
+      if (parent) {
+        for (const c of matching.concat(rest)) parent.appendChild(c);
+      }
+    };
+
+    options.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const val = btn.dataset.filter;
+        if (label) label.textContent = btn.textContent.trim();
+        options.forEach((o) =>
+          o.setAttribute("aria-selected", String(o === btn))
+        );
+        applyFilter(val);
+        dd.open = false;
+      });
+      btn.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          btn.click();
+        }
+      });
+    });
+
+    const initial =
+      options.find((o) => o.getAttribute("aria-selected") === "true")?.dataset
+        .filter || "all";
+    applyFilter(initial);
+  }
 });
 
-// Filter projects function (placeholder for future use)
-function filterProjects(filterType) {
-  // This function can be implemented later if you want to add filtering functionality
-  console.log('Filtering by:', filterType);
-}
-
-// Input validation function
 function validateInput(input) {
-  const value = input.value.trim();
-  
-  if (input.placeholder === 'Your Name') {
-    if (value.length < 2) {
-      input.classList.add('error');
-      return false;
-    } else {
-      input.classList.add('success');
-      return true;
-    }
-  }
-  
-  if (input.placeholder === 'Your Email') {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(value)) {
-      input.classList.add('error');
-      return false;
-    } else {
-      input.classList.add('success');
-      return true;
-    }
-  }
-  
-  if (input.placeholder === 'Your Message') {
-    if (value.length < 10) {
-      input.classList.add('error');
-      return false;
-    } else {
-      input.classList.add('success');
-      return true;
-    }
-  }
-  
-  return true;
-}
+  const v = (input.value || "").trim();
 
-// Add CSS animations
-const style = document.createElement('style');
-style.textContent = `
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
+  const type = (
+    input.getAttribute("data-validate") ||
+    input.getAttribute("name") ||
+    input.type ||
+    input.placeholder ||
+    ""
+  ).toLowerCase();
+
+  let ok = true;
+
+  if (type.includes("name")) {
+    ok = v.length >= 2;
+  } else if (type.includes("email")) {
+    ok = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+  } else if (type.includes("message") || input.tagName === "TEXTAREA") {
+    ok = v.length >= 10;
   }
-  
-  .project-card {
-    animation: fadeIn 0.5s ease-in-out;
-  }
-`;
-document.head.appendChild(style);
+
+  input.classList.toggle("error", !ok);
+  input.classList.toggle("success", ok);
+  return ok;
+}
