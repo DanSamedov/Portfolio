@@ -8,6 +8,11 @@
     <script defer src="./src/main.js"></script>
   </head>
   <body>
+    <div
+      id="scroll-progress"
+      class="fixed left-0 top-0 h-1 sm:h-[6px] w-0 bg-[#0d80f2] pointer-events-none z-[999]"
+    ></div>
+
     <header
       role="banner"
       class="fixed inset-x-0 bottom-2 sm:top-4 sm:bottom-auto z-50 flex justify-center pointer-events-none"
@@ -374,165 +379,204 @@
                 </div>
               </div>
             </div>
-            <div id="contact">
-              <h2 class="section-header">Contact</h2>
-              <div
-                class="flex max-w-[480px] flex-wrap items-end gap-4 px-4 py-3"
-              >
-                <label class="flex flex-col min-w-40 flex-1">
-                  <p
-                    class="text-[#0d141c] text-base font-medium leading-normal pb-2"
-                  >
-                    Name
-                  </p>
-                  <input
-                    placeholder="Your Name"
-                    class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl text-[#0d141c] focus:outline-0 focus:ring-0 border-none bg-[#e7edf4] focus:border-none h-14 placeholder:text-[#49739c] p-4 text-base font-normal leading-normal"
-                    value=""
-                  />
-                </label>
-              </div>
-              <div
-                class="flex max-w-[480px] flex-wrap items-end gap-4 px-4 py-3"
-              >
-                <label class="flex flex-col min-w-40 flex-1">
-                  <p
-                    class="text-[#0d141c] text-base font-medium leading-normal pb-2"
-                  >
-                    Email
-                  </p>
-                  <input
-                    placeholder="Your Email"
-                    class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl text-[#0d141c] focus:outline-0 focus:ring-0 border-none bg-[#e7edf4] focus:border-none h-14 placeholder:text-[#49739c] p-4 text-base font-normal leading-normal"
-                    value=""
-                  />
-                </label>
-              </div>
-              <div
-                class="flex max-w-[480px] flex-wrap items-end gap-4 px-4 py-3"
-              >
-                <label class="flex flex-col min-w-40 flex-1">
-                  <p
-                    class="text-[#0d141c] text-base font-medium leading-normal pb-2"
-                  >
-                    Message
-                  </p>
-                  <textarea
-                    placeholder="Your Message"
-                    class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl text-[#0d141c] focus:outline-0 focus:ring-0 border-none bg-[#e7edf4] focus:border-none min-h-36 placeholder:text-[#49739c] p-4 text-base font-normal leading-normal"
-                  ></textarea>
-                </label>
-              </div>
-              <div class="flex px-4 py-3 justify-end">
-                <button
-                  class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 px-4 bg-[#0d80f2] text-slate-50 text-sm font-bold leading-normal tracking-[0.015em]"
-                >
-                  <span class="truncate">Send Message</span>
-                </button>
-              </div>
-              <p
-                class="text-[#49739c] text-sm font-normal leading-normal pb-3 pt-1 px-4 text-center"
-              >
-                Connect with me on
-              </p>
-              <div class="@container">
-                <div
-                  class="gap-2 px-4 grid-cols-[repeat(auto-fit, minmax(80px,_1fr))] grid"
-                >
-                  <div class="social-icon">
-                    <div class="social-icon-bg">
-                      <div
-                        class="text-[#0d141c]"
-                        data-icon="LinkedinLogo"
-                        data-size="20px"
-                        data-weight="regular"
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="20px"
-                          height="20px"
-                          fill="currentColor"
-                          viewBox="0 0 256 256"
-                        >
-                          <path
-                            d="M216,24H40A16,16,0,0,0,24,40V216a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V40A16,16,0,0,0,216,24Zm0,192H40V40H216V216ZM96,112v64a8,8,0,0,1-16,0V112a8,8,0,0,1,16,0Zm88,28v36a8,8,0,0,1-16,0V140a20,20,0,0,0-40,0v36a8,8,0,0,1-16,0V112a8,8,0,0,1,15.79-1.78A36,36,0,0,1,184,140ZM100,84A12,12,0,1,1,88,72,12,12,0,0,1,100,84Z"
-                          ></path>
-                        </svg>
-                      </div>
-                    </div>
-                    <p
-                      class="text-[#0d141c] text-sm font-medium leading-normal"
+            <section id="contact" class="relative px-4 py-16">
+              <div class="absolute inset-0 bg-slate-100/60 -z-10"></div>
+
+              <div class="mx-auto max-w-[960px]">
+                <div class="grid md:grid-cols-5 gap-8 md:gap-12 items-start">
+                  <div class="md:col-span-2 text-center md:text-left space-y-4">
+                    <h2
+                      class="flex items-center justify-center md:justify-start gap-3 text-4xl sm:text-5xl font-extrabold text-[#0d141c]"
                     >
-                      LinkedIn
-                    </p>
-                  </div>
-                  <div class="social-icon">
-                    <div class="social-icon-bg">
-                      <div
-                        class="text-[#0d141c]"
-                        data-icon="GithubLogo"
-                        data-size="20px"
-                        data-weight="regular"
+                      Contact Me
+                      <svg
+                        class="w-7 h-7"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.8"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
                       >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="20px"
-                          height="20px"
-                          fill="currentColor"
-                          viewBox="0 0 256 256"
-                        >
-                          <path
-                            d="M208.31,75.68A59.78,59.78,0,0,0,202.93,28,8,8,0,0,0,196,24a59.75,59.75,0,0,0-48,24H124A59.75,59.75,0,0,0,76,24a8,8,0,0,0-6.93,4,59.78,59.78,0,0,0-5.38,47.68A58.14,58.14,0,0,0,56,104v8a56.06,56.06,0,0,0,48.44,55.47A39.8,39.8,0,0,0,96,192v8H72a24,24,0,0,1-24-24A40,40,0,0,0,8,136a8,8,0,0,0,0,16,24,24,0,0,1,24,24,40,40,0,0,0,40,40H96v16a8,8,0,0,0,16,0V192a24,24,0,0,1,48,0v40a8,8,0,0,0,16,0V192a39.8,39.8,0,0,0-8.44-24.53A56.06,56.06,0,0,0,216,112v-8A58.14,58.14,0,0,0,208.31,75.68ZM200,112a40,40,0,0,1-40,40H112a40,40,0,0,1-40-40v-8a41.74,41.74,0,0,1,6.9-22.48A8,8,0,0,0,80,73.83a43.81,43.81,0,0,1,.79-33.58,43.88,43.88,0,0,1,32.32,20.06A8,8,0,0,0,119.82,64h32.35a8,8,0,0,0,6.74-3.69,43.87,43.87,0,0,1,32.32-20.06A43.81,43.81,0,0,1,192,73.83a8.09,8.09,0,0,0,1,7.65A41.72,41.72,0,0,1,200,104Z"
-                          ></path>
-                        </svg>
-                      </div>
-                    </div>
-                    <p
-                      class="text-[#0d141c] text-sm font-medium leading-normal"
-                    >
-                      GitHub
+                        <rect
+                          x="3"
+                          y="5"
+                          width="18"
+                          height="14"
+                          rx="2"
+                          ry="2"
+                        ></rect>
+                        <polyline points="22,6 12,13 2,6"></polyline>
+                      </svg>
+                    </h2>
+                    <p class="text-[#49739c]">
+                      Let’s work together or just say hi
                     </p>
-                  </div>
-                  <div class="social-icon">
-                    <div class="social-icon-bg">
-                      <div
-                        class="text-[#0d141c]"
-                        data-icon="TwitterLogo"
-                        data-size="20px"
-                        data-weight="regular"
+
+                    <div
+                      class="group inline-flex items-center rounded-full border border-border bg-white/90 shadow-sm hover:border-[#0d80f2] transition"
+                    >
+                      <span class="pl-4 pr-2 py-1.5 text-[#0d141c] select-none">
+                        samedovdanylo@gmail.com
+                      </span>
+
+                      <button
+                        type="button"
+                        class="ml-1.5 mr-1.5 rounded-full px-3 py-1 text-sm border border-border text-[#0d141c] hover:bg-[#0d80f2] hover:text-white transition focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0d80f2]/40"
+                        data-copy="samedovdanylo@gmail.com"
+                        data-copied="Copied!"
+                        aria-label="Copy email to clipboard"
                       >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="20px"
-                          height="20px"
-                          fill="currentColor"
-                          viewBox="0 0 256 256"
-                        >
-                          <path
-                            d="M247.39,68.94A8,8,0,0,0,240,64H209.57A48.66,48.66,0,0,0,168.1,40a46.91,46.91,0,0,0-33.75,13.7A47.9,47.9,0,0,0,120,88v6.09C79.74,83.47,46.81,50.72,46.46,50.37a8,8,0,0,0-13.65,4.92c-4.31,47.79,9.57,79.77,22,98.18a110.93,110.93,0,0,0,21.88,24.2c-15.23,17.53-39.21,26.74-39.47,26.84a8,8,0,0,0-3.85,11.93c.75,1.12,3.75,5.05,11.08,8.72C53.51,229.7,65.48,232,80,232c70.67,0,129.72-54.42,135.75-124.44l29.91-29.9A8,8,0,0,0,247.39,68.94Zm-45,29.41a8,8,0,0,0-2.32,5.14C196,166.58,143.28,216,80,216c-10.56,0-18-1.4-23.22-3.08,11.51-6.25,27.56-17,37.88-32.48A8,8,0,0,0,92,169.08c-.47-.27-43.91-26.34-44-96,16,13,45.25,33.17,78.67,38.79A8,8,0,0,0,136,104V88a32,32,0,0,1,9.6-22.22.92A30.94,30.94,0,0,1,167.9,56c12.66.16,24.49,7.88,29.44,19.21A8,8,0,0,0,204.67,80h16Z"
-                          ></path>
-                        </svg>
-                      </div>
+                        Copy
+                      </button>
                     </div>
-                    <p
-                      class="text-[#0d141c] text-sm font-medium leading-normal"
-                    >
-                      Twitter
-                    </p>
                   </div>
+
+                  <form
+                    class="md:col-span-3 rounded-2xl border border-border bg-white/80 backdrop-blur p-6 shadow-sm space-y-4"
+                  >
+                    <label class="block">
+                      <span class="sr-only">Your Name</span>
+                      <input
+                        name="name"
+                        type="text"
+                        placeholder="Your Name"
+                        required
+                        class="w-full h-12 rounded-xl bg-white border border-border px-4 text-[#0d141c] placeholder:text-[#7a8ea4] shadow-sm focus:outline-none focus:ring-4 focus:ring-[#0d80f2]/20 focus:border-[#0d80f2] transition"
+                      />
+                    </label>
+
+                    <label class="block">
+                      <span class="sr-only">Your Email</span>
+                      <input
+                        name="email"
+                        type="email"
+                        placeholder="Your Email"
+                        required
+                        class="w-full h-12 rounded-xl bg-white border border-border px-4 text-[#0d141c] placeholder:text-[#7a8ea4] shadow-sm focus:outline-none focus:ring-4 focus:ring-[#0d80f2]/20 focus:border-[#0d80f2] transition"
+                      />
+                    </label>
+
+                    <label class="block">
+                      <span class="sr-only">Your Message</span>
+                      <textarea
+                        name="message"
+                        placeholder="Your Message"
+                        required
+                        class="w-full min-h-36 rounded-xl bg-white border border-border p-4 text-[#0d141c] placeholder:text-[#7a8ea4] shadow-sm resize-y focus:outline-none focus:ring-4 focus:ring-[#0d80f2]/20 focus:border-[#0d80f2] transition"
+                      ></textarea>
+                    </label>
+
+                    <div class="flex justify-center pt-1">
+                      <button
+                        type="submit"
+                        class="inline-flex items-center gap-2 rounded-full h-12 px-6 bg-[#0d141c] text-white text-sm sm:text-base font-semibold hover:bg-[#0b1620] active:translate-y-[1px] transition"
+                      >
+                        Send Message
+                        <svg
+                          class="w-5 h-5"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="1.8"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          aria-hidden="true"
+                        >
+                          <path d="M22 2L11 13"></path>
+                          <path d="M22 2l-7 20-4-9-9-4 20-7z"></path>
+                        </svg>
+                      </button>
+                    </div>
+                  </form>
                 </div>
               </div>
-            </div>
+            </section>
           </div>
         </div>
-        <footer
-          class="flexjustify-center flex-col gap-6 px-5 py-10 text-center @containermax-w-[960px] flex-1"
-        >
-          <p class="text-[#49739c] text-base font-normal leading-normal">
-            © 2025 Danylo Samedov. All rights reserved.
-          </p>
-        </footer>
       </div>
     </div>
+    <footer class="w-full border-t border-border bg-background">
+      <div class="mx-auto w-full max-w-screen-xl px-5 sm:px-6">
+        <div class="h-14 sm:h-16 flex items-center justify-between">
+          <!-- left -->
+          <p class="m-0 text-sm sm:text-base text-muted-foreground">
+            © 2025 Danylo Samedov. All rights reserved.
+          </p>
+
+          <!-- right -->
+          <div class="flex items-center gap-5 sm:gap-6 text-muted-foreground">
+            <!-- GitHub -->
+            <a
+              href="https://github.com/DanSamedov"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="p-2 sm:p-2.5 rounded-md transition-colors hover:text-[#0d80f2] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0d80f2]/40"
+              aria-label="GitHub"
+            >
+              <svg
+                class="w-5 h-5 sm:w-6 sm:h-6"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path
+                  d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"
+                />
+              </svg>
+            </a>
+
+            <!-- LinkedIn -->
+            <a
+              href="https://www.linkedin.com/in/danylo-samedov-b557132b1/"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="p-2 sm:p-2.5 rounded-md transition-colors hover:text-[#0d80f2] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0d80f2]/40"
+              aria-label="LinkedIn"
+            >
+              <svg
+                class="w-5 h-5 sm:w-6 sm:h-6"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path
+                  d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"
+                />
+                <rect x="2" y="9" width="4" height="12" />
+                <circle cx="4" cy="4" r="2" />
+              </svg>
+            </a>
+
+            <!-- Email -->
+            <a
+              href="mailto:samedovdanylo@gmail.com"
+              class="p-2 sm:p-2.5 rounded-md transition-colors hover:text-[#0d80f2] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0d80f2]/40"
+              aria-label="Email"
+            >
+              <svg
+                class="w-5 h-5 sm:w-6 sm:h-6"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <rect x="3" y="5" width="18" height="14" rx="2" ry="2" />
+                <polyline points="22,6 12,13 2,6" />
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </footer>
   </body>
 </html>
