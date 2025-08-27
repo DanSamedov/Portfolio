@@ -7,10 +7,10 @@
     <link rel="stylesheet" href="./dist/styles.css" />
     <script defer src="./src/main.js"></script>
   </head>
-  <body>
+  <body class="scroll-smooth bg-slate-50">
     <div
       id="scroll-progress"
-      class="fixed left-0 top-0 h-1 sm:h-[6px] w-0 bg-[#0d80f2] pointer-events-none z-[999]"
+      class="fixed left-0 top-0 h-1 sm:h-[6px] w-0 bg-primary pointer-events-none z-[999]"
     ></div>
 
     <header
@@ -104,477 +104,494 @@
         </div>
       </nav>
     </header>
-    <div
-      class="relative flex size-full min-h-screen flex-col bg-slate-50 group/design-root overflow-x-hidden"
-      style="font-family: 'Space Grotesk', 'Noto Sans', sans-serif"
-    >
-      <div class="layout-container flex h-full grow flex-col">
-        <div class="px-40 flex flex-1 justify-center py-5">
-          <div
-            class="layout-content-container flex flex-col max-w-[960px] flex-1"
-          >
-            <div class="@container">
-              <div class="@[480px]:p-4">
-                <div
-                  id="home"
-                  class="flex min-h-[480px] flex-col gap-6 bg-cover bg-center bg-no-repeat @[480px]:gap-8 @[480px]:rounded-xl items-start justify-end px-4 pb-10 @[480px]:px-10"
-                  style="
-                    background-image: linear-gradient(
-                        rgba(0, 0, 0, 0.1) 0%,
-                        rgba(0, 0, 0, 0.4) 100%
-                      ),
-                      url('https://lh3.googleusercontent.com/aida-public/AB6AXuBIuP4151KRv0iJLDSUUcJV2Q1uP6OnJTpswsH2JouBSClElDfTyIM5OXyIkc7qVr8X6uIiz8hrGnUvxQEuTuXZoZbvAtu2P6yIOYs74N_x4MvBIy0pE0Krj8r3TXBfcG0S61Ux0ctlISXf3XdFKQnyuVL2wCe1Eoh5GnyJF0b_U7k5ec-jWTXWoemaILBO96eXaEKr_Whuf56kQZxW4JFoR6wuPCdIxD8Xl_-KDQwul6ThvfW8yTgT3RPRBY4mM5CCNyVCdxWLcQ');
-                  "
-                >
-                  <div class="hero-content">
-                    <h1 class="hero-title">Hi, I'm Danylo Samedov</h1>
-                    <h2 class="hero-subtitle">
-                      Full-Stack Developer with a passion for creating
-                      innovative web applications. I specialize in building
-                      scalable and maintainable solutions using modern
-                      technologies.
-                    </h2>
-                  </div>
-                  <div class="hero-buttons">
-                    <button class="btn-primary">
-                      <span class="truncate">View Projects</span>
-                    </button>
-                    <button class="btn-secondary">
-                      <span class="truncate">Contact Me</span>
-                    </button>
-                  </div>
+    <main class="flex flex-col items-center justify-center">
+      <!-- HOME -->
+      <section id="home" class="w-full scroll-mt-14 pt-16 pb-12">
+        <div class="mx-auto max-w-[960px] px-4">
+          <div class="@container">
+            <div class="@[480px]:p-4">
+              <div
+                class="flex min-h-[480px] flex-col gap-6 bg-cover bg-center bg-no-repeat @[480px]:gap-8 @[480px]:rounded-xl items-start justify-end px-4 pb-10 @[480px]:px-10"
+                style="
+                  background-image: linear-gradient(
+                      rgba(0, 0, 0, 0.1) 0%,
+                      rgba(0, 0, 0, 0.4) 100%
+                    ),
+                    url('https://lh3.googleusercontent.com/aida-public/AB6AXuBIuP4151KRv0iJLDSUUcJV2Q1uP6OnJTpswsH2JouBSClElDfTyIM5OXyIkc7qVr8X6uIiz8hrGnUvxQEuTuXZoZbvAtu2P6yIOYs74N_x4MvBIy0pE0Krj8r3TXBfcG0S61Ux0ctlISXf3XdFKQnyuVL2wCe1Eoh5GnyJF0b_U7k5ec-jWTXWoemaILBO96eXaEKr_Whuf56kQZxW4JFoR6wuPCdIxD8Xl_-KDQwul6ThvfW8yTgT3RPRBY4mM5CCNyVCdxWLcQ');
+                "
+              >
+                <div class="hero-content">
+                  <h1 class="hero-title">Hi, I'm Danylo Samedov</h1>
+                  <h2 class="hero-subtitle">
+                    Full-Stack Developer with a passion for creating innovative
+                    web applications. I specialize in building scalable and
+                    maintainable solutions using modern technologies.
+                  </h2>
+                </div>
+                <div class="hero-buttons">
+                  <button class="btn-primary">
+                    <span class="truncate">View Projects</span>
+                  </button>
+                  <button class="btn-secondary">
+                    <span class="truncate">Contact Me</span>
+                  </button>
                 </div>
               </div>
             </div>
-            <div id="projects">
-              <h2 class="section-header">Projects</h2>
-              <div class="flex gap-3 p-3 flex-wrap pr-4">
-                <!-- Project filter -->
-                <div class="relative inline-block">
-                  <details id="project-filter" class="group">
-                    <summary
-                      class="flex items-center gap-2 rounded-xl px-3 py-2 border border-border bg-muted text-foreground cursor-pointer list-none focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 [&::-webkit-details-marker]:hidden"
-                      role="button"
-                      aria-haspopup="listbox"
-                    >
-                      <span data-label class="text-sm font-medium">All</span>
-                      <!-- caret icon -->
-                      <svg
-                        class="size-5 transition-transform group-open:rotate-180"
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 256 256"
-                        fill="currentColor"
-                        aria-hidden="true"
-                      >
-                        <path
-                          d="M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80A8,8,0,0,1,53.66,90.34L128,164.69l74.34-74.35a8,8,0,0,1,11.32,11.32Z"
-                        />
-                      </svg>
-                    </summary>
-
-                    <!-- dropdown panel -->
-                    <div
-                      class="absolute z-50 mt-2 w-48 rounded-xl border border-border bg-background shadow-lg p-1"
-                      role="listbox"
-                      aria-label="Filter projects"
-                    >
-                      <button
-                        type="button"
-                        role="option"
-                        aria-selected="true"
-                        class="w-full text-left rounded-lg px-3 py-2 text-sm hover:bg-muted"
-                        data-filter="all"
-                      >
-                        All
-                      </button>
-                      <button
-                        type="button"
-                        role="option"
-                        class="w-full text-left rounded-lg px-3 py-2 text-sm hover:bg-muted"
-                        data-filter="websites"
-                      >
-                        Websites
-                      </button>
-                      <button
-                        type="button"
-                        role="option"
-                        class="w-full text-left rounded-lg px-3 py-2 text-sm hover:bg-muted"
-                        data-filter="bots"
-                      >
-                        Bots
-                      </button>
-                      <button
-                        type="button"
-                        role="option"
-                        class="w-full text-left rounded-lg px-3 py-2 text-sm hover:bg-muted"
-                        data-filter="programs"
-                      >
-                        Programs
-                      </button>
-                      <button
-                        type="button"
-                        role="option"
-                        class="w-full text-left rounded-lg px-3 py-2 text-sm hover:bg-muted"
-                        data-filter="other"
-                      >
-                        Other
-                      </button>
-                    </div>
-                  </details>
-                </div>
-              </div>
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4">
-                <div class="project-card" data-project="websites">
-                  <div
-                    class="project-image"
-                    style="
-                      background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBIuP4151KRv0iJLDSUUcJV2Q1uP6OnJTpswsH2JouBSClElDfTyIM5OXyIkc7qVr8X6uIiz8hrGnUvxQEuTuXZoZbvAtu2P6yIOYs74N_x4MvBIy0pE0Krj8r3TXBfcG0S61Ux0ctlISXf3XdFKQnyuVL2wCe1Eoh5GnyJF0b_U7k5ec-jWTXWoemaILBO96eXaEKr_Whuf56kQZxW4JFoR6wuPCdIxD8Xl_-KDQwul6ThvfW8yTgT3RPRBY4mM5CCNyVCdxWLcQ');
-                    "
-                  ></div>
-                  <div>
-                    <p
-                      class="text-[#0d141c] text-base font-medium leading-normal"
-                    >
-                      Codenames Website
-                    </p>
-                    <p
-                      class="text-[#49739c] text-sm font-normal leading-normal"
-                    >
-                      A full-featured e-commerce platform with user
-                      authentication, product catalog, shopping cart, and
-                      payments.
-                    </p>
-                  </div>
-                </div>
-                <div class="project-card" data-project="websites">
-                  <div
-                    class="project-image"
-                    style="
-                      background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBIuP4151KRv0iJLDSUUcJV2Q1uP6OnJTpswsH2JouBSClElDfTyIM5OXyIkc7qVr8X6uIiz8hrGnUvxQEuTuXZoZbvAtu2P6yIOYs74N_x4MvBIy0pE0Krj8r3TXBfcG0S61Ux0ctlISXf3XdFKQnyuVL2wCe1Eoh5GnyJF0b_U7k5ec-jWTXWoemaILBO96eXaEKr_Whuf56kQZxW4JFoR6wuPCdIxD8Xl_-KDQwul6ThvfW8yTgT3RPRBY4mM5CCNyVCdxWLcQ');
-                    "
-                  ></div>
-                  <div>
-                    <p
-                      class="text-[#0d141c] text-base font-medium leading-normal"
-                    >
-                      Portfolio Website
-                    </p>
-                    <p
-                      class="text-[#49739c] text-sm font-normal leading-normal"
-                    >
-                      A full-featured e-commerce platform with user
-                      authentication, product catalog, shopping cart, and
-                      payments.
-                    </p>
-                  </div>
-                </div>
-
-                <div class="project-card" data-project="bots">
-                  <div
-                    class="project-image"
-                    style="
-                      background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCK_Y_vKSnxjallhE4KJftRL1roiQZgFdp4FQiFIT_Q4CoYK_SZat2ssEbsvLkij2UkMJNKFfGgcgNYKEAgMnLvDfmr6qdUlJuNRriytIDsUuZtlZvv50hKFUW094B9cF-vc6hUnKivTva83srjc4HCd_fnsU5BW4hQ1qbBqvFySx0OyPskciJ4wathWBhbaWcIw5xiWW1_zCK80AyxTar5GIWq5el8bPJgEYEf1eGihjgHB8MqfTSH9WXivH6XFUdI80Mo9GYlSw');
-                    "
-                  ></div>
-                  <div>
-                    <p
-                      class="text-[#0d141c] text-base font-medium leading-normal"
-                    >
-                      Telegram bot
-                    </p>
-                    <p
-                      class="text-[#49739c] text-sm font-normal leading-normal"
-                    >
-                      A task management application with creation, assignment,
-                      prioritization, and progress tracking.
-                    </p>
-                  </div>
-                </div>
-
-                <div class="project-card" data-project="programs">
-                  <div
-                    class="project-image"
-                    style="
-                      background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDJbDT_zJa01vi1xdYwheXvcx5QWiKzoNdcebzjni7iyIYvLMhoYxzKIRAKFrxHrTRxBhMy8HCT1-55XxKzxKk1wvpKmer3Nz2S6E70GWZ3MyTVv16oBx1zrLt4WriTlSYvWqp0Xm4fvggibwn82etizQcdol2D1v6Y9BWRXzuUm7UerHiPlqJLarnf-4gmwL5nKV7_8HIJU7G1P-rgGhVwV4v-qoNh_2ehfYZBSpNe2yB9L5QjDJJD6K4Ga9SiwRFLJk2NzJqsdw');
-                    "
-                  ></div>
-                  <div>
-                    <p
-                      class="text-[#0d141c] text-base font-medium leading-normal"
-                    >
-                      Casino Predict
-                    </p>
-                    <p
-                      class="text-[#49739c] text-sm font-normal leading-normal"
-                    >
-                      A social media dashboard for managing multiple accounts,
-                      scheduling posts, and analyzing engagement.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div id="skills">
-              <h2 class="section-header">Skills</h2>
-              <div class="flex gap-3 p-3 flex-wrap pr-4">
-                <div class="skill-tag">
-                  <p class="text-[#0d141c] text-sm font-medium leading-normal">
-                    JavaScript
-                  </p>
-                </div>
-                <div class="skill-tag">
-                  <p class="text-[#0d141c] text-sm font-medium leading-normal">
-                    React
-                  </p>
-                </div>
-                <div class="skill-tag">
-                  <p class="text-[#0d141c] text-sm font-medium leading-normal">
-                    Node.js
-                  </p>
-                </div>
-                <div class="skill-tag">
-                  <p class="text-[#0d141c] text-sm font-medium leading-normal">
-                    Python
-                  </p>
-                </div>
-                <div class="skill-tag">
-                  <p class="text-[#0d141c] text-sm font-medium leading-normal">
-                    Django
-                  </p>
-                </div>
-                <div class="skill-tag">
-                  <p class="text-[#0d141c] text-sm font-medium leading-normal">
-                    SQL
-                  </p>
-                </div>
-                <div class="skill-tag">
-                  <p class="text-[#0d141c] text-sm font-medium leading-normal">
-                    NoSQL
-                  </p>
-                </div>
-                <div class="skill-tag">
-                  <p class="text-[#0d141c] text-sm font-medium leading-normal">
-                    HTML
-                  </p>
-                </div>
-                <div class="skill-tag">
-                  <p class="text-[#0d141c] text-sm font-medium leading-normal">
-                    CSS
-                  </p>
-                </div>
-                <div class="skill-tag">
-                  <p class="text-[#0d141c] text-sm font-medium leading-normal">
-                    Git
-                  </p>
-                </div>
-                <div class="skill-tag">
-                  <p class="text-[#0d141c] text-sm font-medium leading-normal">
-                    Docker
-                  </p>
-                </div>
-                <div class="skill-tag">
-                  <p class="text-[#0d141c] text-sm font-medium leading-normal">
-                    AWS
-                  </p>
-                </div>
-              </div>
-            </div>
-            <section id="contact" class="relative px-4 py-16">
-              <div class="absolute inset-0 bg-slate-100/60 -z-10"></div>
-
-              <div class="mx-auto max-w-[960px]">
-                <div class="grid md:grid-cols-5 gap-8 md:gap-12 items-start">
-                  <div class="md:col-span-2 text-center md:text-left space-y-4">
-                    <h2
-                      class="flex items-center justify-center md:justify-start gap-3 text-4xl sm:text-5xl font-extrabold text-[#0d141c]"
-                    >
-                      Contact Me
-                      <svg
-                        class="w-7 h-7"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="1.8"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        aria-hidden="true"
-                      >
-                        <rect
-                          x="3"
-                          y="5"
-                          width="18"
-                          height="14"
-                          rx="2"
-                          ry="2"
-                        ></rect>
-                        <polyline points="22,6 12,13 2,6"></polyline>
-                      </svg>
-                    </h2>
-                    <p class="text-[#49739c]">
-                      Let’s work together or just say hi
-                    </p>
-
-                    <div
-                      class="group inline-flex items-center rounded-full border border-border bg-white/90 shadow-sm hover:border-[#0d80f2] transition"
-                    >
-                      <span class="pl-4 pr-2 py-1.5 text-[#0d141c] select-none">
-                        samedovdanylo@gmail.com
-                      </span>
-
-                      <button
-                        type="button"
-                        class="ml-1.5 mr-1.5 rounded-full px-3 py-1 text-sm border border-border text-[#0d141c] hover:bg-[#0d80f2] hover:text-white transition focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0d80f2]/40"
-                        data-copy="samedovdanylo@gmail.com"
-                        data-copied="Copied!"
-                        aria-label="Copy email to clipboard"
-                      >
-                        Copy
-                      </button>
-                    </div>
-                  </div>
-
-                  <form
-                    class="md:col-span-3 rounded-2xl border border-border bg-white/80 backdrop-blur p-6 shadow-sm space-y-4"
-                  >
-                    <label class="block">
-                      <span class="sr-only">Your Name</span>
-                      <input
-                        name="name"
-                        type="text"
-                        placeholder="Your Name"
-                        required
-                        class="w-full h-12 rounded-xl bg-white border border-border px-4 text-[#0d141c] placeholder:text-[#7a8ea4] shadow-sm focus:outline-none focus:ring-4 focus:ring-[#0d80f2]/20 focus:border-[#0d80f2] transition"
-                      />
-                    </label>
-
-                    <label class="block">
-                      <span class="sr-only">Your Email</span>
-                      <input
-                        name="email"
-                        type="email"
-                        placeholder="Your Email"
-                        required
-                        class="w-full h-12 rounded-xl bg-white border border-border px-4 text-[#0d141c] placeholder:text-[#7a8ea4] shadow-sm focus:outline-none focus:ring-4 focus:ring-[#0d80f2]/20 focus:border-[#0d80f2] transition"
-                      />
-                    </label>
-
-                    <label class="block">
-                      <span class="sr-only">Your Message</span>
-                      <textarea
-                        name="message"
-                        placeholder="Your Message"
-                        required
-                        class="w-full min-h-36 rounded-xl bg-white border border-border p-4 text-[#0d141c] placeholder:text-[#7a8ea4] shadow-sm resize-y focus:outline-none focus:ring-4 focus:ring-[#0d80f2]/20 focus:border-[#0d80f2] transition"
-                      ></textarea>
-                    </label>
-
-                    <div class="flex justify-center pt-1">
-                      <button
-                        type="submit"
-                        class="inline-flex items-center gap-2 rounded-full h-12 px-6 bg-[#0d141c] text-white text-sm sm:text-base font-semibold hover:bg-[#0b1620] active:translate-y-[1px] transition"
-                      >
-                        Send Message
-                        <svg
-                          class="w-5 h-5"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          stroke-width="1.8"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          aria-hidden="true"
-                        >
-                          <path d="M22 2L11 13"></path>
-                          <path d="M22 2l-7 20-4-9-9-4 20-7z"></path>
-                        </svg>
-                      </button>
-                    </div>
-                  </form>
-                </div>
-              </div>
-            </section>
           </div>
         </div>
-      </div>
-    </div>
-    <footer class="w-full border-t border-border bg-background">
-      <div class="mx-auto w-full max-w-screen-xl px-5 sm:px-6">
-        <div class="h-14 sm:h-16 flex items-center justify-between">
-          <!-- left -->
-          <p class="m-0 text-sm sm:text-base text-muted-foreground">
-            © 2025 Danylo Samedov. All rights reserved.
-          </p>
+      </section>
 
-          <!-- right -->
-          <div class="flex items-center gap-5 sm:gap-6 text-muted-foreground">
-            <!-- GitHub -->
-            <a
-              href="https://github.com/DanSamedov"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="p-2 sm:p-2.5 rounded-md transition-colors hover:text-[#0d80f2] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0d80f2]/40"
-              aria-label="GitHub"
-            >
-              <svg
-                class="w-5 h-5 sm:w-6 sm:h-6"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <path
-                  d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"
-                />
-              </svg>
-            </a>
+      <!-- PROJECTS -->
+      <section id="projects" class="w-full scroll-mt-14 py-12">
+        <div class="mx-auto max-w-[960px] px-4">
+          <h2 class="section-header">Projects</h2>
 
-            <!-- LinkedIn -->
-            <a
-              href="https://www.linkedin.com/in/danylo-samedov-b557132b1/"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="p-2 sm:p-2.5 rounded-md transition-colors hover:text-[#0d80f2] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0d80f2]/40"
-              aria-label="LinkedIn"
-            >
-              <svg
-                class="w-5 h-5 sm:w-6 sm:h-6"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <path
-                  d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"
-                />
-                <rect x="2" y="9" width="4" height="12" />
-                <circle cx="4" cy="4" r="2" />
-              </svg>
-            </a>
+          <div class="flex gap-3 p-3 flex-wrap pr-4">
+            <!-- Project filter -->
+            <div class="relative inline-block">
+              <details id="project-filter" class="group">
+                <summary
+                  class="flex items-center gap-2 rounded-xl px-3 py-2 border border-border bg-muted text-foreground cursor-pointer list-none focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 [&::-webkit-details-marker]:hidden"
+                  role="button"
+                  aria-haspopup="listbox"
+                >
+                  <span data-label class="text-sm font-medium">All</span>
+                  <!-- caret icon -->
+                  <svg
+                    class="size-5 transition-transform group-open:rotate-180"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 256 256"
+                    fill="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path
+                      d="M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80A8,8,0,0,1,53.66,90.34L128,164.69l74.34-74.35a8,8,0,0,1,11.32,11.32Z"
+                    />
+                  </svg>
+                </summary>
 
-            <!-- Email -->
-            <a
-              href="mailto:samedovdanylo@gmail.com"
-              class="p-2 sm:p-2.5 rounded-md transition-colors hover:text-[#0d80f2] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0d80f2]/40"
-              aria-label="Email"
-            >
-              <svg
-                class="w-5 h-5 sm:w-6 sm:h-6"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <rect x="3" y="5" width="18" height="14" rx="2" ry="2" />
-                <polyline points="22,6 12,13 2,6" />
-              </svg>
-            </a>
+                <!-- dropdown panel -->
+                <div
+                  class="absolute z-50 mt-2 w-48 rounded-xl border border-border bg-background shadow-lg p-1"
+                  role="listbox"
+                  aria-label="Filter projects"
+                >
+                  <button
+                    type="button"
+                    role="option"
+                    aria-selected="true"
+                    class="w-full text-left rounded-lg px-3 py-2 text-sm hover:bg-muted"
+                    data-filter="all"
+                  >
+                    All
+                  </button>
+                  <button
+                    type="button"
+                    role="option"
+                    class="w-full text-left rounded-lg px-3 py-2 text-sm hover:bg-muted"
+                    data-filter="websites"
+                  >
+                    Websites
+                  </button>
+                  <button
+                    type="button"
+                    role="option"
+                    class="w-full text-left rounded-lg px-3 py-2 text-sm hover:bg-muted"
+                    data-filter="bots"
+                  >
+                    Bots
+                  </button>
+                  <button
+                    type="button"
+                    role="option"
+                    class="w-full text-left rounded-lg px-3 py-2 text-sm hover:bg-muted"
+                    data-filter="programs"
+                  >
+                    Programs
+                  </button>
+                  <button
+                    type="button"
+                    role="option"
+                    class="w-full text-left rounded-lg px-3 py-2 text-sm hover:bg-muted"
+                    data-filter="other"
+                  >
+                    Other
+                  </button>
+                </div>
+              </details>
+            </div>
           </div>
+
+          <div
+            id="projects-grid"
+            class="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4"
+          >
+            <div class="project-card" data-project="websites">
+              <div
+                class="project-image"
+                style="
+                  background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBIuP4151KRv0iJLDSUUcJV2Q1uP6OnJTpswsH2JouBSClElDfTyIM5OXyIkc7qVr8X6uIiz8hrGnUvxQEuTuXZoZbvAtu2P6yIOYs74N_x4MvBIy0pE0Krj8r3TXBfcG0S61Ux0ctlISXf3XdFKQnyuVL2wCe1Eoh5GnyJF0b_U7k5ec-jWTXWoemaILBO96eXaEKr_Whuf56kQZxW4JFoR6wuPCdIxD8Xl_-KDQwul6ThvfW8yTgT3RPRBY4mM5CCNyVCdxWLcQ');
+                "
+              ></div>
+              <div>
+                <p class="text-[#0d141c] text-base font-medium leading-normal">
+                  Codenames Website
+                </p>
+                <p class="text-[#49739c] text-sm font-normal leading-normal">
+                  A full-featured e-commerce platform with user authentication,
+                  product catalog, shopping cart, and payments.
+                </p>
+              </div>
+            </div>
+            <div class="project-card" data-project="websites">
+              <div
+                class="project-image"
+                style="
+                  background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBIuP4151KRv0iJLDSUUcJV2Q1uP6OnJTpswsH2JouBSClElDfTyIM5OXyIkc7qVr8X6uIiz8hrGnUvxQEuTuXZoZbvAtu2P6yIOYs74N_x4MvBIy0pE0Krj8r3TXBfcG0S61Ux0ctlISXf3XdFKQnyuVL2wCe1Eoh5GnyJF0b_U7k5ec-jWTXWoemaILBO96eXaEKr_Whuf56kQZxW4JFoR6wuPCdIxD8Xl_-KDQwul6ThvfW8yTgT3RPRBY4mM5CCNyVCdxWLcQ');
+                "
+              ></div>
+              <div>
+                <p class="text-[#0d141c] text-base font-medium leading-normal">
+                  Portfolio Website
+                </p>
+                <p class="text-[#49739c] text-sm font-normal leading-normal">
+                  A full-featured e-commerce platform with user authentication,
+                  product catalog, shopping cart, and payments.
+                </p>
+              </div>
+            </div>
+
+            <div class="project-card" data-project="bots">
+              <div
+                class="project-image"
+                style="
+                  background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCK_Y_vKSnxjallhE4KJftRL1roiQZgFdp4FQiFIT_Q4CoYK_SZat2ssEbsvLkij2UkMJNKFfGgcgNYKEAgMnLvDfmr6qdUlJuNRriytIDsUuZtlZvv50hKFUW094B9cF-vc6hUnKivTva83srjc4HCd_fnsU5BW4hQ1qbBqvFySx0OyPskciJ4wathWBhbaWcIw5xiWW1_zCK80AyxTar5GIWq5el8bPJgEYEf1eGihjgHB8MqfTSH9WXivH6XFUdI80Mo9GYlSw');
+                "
+              ></div>
+              <div>
+                <p class="text-[#0d141c] text-base font-medium leading-normal">
+                  Telegram bot
+                </p>
+                <p class="text-[#49739c] text-sm font-normal leading-normal">
+                  A task management application with creation, assignment,
+                  prioritization, and progress tracking.
+                </p>
+              </div>
+            </div>
+
+            <div class="project-card" data-project="programs">
+              <div
+                class="project-image"
+                style="
+                  background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDJbDT_zJa01vi1xdYwheXvcx5QWiKzoNdcebzjni7iyIYvLMhoYxzKIRAKFrxHrTRxBhMy8HCT1-55XxKzxKk1wvpKmer3Nz2S6E70GWZ3MyTVv16oBx1zrLt4WriTlSYvWqp0Xm4fvggibwn82etizQcdol2D1v6Y9BWRXzuUm7UerHiPlqJLarnf-4gmwL5nKV7_8HIJU7G1P-rgGhVwV4v-qoNh_2ehfYZBSpNe2yB9L5QjDJJD6K4Ga9SiwRFLJk2NzJqsdw');
+                "
+              ></div>
+              <div>
+                <p class="text-[#0d141c] text-base font-medium leading-normal">
+                  Casino Predict
+                </p>
+                <p class="text-[#49739c] text-sm font-normal leading-normal">
+                  A social media dashboard for managing multiple accounts,
+                  scheduling posts, and analyzing engagement.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SKILLS -->
+      <section id="skills" class="w-full scroll-mt-14 py-12">
+        <div class="mx-auto max-w-[960px] px-4">
+          <h2 class="section-header">Skills</h2>
+          <div class="flex gap-3 p-3 flex-wrap pr-4">
+            <div class="skill-tag">
+              <p class="text-[#0d141c] text-sm font-medium leading-normal">
+                JavaScript
+              </p>
+            </div>
+            <div class="skill-tag">
+              <p class="text-[#0d141c] text-sm font-medium leading-normal">
+                React
+              </p>
+            </div>
+            <div class="skill-tag">
+              <p class="text-[#0d141c] text-sm font-medium leading-normal">
+                Node.js
+              </p>
+            </div>
+            <div class="skill-tag">
+              <p class="text-[#0d141c] text-sm font-medium leading-normal">
+                Python
+              </p>
+            </div>
+            <div class="skill-tag">
+              <p class="text-[#0d141c] text-sm font-medium leading-normal">
+                Django
+              </p>
+            </div>
+            <div class="skill-tag">
+              <p class="text-[#0d141c] text-sm font-medium leading-normal">
+                SQL
+              </p>
+            </div>
+            <div class="skill-tag">
+              <p class="text-[#0d141c] text-sm font-medium leading-normal">
+                NoSQL
+              </p>
+            </div>
+            <div class="skill-tag">
+              <p class="text-[#0d141c] text-sm font-medium leading-normal">
+                HTML
+              </p>
+            </div>
+            <div class="skill-tag">
+              <p class="text-[#0d141c] text-sm font-medium leading-normal">
+                CSS
+              </p>
+            </div>
+            <div class="skill-tag">
+              <p class="text-[#0d141c] text-sm font-medium leading-normal">
+                Git
+              </p>
+            </div>
+            <div class="skill-tag">
+              <p class="text-[#0d141c] text-sm font-medium leading-normal">
+                Docker
+              </p>
+            </div>
+            <div class="skill-tag">
+              <p class="text-[#0d141c] text-sm font-medium leading-normal">
+                AWS
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CONTACT -->
+      <section id="contact" class="w-full scroll-mt-14 py-12">
+        <div class="mx-auto max-w-[960px] px-4">
+          <div class="grid md:grid-cols-5 gap-8 md:gap-12 items-start">
+            <div class="md:col-span-2 text-center md:text-left space-y-4">
+              <h2
+                class="flex items-center justify-center md:justify-start gap-3 text-4xl sm:text-5xl font-extrabold text-[#0d141c]"
+              >
+                Contact Me
+                <svg
+                  class="w-7 h-7"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <rect x="3" y="5" width="18" height="14" rx="2" ry="2"></rect>
+                  <polyline points="22,6 12,13 2,6"></polyline>
+                </svg>
+              </h2>
+              <p class="text-[#49739c]">Let’s work together or just say hi</p>
+
+              <!-- Email pill (with copy) -->
+              <div
+                class="group inline-flex h-10 items-center rounded-full text-[#0d141c] border border-border bg-white/90 shadow-sm transition-colors duration-300 ease-in-out hover:bg-primary hover:text-white hover:border-primary"
+              >
+                <span class="pl-4 pr-2 py-2 select-none font-semibold">
+                  samedovdanylo@gmail.com
+                </span>
+
+                <button
+                  type="button"
+                  class="ml-1.5 mr-1.5 h-8 rounded-full px-3 text-sm font-semibold border border-border bg-primary text-white transition-colors duration-300 ease-in-out group-hover:bg-white/90 group-hover:text-[#0d141c] group-hover:border-white/70 group-focus-within:bg-white/90 group-focus-within:text-[#0d141c] focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
+                  data-copy="samedovdanylo@gmail.com"
+                  data-copied="Copied!"
+                  aria-label="Copy email to clipboard"
+                >
+                  Copy
+                </button>
+              </div>
+
+              <!-- Resume button -->
+              <button
+                class="group relative w-32 h-10 cursor-pointer overflow-hidden rounded-full border border-border bg-white/90 shadow-sm p-2 text-center font-semibold"
+              >
+                <span
+                  class="inline-block translate-x-1 transition-all duration-300 group-hover:translate-x-12 group-hover:opacity-0"
+                  >Resume</span
+                >
+
+                <div
+                  class="absolute top-0 z-10 flex h-full w-full translate-x-12 items-center justify-center gap-2 text-primary-foreground opacity-0 transition-all duration-300 group-hover:-translate-x-1 group-hover:opacity-100"
+                >
+                  <span>Resume</span>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M12 15V3"></path>
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <path d="m7 10 5 5 5-5"></path>
+                  </svg>
+                </div>
+
+                <div
+                  class="absolute left-[15%] top-[40%] h-2 w-2 scale-[1] rounded-lg bg-primary transition-all duration-300 group-hover:left-[0%] group-hover:top-[0%] group-hover:h-full group-hover:w-full group-hover:scale-[1.8] group-hover:bg-primary"
+                ></div>
+              </button>
+            </div>
+
+            <form
+              class="md:col-span-3 rounded-2xl border border-border bg-white/80 backdrop-blur p-6 shadow-sm space-y-4"
+            >
+              <label class="block">
+                <span class="sr-only">Your Name</span>
+                <input
+                  name="name"
+                  type="text"
+                  placeholder="Your Name"
+                  required
+                  class="w-full h-12 rounded-xl bg-white border border-border px-4 text-[#0d141c] placeholder:text-[#7a8ea4] shadow-sm focus:outline-none focus:ring-4 focus:ring-primary/20 focus:border-primary transition"
+                />
+              </label>
+
+              <label class="block">
+                <span class="sr-only">Your Email</span>
+                <input
+                  name="email"
+                  type="email"
+                  placeholder="Your Email"
+                  required
+                  class="w-full h-12 rounded-xl bg-white border border-border px-4 text-[#0d141c] placeholder:text-[#7a8ea4] shadow-sm focus:outline-none focus:ring-4 focus:ring-primary/20 focus:border-primary transition"
+                />
+              </label>
+
+              <label class="block">
+                <span class="sr-only">Your Message</span>
+                <textarea
+                  name="message"
+                  placeholder="Your Message"
+                  required
+                  class="w-full min-h-36 rounded-xl bg-white border border-border p-4 text-[#0d141c] placeholder:text-[#7a8ea4] shadow-sm resize-y focus:outline-none focus:ring-4 focus:ring-primary/20 focus:border-primary transition"
+                ></textarea>
+              </label>
+
+              <div class="flex justify-center pt-1">
+                <button
+                  type="submit"
+                  class="inline-flex items-center gap-2 rounded-full h-12 px-6 bg-[#0d141c] text-white text-sm sm:text-base font-semibold hover:bg-[#0b1620] active:translate-y-[1px] transition"
+                >
+                  Send Message
+                  <svg
+                    class="w-5 h-5"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M22 2L11 13"></path>
+                    <path d="M22 2l-7 20-4-9-9-4 20-7z"></path>
+                  </svg>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer
+      class="w-full border-t border-border py-6 px-4 text-sm text-muted-foreground"
+    >
+      <div
+        class="mx-auto max-w-[960px] flex flex-col md:flex-row items-center justify-between gap-3"
+      >
+        <p class="text-center md:text-left">
+          © 2025 Danylo Samedov. All rights reserved.
+        </p>
+
+        <div class="flex items-center gap-4">
+          <!-- GitHub -->
+          <a
+            href="https://github.com/your-username"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="hover:text-foreground transition-colors focus-ring rounded-md"
+            aria-label="GitHub"
+          >
+            <svg
+              class="w-5 h-5"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path
+                d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"
+              />
+            </svg>
+          </a>
+
+          <!-- LinkedIn -->
+          <a
+            href="https://www.linkedin.com/in/your-profile"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="hover:text-foreground transition-colors focus-ring rounded-md"
+            aria-label="LinkedIn"
+          >
+            <svg
+              class="w-5 h-5"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path
+                d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"
+              />
+              <rect x="2" y="9" width="4" height="12" />
+              <circle cx="4" cy="4" r="2" />
+            </svg>
+          </a>
+
+          <!-- Email -->
+          <a
+            href="mailto:samedovdanylo@gmail.com"
+            class="hover:text-foreground transition-colors focus-ring rounded-md"
+            aria-label="Email"
+          >
+            <svg
+              class="w-5 h-5"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <rect x="3" y="5" width="18" height="14" rx="2" ry="2" />
+              <polyline points="22,6 12,13 2,6" />
+            </svg>
+          </a>
         </div>
       </div>
     </footer>
