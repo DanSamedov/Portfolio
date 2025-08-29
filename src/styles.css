@@ -36,12 +36,18 @@
   --color-border: #d6e3f3;
   --color-ring: var(--color-primary);
   --radius: 0.75rem;
+
+  /* Page background gradient (light) */
+  --bg-page-angle: 145deg;
+  --bg-page-start: #d9d8df;
+  /* rgb(217,216,223) */
+  --bg-page-end: #ffffff;
 }
 
 /* Dark theme palette */
 :root.dark,
 [data-theme="dark"] {
-  --color-background: #0b1220;
+  --color-background: #DBDBE1;
   --color-foreground: #e6edf6;
   --color-muted: #0f172a;
   --color-muted-foreground: #93a4b7;
@@ -49,6 +55,10 @@
   --color-primary-foreground: #0b1220;
   --color-border: #1f2a44;
   --color-ring: #60a5fa;
+
+  /* Optional dark gradient */
+  --bg-page-start: #1e293b;
+  --bg-page-end: #0f172a;
 }
 
 /* ===== Base layer ===== */
@@ -57,10 +67,26 @@
     scroll-behavior: smooth;
   }
 
+  /* Ensure full-height background paint */
+  html,
   body {
-    @apply bg-background text-foreground antialiased;
+    min-height: 100%;
+  }
+
+  /* Centralized site background */
+  body {
+    @apply text-foreground antialiased;
     font-feature-settings: "rlig" 1, "calt" 1;
     font-family: var(--font-sans);
+
+    background-color: var(--color-background);
+    background-image: linear-gradient(var(--bg-page-angle),
+        var(--bg-page-start),
+        var(--bg-page-end));
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: scroll;
+    /* better mobile perf */
   }
 
   h1,
@@ -80,7 +106,7 @@
     margin-top: 3rem;
   }
 
-  /* Smooth scrolling for all elements */
+  /* Smooth color transitions */
   * {
     @apply transition-colors duration-200 ease-in-out;
   }
@@ -89,63 +115,67 @@
 /* ===== Components layer ===== */
 @layer components {
 
-  /* Reusable glass container for the floating nav */
+  /* Floating nav glass */
   .nav-glass {
     @apply bg-background/60 border border-border/60 backdrop-blur-lg shadow-lg;
   }
 
-  /* Enhanced button styles */
+  /* Buttons */
   .btn-primary {
-    @apply inline-flex items-center justify-center rounded-xl bg-primary text-primary-foreground font-bold h-10 px-4 @[480px]:h-12 @[480px]:px-5 transition-all duration-200 ease-in-out hover:bg-primary/90 hover:transform hover:scale-105 hover:shadow-lg active:scale-95;
+    @apply inline-flex items-center justify-center rounded-xl bg-primary text-primary-foreground font-bold h-10 px-4 @[480px]:h-12 @[480px]:px-5 transition-all duration-250 ease-in-out hover:bg-primary/90 hover:shadow-lg active:scale-95;
   }
 
   .btn-secondary {
-    @apply inline-flex items-center justify-center rounded-xl bg-muted text-foreground font-bold h-10 px-4 @[480px]:h-12 @[480px]:px-5 transition-all duration-200 ease-in-out hover:bg-muted/80 hover:transform hover:scale-105 hover:shadow-md active:scale-95;
+    @apply inline-flex items-center justify-center rounded-xl bg-muted text-foreground font-bold h-10 px-4 @[480px]:h-12 @[480px]:px-5 transition-all duration-250 ease-in-out hover:bg-muted/80 hover:shadow-md active:scale-95;
   }
 
-  /* Filter button styles */
+  /* Filter pill */
   .filter-btn {
-    @apply flex h-8 shrink-0 items-center justify-center gap-x-2 rounded-xl bg-muted pl-4 pr-2 transition-all duration-200 ease-in-out hover:bg-muted/80 hover:scale-105 cursor-pointer;
+    @apply flex h-8 shrink-0 items-center justify-center gap-x-2 rounded-xl bg-muted pl-4 pr-2 transition-all duration-200 ease-in-out hover:bg-muted/80 cursor-pointer;
   }
 
   .filter-btn.active {
     @apply bg-primary text-primary-foreground shadow-md;
   }
 
-  /* Enhanced form inputs */
+  /* Inputs */
   .form-input {
     @apply bg-muted text-foreground placeholder-muted-foreground rounded-xl border-none ring-0 focus:outline-none transition-all duration-200 ease-in-out;
   }
 
   .form-input:focus {
-    @apply ring-2 ring-primary/60 shadow-lg transform scale-[1.02];
+    @apply ring-2 ring-primary/60 shadow-lg;
+    transform: scale(1.02);
   }
 
-  /* Project card styles */
+  /* Project card (gentle lift only) */
   .project-card {
-    @apply flex flex-col gap-3 pb-3 transition-all duration-300 ease-in-out hover:transform hover:scale-105 hover:shadow-xl;
+    @apply flex flex-col gap-3 pb-3 transition-all duration-300 ease-in-out hover:shadow-xl;;
   }
 
-  .project-image {
-    @apply w-full bg-center bg-no-repeat aspect-video bg-cover rounded-xl transition-transform duration-300 ease-in-out;
+  .project-card:hover {
+    background-color: rgba(0, 0, 0, 0.35) !important;
+    transform: translateY(-10px) scale(1.06);
   }
 
-  .project-card:hover .project-image {
-    @apply scale-110;
+  .project-card> :last-child img {
+    transition: transform 420ms cubic-bezier(.22, .61, .36, 1);
+    will-change: transform;
   }
 
-  /* Skill tag styles */
+  /* Skill tag */
   .skill-tag {
-    @apply flex h-8 shrink-0 items-center justify-center gap-x-2 rounded-xl bg-muted pl-4 pr-4 transition-all duration-200 ease-in-out hover:bg-primary hover:text-primary-foreground hover:scale-110 hover:shadow-md cursor-pointer;
+    @apply flex h-8 shrink-0 items-center justify-center gap-x-2 rounded-xl bg-muted pl-4 pr-4 transition-all duration-200 ease-in-out hover:bg-primary hover:text-primary-foreground hover:shadow-md cursor-pointer;
+    transform: translateZ(0);
   }
 
-  /* Social media icon styles */
+  /* Social icons */
   .social-icon {
-    @apply flex flex-col items-center gap-2 bg-slate-50 py-2.5 text-center transition-all duration-200 ease-in-out hover:scale-110 hover:bg-primary hover:text-primary-foreground;
+    @apply flex flex-col items-center gap-2 bg-slate-50 py-2.5 text-center transition-all duration-200 ease-in-out hover:bg-primary hover:text-primary-foreground;
   }
 
   .social-icon:hover {
-    @apply transform rotate-3;
+    transform: rotate(3deg) scale(1.05);
   }
 
   .social-icon-bg {
@@ -156,20 +186,20 @@
     @apply bg-primary/20;
   }
 
-  /* Navigation link styles */
+  /* Nav link */
   .nav-link {
-    @apply relative inline-flex items-center gap-2 text-sm font-semibold px-3 sm:px-5 py-2 rounded-full transition-all duration-200 ease-in-out hover:transform hover:scale-105 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/60;
+    @apply relative inline-flex items-center gap-2 text-sm font-semibold px-3 sm:px-5 py-2 rounded-full transition-all duration-200 ease-in-out focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/60;
   }
 
   .nav-link:hover {
-    @apply transform scale-105;
+    transform: translateY(-1px);
   }
 
   .nav-link[aria-current="page"] {
     @apply bg-muted text-primary shadow-lg;
   }
 
-  /* Hero section styles */
+  /* Hero */
   .hero-content {
     @apply flex flex-col gap-2 text-left;
     animation: fade-in-up 0.6s ease-out forwards;
@@ -193,9 +223,64 @@
     @apply gap-4;
   }
 
-  /* Section headers */
+  /* Section header */
   .section-header {
     @apply text-foreground text-[22px] font-bold leading-tight tracking-[-0.015em] px-4 pb-3 pt-5 transition-all duration-200 ease-in-out hover:text-primary;
+  }
+
+  /* Modal close button (pixel-perfect center) */
+  .modal-close {
+    display: grid;
+    place-items: center;
+    width: 2.5rem;
+    /* 40px */
+    height: 2.5rem;
+    padding: 0;
+    line-height: 0;
+    -webkit-appearance: none;
+    appearance: none;
+    border: 0;
+  }
+
+  .modal-close svg {
+    display: block;
+    width: 20px;
+    height: 20px;
+  }
+
+  /* Modal action pills (Live / GitHub) */
+  .modal-actions a,
+  .pill-link {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    padding: .5rem .875rem;
+    border-radius: 9999px;
+    background: rgba(0, 0, 0, .72);
+    color: #fff;
+    font-weight: 600;
+    line-height: 1;
+    transition: transform 200ms ease, opacity 200ms ease, background 200ms ease;
+  }
+
+  .modal-actions a:hover,
+  .pill-link:hover {
+    background: rgba(0, 0, 0, .85);
+    transform: translateY(-1px);
+  }
+
+  .modal-actions a:focus-visible,
+  .pill-link:focus-visible {
+    outline: 2px solid rgba(255, 255, 255, .7);
+    outline-offset: 2px;
+  }
+
+  .modal-actions a svg,
+  .pill-link svg {
+    display: block;
+    width: 18px;
+    height: 18px;
+    flex: 0 0 auto;
   }
 }
 
@@ -263,8 +348,11 @@
   }
 }
 
-/* ===== High contrast mode support ===== */
+/* ===== High contrast mode ===== */
 @media (prefers-contrast: high) {
+  body {
+    background-image: none;
+  }
 
   .btn-primary,
   .btn-secondary {
@@ -276,7 +364,7 @@
   }
 }
 
-/* ===== Reduced motion support ===== */
+/* ===== Reduced motion ===== */
 @media (prefers-reduced-motion: reduce) {
 
   *,

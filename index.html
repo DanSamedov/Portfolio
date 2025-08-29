@@ -147,8 +147,8 @@
         <div class="mx-auto max-w-[960px] px-4">
           <h2 class="section-header">Projects</h2>
 
+          <!-- Filter (unchanged) -->
           <div class="flex gap-3 p-3 flex-wrap pr-4">
-            <!-- Project filter -->
             <div class="relative inline-block">
               <details id="project-filter" class="group">
                 <summary
@@ -157,7 +157,6 @@
                   aria-haspopup="listbox"
                 >
                   <span data-label class="text-sm font-medium">All</span>
-                  <!-- caret icon -->
                   <svg
                     class="size-5 transition-transform group-open:rotate-180"
                     xmlns="http://www.w3.org/2000/svg"
@@ -170,8 +169,6 @@
                     />
                   </svg>
                 </summary>
-
-                <!-- dropdown panel -->
                 <div
                   class="absolute z-50 mt-2 w-48 rounded-xl border border-border bg-background shadow-lg p-1"
                   role="listbox"
@@ -223,78 +220,275 @@
             </div>
           </div>
 
+          <!-- Cards -->
           <div
             id="projects-grid"
-            class="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4"
+            class="grid grid-cols-1 sm:grid-cols-2 gap-6 p-4"
           >
-            <div class="project-card" data-project="websites">
+            <!-- Card -->
+            <div
+              class="project-card group relative cursor-pointer rounded-xl overflow-hidden border border-white/20 dark:border-white/10 backdrop-blur-sm transition-all duration-700 ease-[cubic-bezier(.22,.61,.36,1)] hover:shadow-lg"
+              data-project="websites"
+              data-live="https://your-live-site.com"
+              data-repo="https://github.com/you/your-repo"
+              style="
+                box-shadow: rgba(0, 0, 0, 0.05) 0 2px 10px;
+                background: radial-gradient(
+                  circle at 50% 0%,
+                  rgb(81, 251, 251),
+                  rgb(13, 1, 60)
+                );
+              "
+            >
+              <!-- hover overlay -->
               <div
-                class="project-image"
-                style="
-                  background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBIuP4151KRv0iJLDSUUcJV2Q1uP6OnJTpswsH2JouBSClElDfTyIM5OXyIkc7qVr8X6uIiz8hrGnUvxQEuTuXZoZbvAtu2P6yIOYs74N_x4MvBIy0pE0Krj8r3TXBfcG0S61Ux0ctlISXf3XdFKQnyuVL2wCe1Eoh5GnyJF0b_U7k5ec-jWTXWoemaILBO96eXaEKr_Whuf56kQZxW4JFoR6wuPCdIxD8Xl_-KDQwul6ThvfW8yTgT3RPRBY4mM5CCNyVCdxWLcQ');
-                "
+                class="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity duration-700 ease-[cubic-bezier(.22,.61,.36,1)] z-0"
               ></div>
-              <div>
-                <p class="text-[#0d141c] text-base font-medium leading-normal">
-                  Codenames Website
-                </p>
-                <p class="text-[#49739c] text-sm font-normal leading-normal">
-                  A full-featured e-commerce platform with user authentication,
-                  product catalog, shopping cart, and payments.
-                </p>
+
+              <!-- top content -->
+              <div
+                class="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6 px-6 pt-4"
+              >
+                <div class="text-white w-full md:w-2/3">
+                  <h3 class="text-xl md:text-2xl font-bold">Codenames</h3>
+                  <p class="mt-2 text-sm md:text-base text-white/80">
+                    Party game played in the browser.
+                  </p>
+                </div>
+
+                <!-- icon pills -->
+                <div
+                  class="flex justify-center md:justify-end transition-all duration-700 ease-[cubic-bezier(.22,.61,.36,1)]"
+                >
+                  <div
+                    class="w-12 h-12 rounded-full bg-white dark:bg-neutral-900 flex items-center justify-center text-[24px] shadow-md -ml-2 group-hover:ml-0 transition-all duration-700 ease-[cubic-bezier(.22,.61,.36,1)]"
+                    style="z-index: 3"
+                  >
+                    <!-- React -->
+                    <svg
+                      viewBox="0 0 24 24"
+                      class="text-sky-500"
+                      width="1em"
+                      height="1em"
+                      fill="currentColor"
+                      aria-hidden="true"
+                    >
+                      <path
+                        d="M14.23 12a2.23 2.23 0 1 1-4.46 0 2.23 2.23 0 0 1 4.46 0ZM12 7.08c-1.54 0-2.96.2-4.02.54C6.9 8 .5 10.37.5 12s6.4 4 7.48 4.38c1.06.34 2.48.54 4.02.54s2.96-.2 4.02-.54C17.1 16 23.5 13.63 23.5 12s-6.4-4-7.48-4.38c-1.06-.34-2.48-.54-4.02-.54Z"
+                      />
+                    </svg>
+                  </div>
+                  <div
+                    class="w-12 h-12 rounded-full bg-white dark:bg-neutral-900 flex items-center justify-center text-[24px] shadow-md -ml-2 group-hover:ml-0 transition-all duration-700 ease-[cubic-bezier(.22,.61,.36,1)]"
+                    style="z-index: 2"
+                  >
+                    <span class="font-bold text-blue-600">TS</span>
+                  </div>
+                  <div
+                    class="w-12 h-12 rounded-full bg-white dark:bg-neutral-900 flex items-center justify-center text-[24px] shadow-md -ml-2 group-hover:ml-0 transition-all duration-700 ease-[cubic-bezier(.22,.61,.36,1)]"
+                    style="z-index: 1"
+                  >
+                    <!-- Node -->
+                    <svg
+                      viewBox="0 0 24 24"
+                      class="text-green-500"
+                      width="1em"
+                      height="1em"
+                      fill="currentColor"
+                      aria-hidden="true"
+                    >
+                      <path
+                        d="M12 .5 1.5 6.6v10.8L12 23.5l10.5-6.1V6.6L12 .5Zm4.6 14.3c0 1.8-1.1 2.8-3.1 2.8-.9 0-1.9-.2-2.7-.7V15c.8.5 1.6.8 2.5.8 1 0 1.6-.4 1.6-1.2 0-.6-.4-1-1.7-1.5-1.7-.6-2.8-1.3-2.8-3 0-1.8 1.4-2.8 3-2.8.9 0 1.7.2 2.4.6v1.9c-.7-.4-1.4-.6-2.2-.6-.8 0-1.3.3-1.3.9 0 .6.5.9 1.9 1.4 1.9.7 2.4 1.5 2.4 3z"
+                      />
+                    </svg>
+                  </div>
+                </div>
               </div>
-            </div>
-            <div class="project-card" data-project="websites">
+
+              <!-- bottom image -->
               <div
-                class="project-image"
-                style="
-                  background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBIuP4151KRv0iJLDSUUcJV2Q1uP6OnJTpswsH2JouBSClElDfTyIM5OXyIkc7qVr8X6uIiz8hrGnUvxQEuTuXZoZbvAtu2P6yIOYs74N_x4MvBIy0pE0Krj8r3TXBfcG0S61Ux0ctlISXf3XdFKQnyuVL2wCe1Eoh5GnyJF0b_U7k5ec-jWTXWoemaILBO96eXaEKr_Whuf56kQZxW4JFoR6wuPCdIxD8Xl_-KDQwul6ThvfW8yTgT3RPRBY4mM5CCNyVCdxWLcQ');
-                "
-              ></div>
-              <div>
-                <p class="text-[#0d141c] text-base font-medium leading-normal">
-                  Portfolio Website
-                </p>
-                <p class="text-[#49739c] text-sm font-normal leading-normal">
-                  A full-featured e-commerce platform with user authentication,
-                  product catalog, shopping cart, and payments.
-                </p>
+                class="relative bottom-[-40px] w-full flex justify-center items-end z-10 max-h-[180px] sm:max-h-[300px] md:max-h-none"
+              >
+                <img
+                  alt="Codenames Website preview"
+                  class="duration-700 ease-[cubic-bezier(.22,.61,.36,1)] group-hover:-translate-y-2 object-contain rounded-t-2xl w-[80%]"
+                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuBIuP4151KRv0iJLDSUUcJV2Q1uP6OnJTpswsH2JouBSClElDfTyIM5OXyIkc7qVr8X6uIiz8hrGnUvxQEuTuXZoZbvAtu2P6yIOYs74N_x4MvBIy0pE0Krj8r3TXBfcG0S61Ux0ctlISXf3XdFKQnyuVL2wCe1Eoh5GnyJF0b_U7k5ec-jWTXWoemaILBO96eXaEKr_Whuf56kQZxW4JFoR6wuPCdIxD8Xl_-KDQwul6ThvfW8yTgT3RPRBY4mM5CCNyVCdxWLcQ"
+                />
               </div>
             </div>
 
-            <div class="project-card" data-project="bots">
+            <!-- Card -->
+            <div
+              class="project-card group relative cursor-pointer rounded-xl overflow-hidden border border-white/20 dark:border-white/10 backdrop-blur-sm transition-all duration-700 ease-[cubic-bezier(.22,.61,.36,1)] hover:shadow-lg"
+              data-project="websites"
+              style="
+                box-shadow: rgba(0, 0, 0, 0.05) 0 2px 10px;
+                background: radial-gradient(
+                  circle at 50% 0%,
+                  rgb(20, 241, 149),
+                  rgb(13, 1, 60)
+                );
+              "
+            >
               <div
-                class="project-image"
-                style="
-                  background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCK_Y_vKSnxjallhE4KJftRL1roiQZgFdp4FQiFIT_Q4CoYK_SZat2ssEbsvLkij2UkMJNKFfGgcgNYKEAgMnLvDfmr6qdUlJuNRriytIDsUuZtlZvv50hKFUW094B9cF-vc6hUnKivTva83srjc4HCd_fnsU5BW4hQ1qbBqvFySx0OyPskciJ4wathWBhbaWcIw5xiWW1_zCK80AyxTar5GIWq5el8bPJgEYEf1eGihjgHB8MqfTSH9WXivH6XFUdI80Mo9GYlSw');
-                "
+                class="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity duration-700 ease-[cubic-bezier(.22,.61,.36,1)] z-0"
               ></div>
-              <div>
-                <p class="text-[#0d141c] text-base font-medium leading-normal">
-                  Telegram bot
-                </p>
-                <p class="text-[#49739c] text-sm font-normal leading-normal">
-                  A task management application with creation, assignment,
-                  prioritization, and progress tracking.
-                </p>
+              <div
+                class="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6 px-6 pt-4"
+              >
+                <div class="text-white w-full md:w-2/3">
+                  <h3 class="text-xl md:text-2xl font-bold">
+                    Portfolio Website
+                  </h3>
+                  <p class="mt-2 text-sm md:text-base text-white/80">
+                    Personal site with smooth sections, filters, and responsive
+                    layout.
+                  </p>
+                </div>
+                <div class="flex justify-center md:justify-end">
+                  <div
+                    class="w-12 h-12 rounded-full bg-white dark:bg-neutral-900 flex items-center justify-center text-[24px] shadow-md -ml-2 group-hover:ml-0 transition-all duration-700 ease-[cubic-bezier(.22,.61,.36,1)]"
+                    style="z-index: 3"
+                  >
+                    <span class="font-bold text-indigo-600">HTML</span>
+                  </div>
+                  <div
+                    class="w-12 h-12 rounded-full bg-white dark:bg-neutral-900 flex items-center justify-center text-[24px] shadow-md -ml-2 group-hover:ml-0 transition-all duration-700 ease-[cubic-bezier(.22,.61,.36,1)]"
+                    style="z-index: 2"
+                  >
+                    <span class="font-bold text-cyan-600">CSS</span>
+                  </div>
+                  <div
+                    class="w-12 h-12 rounded-full bg-white dark:bg-neutral-900 flex items-center justify-center text-[24px] shadow-md -ml-2 group-hover:ml-0 transition-all duration-700 ease-[cubic-bezier(.22,.61,.36,1)]"
+                    style="z-index: 1"
+                  >
+                    <span class="font-bold text-emerald-600">JS</span>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="relative bottom-[-40px] w-full flex justify-center items-end z-10 max-h-[180px] sm:max-h-[300px] md:max-h-none"
+              >
+                <img
+                  alt="Portfolio preview"
+                  class="duration-700 ease-[cubic-bezier(.22,.61,.36,1)] group-hover:-translate-y-2 object-contain rounded-t-2xl w-[80%]"
+                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuBIuP4151KRv0iJLDSUUcJV2Q1uP6OnJTpswsH2JouBSClElDfTyIM5OXyIkc7qVr8X6uIiz8hrGnUvxQEuTuXZoZbvAtu2P6yIOYs74N_x4MvBIy0pE0Krj8r3TXBfcG0S61Ux0ctlISXf3XdFKQnyuVL2wCe1Eoh5GnyJF0b_U7k5ec-jWTXWoemaILBO96eXaEKr_Whuf56kQZxW4JFoR6wuPCdIxD8Xl_-KDQwul6ThvfW8yTgT3RPRBY4mM5CCNyVCdxWLcQ"
+                />
               </div>
             </div>
 
-            <div class="project-card" data-project="programs">
+            <!-- Card -->
+            <div
+              class="project-card group relative cursor-pointer rounded-xl overflow-hidden border border-white/20 dark:border-white/10 backdrop-blur-sm transition-all duration-700 ease-[cubic-bezier(.22,.61,.36,1)] hover:shadow-lg"
+              data-project="bots"
+              style="
+                box-shadow: rgba(0, 0, 0, 0.05) 0 2px 10px;
+                background: radial-gradient(
+                  circle at 50% 0%,
+                  rgb(102, 68, 238),
+                  rgb(13, 1, 60)
+                );
+              "
+            >
               <div
-                class="project-image"
-                style="
-                  background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDJbDT_zJa01vi1xdYwheXvcx5QWiKzoNdcebzjni7iyIYvLMhoYxzKIRAKFrxHrTRxBhMy8HCT1-55XxKzxKk1wvpKmer3Nz2S6E70GWZ3MyTVv16oBx1zrLt4WriTlSYvWqp0Xm4fvggibwn82etizQcdol2D1v6Y9BWRXzuUm7UerHiPlqJLarnf-4gmwL5nKV7_8HIJU7G1P-rgGhVwV4v-qoNh_2ehfYZBSpNe2yB9L5QjDJJD6K4Ga9SiwRFLJk2NzJqsdw');
-                "
+                class="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity duration-700 ease-[cubic-bezier(.22,.61,.36,1)] z-0"
               ></div>
-              <div>
-                <p class="text-[#0d141c] text-base font-medium leading-normal">
-                  Casino Predict
-                </p>
-                <p class="text-[#49739c] text-sm font-normal leading-normal">
-                  A social media dashboard for managing multiple accounts,
-                  scheduling posts, and analyzing engagement.
-                </p>
+              <div
+                class="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6 px-6 pt-4"
+              >
+                <div class="text-white w-full md:w-2/3">
+                  <h3 class="text-xl md:text-2xl font-bold">Telegram Bot</h3>
+                  <p class="mt-2 text-sm md:text-base text-white/80">
+                    Automates tasks and notifications with commands and
+                    webhooks.
+                  </p>
+                </div>
+                <div class="flex justify-center md:justify-end">
+                  <div
+                    class="w-12 h-12 rounded-full bg-white dark:bg-neutral-900 flex items-center justify-center text-[24px] shadow-md -ml-2 group-hover:ml-0 transition-all duration-700 ease-[cubic-bezier(.22,.61,.36,1)]"
+                    style="z-index: 3"
+                  >
+                    <span class="font-bold text-sky-600">@</span>
+                  </div>
+                  <div
+                    class="w-12 h-12 rounded-full bg-white dark:bg-neutral-900 flex items-center justify-center text-[24px] shadow-md -ml-2 group-hover:ml-0 transition-all duration-700 ease-[cubic-bezier(.22,.61,.36,1)]"
+                    style="z-index: 2"
+                  >
+                    <span class="font-bold text-green-600">API</span>
+                  </div>
+                  <div
+                    class="w-12 h-12 rounded-full bg-white dark:bg-neutral-900 flex items-center justify-center text-[24px] shadow-md -ml-2 group-hover:ml-0 transition-all duration-700 ease-[cubic-bezier(.22,.61,.36,1)]"
+                    style="z-index: 1"
+                  >
+                    <span class="font-bold text-slate-800">DX</span>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="relative bottom-[-40px] w-full flex justify-center items-end z-10 max-h-[180px] sm:max-h-[300px] md:max-h-none"
+              >
+                <img
+                  alt="Telegram bot preview"
+                  class="duration-700 ease-[cubic-bezier(.22,.61,.36,1)] group-hover:-translate-y-2 object-contain rounded-t-2xl w-[80%]"
+                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuCK_Y_vKSnxjallhE4KJftRL1roiQZgFdp4FQiFIT_Q4CoYK_SZat2ssEbsvLkij2UkMJNKFfGgcgNYKEAgMnLvDfmr6qdUlJuNRriytIDsUuZtlZvv50hKFUW094B9cF-vc6hUnKivTva83srjc4HCd_fnsU5BW4hQ1qbBqvFySx0OyPskciJ4wathWBhbaWcIw5xiWW1_zCK80AyxTar5GIWq5el8bPJgEYEf1eGihjgHB8MqfTSH9WXivH6XFUdI80Mo9GYlSw"
+                />
+              </div>
+            </div>
+
+            <!-- Card -->
+            <div
+              class="project-card group relative cursor-pointer rounded-xl overflow-hidden border border-white/20 dark:border-white/10 backdrop-blur-sm transition-all duration-700 ease-[cubic-bezier(.22,.61,.36,1)] hover:shadow-lg"
+              data-project="programs"
+              style="
+                box-shadow: rgba(0, 0, 0, 0.05) 0 2px 10px;
+                background: radial-gradient(
+                  circle at 50% 0%,
+                  rgb(20, 141, 241),
+                  rgb(13, 1, 60)
+                );
+              "
+            >
+              <div
+                class="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity duration-700 ease-[cubic-bezier(.22,.61,.36,1)] z-0"
+              ></div>
+              <div
+                class="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6 px-6 pt-4"
+              >
+                <div class="text-white w-full md:w-2/3">
+                  <h3 class="text-xl md:text-2xl font-bold">Casino Predict</h3>
+                  <p class="mt-2 text-sm md:text-base text-white/80">
+                    Stats-heavy simulator with charts and strategy testing.
+                  </p>
+                </div>
+                <div class="flex justify-center md:justify-end">
+                  <div
+                    class="w-12 h-12 rounded-full bg-white dark:bg-neutral-900 flex items-center justify-center text-[24px] shadow-md -ml-2 group-hover:ml-0 transition-all duration-700 ease-[cubic-bezier(.22,.61,.36,1)]"
+                    style="z-index: 3"
+                  >
+                    <span class="font-bold text-rose-600">Py</span>
+                  </div>
+                  <div
+                    class="w-12 h-12 rounded-full bg-white dark:bg-neutral-900 flex items-center justify-center text-[24px] shadow-md -ml-2 group-hover:ml-0 transition-all duration-700 ease-[cubic-bezier(.22,.61,.36,1)]"
+                    style="z-index: 2"
+                  >
+                    <span class="font-bold text-violet-600">DB</span>
+                  </div>
+                  <div
+                    class="w-12 h-12 rounded-full bg-white dark:bg-neutral-900 flex items-center justify-center text-[24px] shadow-md -ml-2 group-hover:ml-0 transition-all duration-700 ease-[cubic-bezier(.22,.61,.36,1)]"
+                    style="z-index: 1"
+                  >
+                    <span class="font-bold text-emerald-600">ML</span>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="relative bottom-[-40px] w-full flex justify-center items-end z-10 max-h-[180px] sm:max-h-[300px] md:max-h-none"
+              >
+                <img
+                  alt="Casino Predict preview"
+                  class="duration-700 ease-[cubic-bezier(.22,.61,.36,1)] group-hover:-translate-y-2 object-contain rounded-t-2xl w-[80%]"
+                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuDJbDT_zJa01vi1xdYwheXvcx5QWiKzoNdcebzjni7iyIYvLMhoYxzKIRAKFrxHrTRxBhMy8HCT1-55XxKzxKk1wvpKmer3Nz2S6E70GWZ3MyTVv16oBx1zrLt4WriTlSYvWqp0Xm4fvggibwn82etizQcdol2D1v6Y9BWRXzuUm7UerHiPlqJLarnf-4gmwL5nKV7_8HIJU7G1P-rgGhVwV4v-qoNh_2ehfYZBSpNe2yB9L5QjDJJD6K4Ga9SiwRFLJk2NzJqsdw"
+                />
               </div>
             </div>
           </div>
@@ -527,20 +721,21 @@
         <div class="flex items-center gap-4">
           <!-- GitHub -->
           <a
-            href="https://github.com/your-username"
+            href="https://github.com/DanSamedov"
             target="_blank"
             rel="noopener noreferrer"
-            class="hover:text-foreground transition-colors focus-ring rounded-md"
+            class="text-muted-foreground hover:text-primary transition-colors focus-ring rounded-md"
             aria-label="GitHub"
           >
             <svg
-              class="w-5 h-5"
+              class="w-5 h-5 transition-colors"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
               stroke-width="2"
               stroke-linecap="round"
               stroke-linejoin="round"
+              aria-hidden="true"
             >
               <path
                 d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"
@@ -550,10 +745,10 @@
 
           <!-- LinkedIn -->
           <a
-            href="https://www.linkedin.com/in/your-profile"
+            href="https://www.linkedin.com/in/danylo-samedov-b557132b1/"
             target="_blank"
             rel="noopener noreferrer"
-            class="hover:text-foreground transition-colors focus-ring rounded-md"
+            class="text-muted-foreground hover:text-primary transition-colors focus-ring rounded-md"
             aria-label="LinkedIn"
           >
             <svg
@@ -564,6 +759,7 @@
               stroke-width="2"
               stroke-linecap="round"
               stroke-linejoin="round"
+              aria-hidden="true"
             >
               <path
                 d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"
@@ -576,7 +772,7 @@
           <!-- Email -->
           <a
             href="mailto:samedovdanylo@gmail.com"
-            class="hover:text-foreground transition-colors focus-ring rounded-md"
+            class="text-muted-foreground hover:text-primary transition-colors focus-ring rounded-md"
             aria-label="Email"
           >
             <svg
@@ -587,6 +783,7 @@
               stroke-width="2"
               stroke-linecap="round"
               stroke-linejoin="round"
+              aria-hidden="true"
             >
               <rect x="3" y="5" width="18" height="14" rx="2" ry="2" />
               <polyline points="22,6 12,13 2,6" />
