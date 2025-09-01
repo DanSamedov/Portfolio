@@ -29,8 +29,7 @@
   --color-muted: #e7edf4;
   /* pale blue */
   --color-muted-foreground: #49739c;
-  /* desaturated blue */
-  --color-primary: #0d80f2;
+  --color-primary: #1f1f1f;
   /* brand blue */
   --color-primary-foreground: #ffffff;
   --color-border: #d6e3f3;
@@ -122,11 +121,11 @@
 
   /* Buttons */
   .btn-primary {
-    @apply inline-flex items-center justify-center rounded-xl bg-primary text-primary-foreground font-bold h-10 px-4 @[480px]:h-12 @[480px]:px-5 transition-all duration-250 ease-in-out hover:bg-primary/90 hover:shadow-lg active:scale-95;
+    @apply inline-flex items-center justify-center rounded-xl bg-primary text-primary-foreground font-bold h-10 px-4 @[480px]:h-12 @[480px]:px-5 transition-all duration-200 ease-in-out hover:bg-primary/90 hover:shadow-lg active:scale-95;
   }
 
   .btn-secondary {
-    @apply inline-flex items-center justify-center rounded-xl bg-muted text-foreground font-bold h-10 px-4 @[480px]:h-12 @[480px]:px-5 transition-all duration-250 ease-in-out hover:bg-muted/80 hover:shadow-md active:scale-95;
+    @apply inline-flex items-center justify-center rounded-xl bg-muted text-foreground font-bold h-10 px-4 @[480px]:h-12 @[480px]:px-5 transition-all duration-200 ease-in-out hover:bg-muted/80 hover:shadow-md active:scale-95;
   }
 
   /* Filter pill */
@@ -150,7 +149,7 @@
 
   /* Project card (gentle lift only) */
   .project-card {
-    @apply flex flex-col gap-3 pb-3 transition-all duration-300 ease-in-out hover:shadow-xl;;
+    @apply flex flex-col gap-3 pb-3 transition-all duration-300 ease-in-out hover:shadow-xl;
   }
 
   .project-card:hover {
@@ -281,6 +280,31 @@
     width: 18px;
     height: 18px;
     flex: 0 0 auto;
+  }
+
+  /* Grid wrapper (optional helper to avoid repeating grid classes) */
+  .skills-grid {
+    @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-8;
+  }
+
+  /* Card */
+  .skill-card {
+      @apply rounded-xl border border-border/60 bg-muted/50 backdrop-blur-md p-4 shadow-sm transition-all duration-300 ease-out hover:bg-muted/70 hover:shadow-md focus-within:ring-2 focus-within:ring-primary/40;
+    }
+  /* Category title */
+  .skill-title {
+    @apply text-sm font-semibold tracking-wide text-primary uppercase;
+  }
+
+  /* Pills */
+  .skill-pill {
+    @apply inline-flex items-center gap-1 rounded-full border border-border/60 bg-background/60 px-3 py-1.5 text-sm text-foreground shadow-sm transition duration-200 ease-out hover:bg-background/80 hover:-translate-y-0.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40;
+  }
+
+  /* Respect reduced motion */
+  .skill-pill,
+  .skill-card {
+    @apply motion-reduce:transition-none motion-reduce:transform-none;
   }
 }
 

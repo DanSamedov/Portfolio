@@ -482,3 +482,15 @@ function esc(s = "") {
 function escAttr(s = "") {
   return esc(s).replace(/"/g, "&quot;");
 }
+
+function handleSubmit(event) {
+  event.preventDefault();
+
+  const button = event.currentTarget;
+  button.style.transform = "scale(0.95)";
+
+  setTimeout(() => {
+    button.style.transform = "scale(1)";
+    alert("Message sent successfully!");
+  }, 150);
+}
