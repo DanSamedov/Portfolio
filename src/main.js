@@ -1,7 +1,18 @@
+"use strict";
+
 // helpers
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
 const norm = (s) => (s || "").toLowerCase().trim();
+const prefersReduced = () =>
+  window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const isVisible = (el) => {
+  if (!el) return false;
+  const cs = getComputedStyle(el);
+  if (cs.display === "none" || cs.visibility === "hidden" || cs.opacity === "0") return false;
+  const r = el.getBoundingClientRect();
+  return r.width > 0 && r.height > 0;
+};
 
 /* -------------------------
    3D tilt on hover (cards/modal)
@@ -17,10 +28,10 @@ function tiltOnHover(
 
   const apply = (x, y) => {
     const rect = el.getBoundingClientRect();
-    const px = (x - rect.left) / rect.width; // 0..1
-    const py = (y - rect.top) / rect.height; // 0..1
-    const rx = (0.5 - py) * (max * 2); // -max..max
-    const ry = (px - 0.5) * (max * 2); // -max..max
+    const px = (x - rect.left) / rect.width;
+    const py = (y - rect.top) / rect.height;
+    const rx = (0.5 - py) * (max * 2);
+    const ry = (px - 0.5) * (max * 2);
     el.style.transition = `transform ${speed}ms cubic-bezier(.22,.61,.36,1)`;
     el.style.transform = `perspective(${perspective}px) rotateX(${rx}deg) rotateY(${ry}deg) scale(${scale})`;
   };
@@ -41,18 +52,20 @@ function tiltOnHover(
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  /* smooth scrolling */
-  $$('a[href^="#"]').forEach((link) => {
-    link.addEventListener("click", (e) => {
-      const id = link.getAttribute("href");
-      const target = id && id !== "#" ? $(id) : null;
-      if (!target) return;
-      e.preventDefault();
-      target.scrollIntoView({ behavior: "smooth", block: "start" });
+  // Smooth-scroll internal anchors (delegated)
+  document.addEventListener("click", (e) => {
+    const a = e.target.closest('a[href^="#"]');
+    if (!a) return;
+    const id = a.getAttribute("href");
+    const target = id && id !== "#" ? $(id) : null;
+    if (!target) return;
+    e.preventDefault();
+    target.scrollIntoView({
+      behavior: prefersReduced() ? "auto" : "smooth",
+      block: "start",
     });
   });
 
-  /* contact form hooks */
   const contactForm =
     $("#contact form") ||
     $("[data-contact-form]") ||
@@ -69,9 +82,8 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  /* parallax */
   const parallax = $(".hero-content");
-  if (parallax) {
+  if (parallax && isVisible(parallax) && !prefersReduced()) {
     let ticking = false;
     const onScroll = () => {
       if (!ticking) {
@@ -85,37 +97,42 @@ document.addEventListener("DOMContentLoaded", () => {
     window.addEventListener("scroll", onScroll, { passive: true });
   }
 
-  /* reveal on view */
   const animated = $$(".project-card, .skill-tag, .section-header");
   if (animated.length) {
-    const io = new IntersectionObserver(
-      (entries) => {
-        for (const e of entries) {
-          if (e.isIntersecting) {
-            e.target.style.opacity = "1";
-            e.target.style.transform = "translateY(0)";
-            io.unobserve(e.target);
+    if (prefersReduced()) {
+      animated.forEach((el) => {
+        el.style.opacity = "1";
+        el.style.transform = "none";
+      });
+    } else {
+      const io = new IntersectionObserver(
+        (entries) => {
+          for (const e of entries) {
+            if (e.isIntersecting) {
+              e.target.style.opacity = "1";
+              e.target.style.transform = "translateY(0)";
+              io.unobserve(e.target);
+            }
           }
-        }
-      },
-      { threshold: 0.1, rootMargin: "0px 0px -50px 0px" }
-    );
-    for (const el of animated) {
-      el.style.opacity = "0";
-      el.style.transform = "translateY(20px)";
-      el.style.transition = "opacity 0.6s ease-out, transform 0.6s ease-out";
-      io.observe(el);
+        },
+        { threshold: 0.1, rootMargin: "0px 0px -50px 0px" }
+      );
+      for (const el of animated) {
+        el.style.opacity = "0";
+        el.style.transform = "translateY(20px)";
+        el.style.transition = "opacity 0.6s ease-out, transform 0.6s ease-out";
+        io.observe(el);
+      }
     }
   }
 
-  /* dropdown filter */
   const dd = $("#project-filter");
   if (dd) {
     const label = $("[data-label]", dd);
     const options = $$("[data-filter]", dd);
     const grid =
       $("#projects-grid") || dd.parentElement?.nextElementSibling || document;
-    let cards = $$(".project-card", grid);
+    const cards = $$(".project-card", grid);
 
     const applyFilter = (val) => {
       const v = norm(val);
@@ -161,7 +178,6 @@ document.addEventListener("DOMContentLoaded", () => {
     applyFilter(initial);
   }
 
-  /* click-to-copy */
   document.addEventListener("click", (e) => {
     const btn = e.target.closest("[data-copy]");
     if (!btn) return;
@@ -203,16 +219,14 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  /* project cards -> open modal (no tilt on grid) */
   const cards = $$(".project-card");
   if (cards.length) {
     cards.forEach((card) => {
       if (!card.hasAttribute("tabindex")) card.setAttribute("tabindex", "0");
 
       const open = (evt) => {
-        // ignore clicks on links/buttons inside the card
         if (evt?.target?.closest("a,button,[data-copy]")) return;
-        openProjectModal(card); // modal still has tilt
+        openProjectModal(card);
       };
 
       card.addEventListener("click", open);
@@ -224,6 +238,9 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     });
   }
+
+  initRoleRotator();
+  setupScrollCue();
 });
 
 /* validation */
@@ -275,6 +292,7 @@ function validateInput(input) {
   window.addEventListener("resize", update);
   update();
 })();
+
 /* -------------------------
    Modal builder (tilt + centered close + links)
 ------------------------- */
@@ -289,7 +307,6 @@ function openProjectModal(card) {
       ?.style.backgroundImage?.replace(/^url\(["']?|["']?\)$/g, "") ||
     "";
 
-  // reuse the card's gradient/background
   const cs = getComputedStyle(card);
   const bg =
     (cs.backgroundImage &&
@@ -298,7 +315,6 @@ function openProjectModal(card) {
     (cs.background && cs.background.includes("gradient") && cs.background) ||
     "radial-gradient(circle at 50% 0%, rgb(81, 251, 251), rgb(13, 1, 60))";
 
-  // links
   const liveUrl =
     card.dataset.live ||
     card.querySelector('a[data-live], a[rel="live"]')?.href ||
@@ -312,14 +328,12 @@ function openProjectModal(card) {
     "";
   if (repoUrl && !/github\.com/i.test(repoUrl)) repoUrl = "";
 
-  // overlay
   const overlay = document.createElement("div");
   overlay.className =
     "fixed inset-0 z-[1000] bg-black/50 backdrop-blur-sm flex items-center justify-center px-5 sm:px-4 opacity-0 transition-opacity duration-300";
   overlay.setAttribute("role", "dialog");
   overlay.setAttribute("aria-modal", "true");
 
-  // modal
   const modal = document.createElement("div");
   modal.className =
     "relative w-full max-w-3xl rounded-xl overflow-hidden group transition-all duration-500 ease-[cubic-bezier(.22,.61,.36,1)] translate-y-4";
@@ -333,7 +347,6 @@ function openProjectModal(card) {
   const titleId = "modal-title-" + Math.random().toString(36).slice(2, 9);
 
   modal.innerHTML = `
-    <!-- perfectly centered close -->
     <button
       class="modal-close absolute top-4 right-4 size-10 grid place-items-center rounded-full bg-black/30 text-white hover:bg-black/50 z-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
       aria-label="Close"
@@ -369,12 +382,7 @@ function openProjectModal(card) {
                 liveUrl
               )}" target="_blank" rel="noopener noreferrer"
                 class="inline-flex items-center gap-2 leading-none bg-black text-white font-semibold px-4 py-2 rounded-3xl hover:opacity-80 transition focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70">
-                <svg
-                  class="shrink-0 w-4 h-4"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  aria-hidden="true"
-                  shape-rendering="geometricPrecision">
+                <svg class="shrink-0 w-4 h-4" viewBox="0 0 24 24" fill="none" aria-hidden="true" shape-rendering="geometricPrecision">
                   <path vector-effect="non-scaling-stroke" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M15 3h6v6"/>
                   <path vector-effect="non-scaling-stroke" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M10 14L21 3"/>
                   <path vector-effect="non-scaling-stroke" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
@@ -390,12 +398,7 @@ function openProjectModal(card) {
                 repoUrl
               )}" target="_blank" rel="noopener noreferrer"
                 class="inline-flex items-center gap-2 leading-none bg-black text-white font-semibold px-4 py-2 rounded-3xl hover:opacity-80 transition focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70">
-                <svg
-                  class="shrink-0 w-4 h-4"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  aria-hidden="true"
-                  shape-rendering="geometricPrecision">
+                <svg class="shrink-0 w-4 h-4" viewBox="0 0 24 24" fill="none" aria-hidden="true" shape-rendering="geometricPrecision">
                   <path vector-effect="non-scaling-stroke" stroke="currentColor" stroke-width="2"
                         d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
                 </svg>
@@ -412,17 +415,14 @@ function openProjectModal(card) {
   overlay.setAttribute("aria-labelledby", titleId);
   document.body.appendChild(overlay);
 
-  // lock scroll
   const prevOverflow = document.body.style.overflow;
   document.body.style.overflow = "hidden";
 
-  // animate in (remove the 'opacity-0' class so Tailwind doesn't fight itself)
   requestAnimationFrame(() => {
     overlay.classList.remove("opacity-0");
     modal.classList.remove("translate-y-4");
   });
 
-  // close handlers
   const closeBtn = modal.querySelector(".modal-close");
   const close = () => {
     overlay.classList.add("opacity-0");
@@ -435,11 +435,10 @@ function openProjectModal(card) {
     }, 250);
   };
   overlay.addEventListener("click", (e) => {
-    if (e.target === overlay) close(); // click outside
+    if (e.target === overlay) close();
   });
   closeBtn.addEventListener("click", close);
 
-  // ESC + focus trap
   const trap = (e) => {
     if (e.key === "Escape") {
       e.preventDefault();
@@ -465,7 +464,6 @@ function openProjectModal(card) {
   document.addEventListener("keydown", trap);
   setTimeout(() => closeBtn.focus(), 10);
 
-  // modal tilt
   tiltOnHover(modal, { max: 8, scale: 1.01, perspective: 1000, speed: 120 });
 }
 
@@ -483,14 +481,183 @@ function escAttr(s = "") {
   return esc(s).replace(/"/g, "&quot;");
 }
 
-// function handleSubmit(event) {
-//   event.preventDefault();
+/* -------- Typewriter role rotator -------- */
+function initRoleRotator() {
+  const el = document.getElementById("role-rotator");
+  if (!el) return;
 
-//   const button = event.currentTarget;
-//   button.style.transform = "scale(0.95)";
+  let phrases;
+  try {
+    phrases = JSON.parse(el.getAttribute("data-phrases") || "[]");
+  } catch {
+    phrases = [];
+  }
+  if (!phrases.length) {
+    phrases = ["Backend Developer", "CS & Econometrics Student"];
+  }
 
-//   setTimeout(() => {
-//     button.style.transform = "scale(1)";
-//     alert("Message sent successfully!");
-//   }, 150);
-// }
+  el.textContent = "";
+
+  const wrap = document.createElement("span");
+  wrap.className = "typewriter";
+
+  const text = document.createElement("span");
+  text.className = "typewriter__text";
+
+  const cursor = document.createElement("span");
+  cursor.className = "typewriter__cursor";
+  cursor.setAttribute("aria-hidden", "true");
+  cursor.textContent = "|";
+
+  wrap.appendChild(text);
+  wrap.appendChild(cursor);
+  el.appendChild(wrap);
+
+  const reduced = window.matchMedia(
+    "(prefers-reduced-motion: reduce)"
+  ).matches;
+
+  const TYPE = 80;
+  const ERASE = 40;
+  const HOLD = 1400;
+  const GAP = 200;
+
+  if (reduced) {
+    let i = 0;
+    text.textContent = phrases[0];
+    setInterval(() => {
+      i = (i + 1) % phrases.length;
+      text.textContent = phrases[i];
+    }, HOLD + 800);
+    return;
+  }
+
+  let pi = 0;
+  let ci = 0;
+
+  function type() {
+    const word = phrases[pi];
+    if (ci <= word.length) {
+      text.textContent = word.slice(0, ci);
+      ci += 1;
+      setTimeout(type, TYPE);
+    } else {
+      setTimeout(() => {
+        setTimeout(erase, GAP);
+      }, HOLD);
+    }
+  }
+
+  function erase() {
+    const word = phrases[pi];
+    if (ci > 0) {
+      ci -= 1;
+      text.textContent = word.slice(0, ci);
+      setTimeout(erase, ERASE);
+    } else {
+      pi = (pi + 1) % phrases.length;
+      setTimeout(type, GAP);
+    }
+  }
+
+  type();
+}
+function setupScrollCue() {
+  const cues = $$(".animate-scroll-cue, #scroll-cue");
+  if (!cues.length) return;
+
+  const reduced = window.matchMedia(
+    "(prefers-reduced-motion: reduce)"
+  ).matches;
+
+  cues.forEach((el) => {
+    // a11y
+    if (!el.hasAttribute("role")) el.setAttribute("role", "button");
+    if (!el.hasAttribute("tabindex")) el.tabIndex = 0;
+    el.setAttribute(
+      "aria-label",
+      el.getAttribute("aria-label") || "Scroll to next section"
+    );
+
+    const offset = getScrollOffsetFrom(el);
+
+    const resolveTarget = () => {
+      // explicit target via data-target="#id"
+      if (el.dataset.target) {
+        const t = document.querySelector(el.dataset.target);
+        if (t) return t;
+      }
+      // next section-like element in the document
+      const sections = getScrollTargets();
+      const y = window.scrollY;
+      return (
+        sections.find(
+          (s) => s.getBoundingClientRect().top + window.scrollY > y + 1
+        ) ||
+        sections[sections.length - 1] ||
+        null
+      );
+    };
+
+    const go = () => {
+      const t = resolveTarget();
+      if (!t) return;
+      const top = t.getBoundingClientRect().top + window.scrollY - offset;
+      window.scrollTo({
+        top,
+        left: 0,
+        behavior: reduced ? "auto" : "smooth",
+      });
+    };
+
+    el.addEventListener("click", (e) => {
+      e.preventDefault();
+      go();
+    });
+    el.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        go();
+      }
+    });
+  });
+}
+
+function getScrollTargets() {
+  const all = $$("section, [data-section], [id]");
+  return all.filter((el) => {
+    const tag = el.tagName.toLowerCase();
+    if (/^(script|style|link|meta|title|head)$/.test(tag)) return false;
+    if (!el.id && !el.matches("section,[data-section]")) return false;
+    const cs = getComputedStyle(el);
+    const r = el.getBoundingClientRect();
+    return (
+      r.width > 0 &&
+      r.height > 0 &&
+      cs.display !== "none" &&
+      cs.visibility !== "hidden"
+    );
+  });
+}
+
+function getScrollOffsetFrom(el) {
+  const attr = el.getAttribute("data-scroll-offset");
+  if (attr && !isNaN(parseFloat(attr))) return parseFloat(attr);
+
+  const header =
+    $("[data-sticky-header]") ||
+    $("header[role='banner']") ||
+    $("header.site-header") ||
+    $("header");
+
+  if (header) {
+    const cs = getComputedStyle(header);
+    if (cs.position === "fixed" || cs.position === "sticky") {
+      return header.offsetHeight || 0;
+    }
+  }
+  return 0;
+}
+
+//
+// End of main.js

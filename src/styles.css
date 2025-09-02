@@ -30,6 +30,7 @@
   /* pale blue */
   --color-muted-foreground: #49739c;
   --color-primary: #1f1f1f;
+  --color-accent: #E8390D;
   /* brand blue */
   --color-primary-foreground: #ffffff;
   --color-border: #d6e3f3;
@@ -306,6 +307,15 @@
   .skill-card {
     @apply motion-reduce:transition-none motion-reduce:transform-none;
   }
+
+  .animate-scroll-cue {
+    animation: cue-bounce 1.25s ease-in-out infinite;
+  }
+
+  .animate-scroll-cue svg {
+    animation: cue-bounce 1.25s ease-in-out infinite;
+    animation-delay: .08s;
+  }
 }
 
 /* ===== Utilities layer ===== */
@@ -354,6 +364,17 @@
   }
 }
 
+@keyframes cue-bounce {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(10px);
+  }
+}
 /* ===== Responsive improvements ===== */
 @media (max-width: 640px) {
   .hero-title {
@@ -405,5 +426,75 @@
     animation: none;
     opacity: 1;
     transform: none;
+  }
+}
+
+
+@layer utilities {
+  .wave-hand {
+    display: inline-block;
+    transform-origin: 70% 70%;
+    animation: hand-wave 1.7s ease-in-out infinite;
+    will-change: transform;
+  }
+
+  @keyframes hand-wave {
+    0% {
+      transform: rotate(0deg);
+    }
+
+    10% {
+      transform: rotate(14deg);
+    }
+
+    20% {
+      transform: rotate(-8deg);
+    }
+
+    30% {
+      transform: rotate(14deg);
+    }
+
+    40% {
+      transform: rotate(-4deg);
+    }
+
+    50% {
+      transform: rotate(10deg);
+    }
+
+    60% {
+      transform: rotate(0deg);
+    }
+
+    100% {
+      transform: rotate(0deg);
+    }
+  }
+}
+
+.wave-hand { animation-duration: 1.7s !important; animation-iteration-count: infinite !important; }
+
+@layer utilities {
+  .typewriter {
+    display: inline;
+  }
+
+  .typewriter__cursor {
+    display: inline-block;
+    width: 1ch;
+    animation: tw-blink 1s steps(1, end) infinite;
+  }
+
+  @keyframes tw-blink {
+
+    0%,
+    100% {
+      opacity: 0;
+    }
+
+    50% {
+      opacity: 1;
+    }
   }
 }
