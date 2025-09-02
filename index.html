@@ -106,38 +106,136 @@
     </header>
     <main class="flex flex-col items-center justify-center">
       <!-- HOME -->
-      <section id="home" class="w-full scroll-mt-14 pt-16 pb-12">
-        <div class="mx-auto max-w-[960px] px-4">
-          <div class="@container">
-            <div class="@[480px]:p-4">
+      <section id="home" class="relative w-full scroll-mt-14 pt-16 pb-16">
+        <div class="mx-auto max-w-[960px] px-4 @container">
+          <div class="@[480px]:p-4">
+            <!-- hero row -->
+            <div
+              class="flex flex-col md:flex-row items-center md:items-start justify-between gap-10 w-full py-2"
+            >
+              <!-- Left: intro + actions -->
+              <div class="flex-1">
+                <div class="flex items-center gap-3">
+                  <h1 class="text-4xl sm:text-6xl font-bold text-foreground">
+                    Hey, I'm <span class="text-primary">Danylo</span>
+                  </h1>
+                  <span class="text-4xl sm:text-5xl">👋</span>
+                </div>
+
+                <p
+                  class="flex items-center mt-4 text-primary gap-2 text-sm sm:text-lg"
+                >
+                  <!-- map pin -->
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path
+                      d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"
+                    />
+                    <circle cx="12" cy="10" r="3" />
+                  </svg>
+                  <span>Based on Planet Earth</span>
+                </p>
+
+                <span
+                  class="mt-4 text-lg sm:text-3xl font-medium block text-left text-foreground/90"
+                >
+                  Backend Developer
+                </span>
+
+                <!-- actions -->
+                <div class="mt-6 flex flex-wrap gap-3">
+                  <!-- Resume button -->
+                  <button
+                    class="group relative w-32 h-10 cursor-pointer overflow-hidden rounded-full border border-border bg-white/90 shadow-sm p-2 text-center font-semibold"
+                  >
+                    <span
+                      class="inline-block translate-x-1 transition-all duration-300 group-hover:translate-x-12 group-hover:opacity-0"
+                      >Resume</span
+                    >
+                    <div
+                      class="absolute top-0 z-10 flex h-full w-full translate-x-12 items-center justify-center gap-2 text-primary-foreground opacity-0 transition-all duration-300 group-hover:-translate-x-1 group-hover:opacity-100"
+                    >
+                      <span>Resume</span>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                      >
+                        <path d="M12 15V3"></path>
+                        <path
+                          d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"
+                        ></path>
+                        <path d="m7 10 5 5 5-5"></path>
+                      </svg>
+                    </div>
+                    <div
+                      class="absolute left-[15%] top-[40%] h-2 w-2 scale-[1] rounded-lg bg-primary transition-all duration-300 group-hover:left-[0%] group-hover:top-[0%] group-hover:h-full group-hover:w-full group-hover:scale-[1.8] group-hover:bg-primary"
+                    ></div>
+                  </button>
+
+                  <!-- Contact Me button with same style -->
+                  <button
+                    class="group relative w-40 h-10 cursor-pointer overflow-hidden rounded-full border border-border bg-white/90 shadow-sm p-2 text-center font-semibold"
+                  >
+                    <span
+                      class="inline-block translate-x-1 transition-all duration-300 group-hover:translate-x-12 group-hover:opacity-0"
+                      >Contact Me</span
+                    >
+                    <div
+                      class="absolute top-0 z-10 flex h-full w-full translate-x-12 items-center justify-center gap-2 text-primary-foreground opacity-0 transition-all duration-300 group-hover:-translate-x-1 group-hover:opacity-100"
+                    >
+                      <span>Contact Me</span>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                      >
+                        <rect width="20" height="16" x="2" y="4" rx="2"></rect>
+                        <path
+                          d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"
+                        ></path>
+                      </svg>
+                    </div>
+                    <div
+                      class="absolute left-[15%] top-[40%] h-2 w-2 scale-[1] rounded-lg bg-primary transition-all duration-300 group-hover:left-[0%] group-hover:top-[0%] group-hover:h-full group-hover:w-full group-hover:scale-[1.8] group-hover:bg-primary"
+                    ></div>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Right: Avatar (inside the row) -->
               <div
-                class="flex min-h-[480px] flex-col gap-6 bg-cover bg-center bg-no-repeat @[480px]:gap-8 @[480px]:rounded-xl items-start justify-end px-4 pb-10 @[480px]:px-10"
-                style="
-                  background-image: linear-gradient(
-                      rgba(0, 0, 0, 0.1) 0%,
-                      rgba(0, 0, 0, 0.4) 100%
-                    ),
-                    url('.\me.png');
-                  background-size: cover;
-                  background-position: center;
-                "
+                class="w-48 h-48 sm:w-72 sm:h-72 relative shrink-0 rounded-full overflow-hidden ring-1 ring-border/70 shadow-[0_12px_30px_rgba(0,0,0,0.12)]"
               >
-                <div class="hero-content">
-                  <h1 class="hero-title">Hi, I'm Danylo Samedov</h1>
-                  <h2 class="hero-subtitle">
-                    Full-Stack Developer with a passion for creating innovative
-                    web applications. I specialize in building scalable and
-                    maintainable solutions using modern technologies.
-                  </h2>
-                </div>
-                <div class="hero-buttons">
-                  <button class="btn-primary">
-                    <span class="truncate">View Projects</span>
-                  </button>
-                  <button class="btn-secondary">
-                    <span class="truncate">Contact Me</span>
-                  </button>
-                </div>
+                <img
+                  alt="Danylo Samedov"
+                  src="./src/assets/imgs/me.png"
+                  class="object-cover w-full h-full rounded-full"
+                />
               </div>
             </div>
           </div>
@@ -497,22 +595,23 @@
         </div>
       </section>
 
+      <!-- Skills -->
       <section id="skills" class="w-full scroll-mt-14 py-12">
         <div class="max-w-[960px] mx-auto px-4">
           <h2 class="section-header">Skills</h2>
 
           <div class="skills-grid">
-            <!-- Langs -->
+            <!-- Languages -->
             <article
               class="skill-card group"
               tabindex="0"
               aria-labelledby="category-lang"
             >
-              <h3 id="category-lang" class="skill-title">Langs</h3>
+              <h3 id="category-lang" class="skill-title">Languages</h3>
               <div class="mt-3 flex flex-wrap gap-2">
                 <span class="skill-pill">Python</span>
                 <span class="skill-pill">Java</span>
-                <span class="skill-pill">JS</span>
+                <span class="skill-pill">JavaScript</span>
               </div>
             </article>
 
@@ -526,7 +625,7 @@
               <div class="mt-3 flex flex-wrap gap-2">
                 <span class="skill-pill">Django</span>
                 <span class="skill-pill">FastAPI</span>
-                <span class="skill-pill">REST</span>
+                <span class="skill-pill">REST APIs</span>
                 <span class="skill-pill">WebSockets</span>
                 <span class="skill-pill">Celery</span>
               </div>
@@ -546,74 +645,65 @@
               </div>
             </article>
 
-            <!-- Automation -->
-            <article
-              class="skill-card group"
-              tabindex="0"
-              aria-labelledby="category-automation"
-            >
-              <h3 id="category-automation" class="skill-title">Automation</h3>
-              <div class="mt-3 flex flex-wrap gap-2">
-                <span class="skill-pill">Selenium</span>
-                <span class="skill-pill">Telegram</span>
-              </div>
-            </article>
-
-            <!-- Data/ML -->
+            <!-- Data & ML -->
             <article
               class="skill-card group"
               tabindex="0"
               aria-labelledby="category-dataml"
             >
-              <h3 id="category-dataml" class="skill-title">Data/ML</h3>
+              <h3 id="category-dataml" class="skill-title">Data & ML</h3>
               <div class="mt-3 flex flex-wrap gap-2">
-                <span class="skill-pill">NumPy</span>
                 <span class="skill-pill">Pandas</span>
+                <span class="skill-pill">NumPy</span>
                 <span class="skill-pill">Matplotlib</span>
-                <span class="skill-pill">sklearn</span>
+                <span class="skill-pill">Scikit-learn</span>
               </div>
             </article>
 
-            <!-- DB/Cache -->
+            <!-- Databases -->
             <article
               class="skill-card group"
               tabindex="0"
               aria-labelledby="category-db"
             >
-              <h3 id="category-db" class="skill-title">DB/Cache</h3>
+              <h3 id="category-db" class="skill-title">Databases</h3>
               <div class="mt-3 flex flex-wrap gap-2">
                 <span class="skill-pill">PostgreSQL</span>
                 <span class="skill-pill">MySQL</span>
-                <span class="skill-pill">Redis</span>
                 <span class="skill-pill">SQLAlchemy</span>
+                <span class="skill-pill">Redis</span>
               </div>
             </article>
 
-            <!-- Testing -->
+            <!-- Testing & Automation -->
             <article
               class="skill-card group"
               tabindex="0"
               aria-labelledby="category-testing"
             >
-              <h3 id="category-testing" class="skill-title">Testing</h3>
+              <h3 id="category-testing" class="skill-title">
+                Testing & Automation
+              </h3>
               <div class="mt-3 flex flex-wrap gap-2">
                 <span class="skill-pill">Pytest</span>
+                <span class="skill-pill">Selenium</span>
+                <span class="skill-pill">Telegram Bots</span>
               </div>
             </article>
 
-            <!-- DevOps -->
+            <!-- DevOps & Tools -->
             <article
               class="skill-card group"
               tabindex="0"
               aria-labelledby="category-devops"
             >
-              <h3 id="category-devops" class="skill-title">DevOps</h3>
+              <h3 id="category-devops" class="skill-title">DevOps & Tools</h3>
               <div class="mt-3 flex flex-wrap gap-2">
                 <span class="skill-pill">Docker</span>
                 <span class="skill-pill">Linux</span>
-                <span class="skill-pill">Servers</span>
                 <span class="skill-pill">Git</span>
                 <span class="skill-pill">GitHub Actions</span>
+                <span class="skill-pill">Server Management</span>
               </div>
             </article>
           </div>
@@ -699,6 +789,68 @@
                   class="absolute left-[15%] top-[40%] h-2 w-2 scale-[1] rounded-lg bg-primary transition-all duration-300 group-hover:left-[0%] group-hover:top-[0%] group-hover:h-full group-hover:w-full group-hover:scale-[1.8] group-hover:bg-primary"
                 ></div>
               </button>
+
+              <p class="text-[#49739c]">Follow Me</p>
+              <div class="mt-6 flex gap-4">
+                <!-- Reusable tile classes applied to all -->
+                <a
+                  href="https://github.com/DanSamedov"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="p-5 rounded-xl transition-all duration-300 transform hover:-translate-y-1.5 bg-white/70 dark:bg-neutral-900/70 backdrop-blur-sm text-slate-900/90 dark:text-white/90"
+                  style="
+                    box-shadow: rgba(0, 0, 0, 0.5) 0 15px 25px,
+                      rgba(0, 0, 0, 0.35) 0 10px 15px,
+                      rgba(0, 0, 0, 0.25) 0 4px 6px;
+                  "
+                >
+                  <!-- GitHub -->
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    class="w-6 h-6"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path
+                      d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"
+                    />
+                  </svg>
+                </a>
+
+                <a
+                  href="https://www.linkedin.com/in/danylo-samedov-b557132b1/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="p-5 rounded-xl transition-all duration-300 transform hover:-translate-y-1.5 bg-white/70 dark:bg-neutral-900/70 backdrop-blur-sm text-slate-900/90 dark:text-white/90"
+                  style="
+                    box-shadow: rgba(0, 0, 0, 0.5) 0 15px 25px,
+                      rgba(0, 0, 0, 0.35) 0 10px 15px,
+                      rgba(0, 0, 0, 0.25) 0 4px 6px;
+                  "
+                >
+                  <!-- LinkedIn -->
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    class="w-6 h-6"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path
+                      d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"
+                    />
+                    <rect x="2" y="9" width="4" height="12" />
+                    <circle cx="4" cy="4" r="2" />
+                  </svg>
+                </a>
+              </div>
             </div>
 
             <form
