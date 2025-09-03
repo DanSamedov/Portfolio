@@ -5,11 +5,13 @@ const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
 const norm = (s) => (s || "").toLowerCase().trim();
 const prefersReduced = () =>
-  window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  window.matchMedia &&
+  window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const isVisible = (el) => {
   if (!el) return false;
   const cs = getComputedStyle(el);
-  if (cs.display === "none" || cs.visibility === "hidden" || cs.opacity === "0") return false;
+  if (cs.display === "none" || cs.visibility === "hidden" || cs.opacity === "0")
+    return false;
   const r = el.getBoundingClientRect();
   return r.width > 0 && r.height > 0;
 };
@@ -241,6 +243,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   initRoleRotator();
   setupScrollCue();
+  initNavSectionTracker();
 });
 
 /* validation */
@@ -513,9 +516,7 @@ function initRoleRotator() {
   wrap.appendChild(cursor);
   el.appendChild(wrap);
 
-  const reduced = window.matchMedia(
-    "(prefers-reduced-motion: reduce)"
-  ).matches;
+  const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   const TYPE = 80;
   const ERASE = 40;
@@ -566,9 +567,7 @@ function setupScrollCue() {
   const cues = $$(".animate-scroll-cue, #scroll-cue");
   if (!cues.length) return;
 
-  const reduced = window.matchMedia(
-    "(prefers-reduced-motion: reduce)"
-  ).matches;
+  const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   cues.forEach((el) => {
     // a11y
@@ -659,5 +658,225 @@ function getScrollOffsetFrom(el) {
   return 0;
 }
 
-//
-// End of main.js
+document.addEventListener("click", (e) => {
+  const btn = e.target.closest("[data-download]");
+  if (!btn) return;
+
+  e.preventDefault();
+  const url = btn.getAttribute("data-download");
+  if (!url) return;
+
+  const a = document.createElement("a");
+  a.href = url;
+  a.setAttribute("download", "cv.pdf");
+  a.rel = "noopener";
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+});
+
+/* -------- Floating nav section tracker -------- */
+function initNavSectionTracker() {
+  const container = document.querySelector(
+    "header[role='banner'] .nav-glass"
+  );
+  if (!container) return;
+
+  const links = Array.from(container.querySelectorAll("a.nav-link"));
+  if (!links.length) return;
+
+  // Create tracker element
+  let tracker = container.querySelector(".nav-tracker");
+  if (!tracker) {
+    tracker = document.createElement("span");
+    tracker.className = "nav-tracker";
+    container.appendChild(tracker);
+  }
+
+  const reduced = prefersReduced();
+  if (reduced) {
+    tracker.style.transition = "none";
+  }
+
+  // Map section id -> link
+  const byId = new Map();
+  links.forEach((a) => {
+    const id = (a.getAttribute("href") || "").replace(/^#/, "");
+    if (id) byId.set(id, a);
+  });
+
+  // Position tracker at the geometric center of the pill (link)
+  const moveTo = (link) => {
+    if (!link || !tracker) return;
+    const left = link.offsetLeft;
+    const width = link.offsetWidth;
+    const trackerWidth = tracker.getBoundingClientRect().width || tracker.offsetWidth || 26;
+    const biasVar = getComputedStyle(container).getPropertyValue("--tracker-bias").trim();
+    const bias = parseFloat(biasVar) || 0;
+    const x = left + width / 2 - trackerWidth / 2 + bias;
+    tracker.style.transform = `translateX(${x}px)`;
+    tracker.style.opacity = "1";
+  };
+
+  // Toggle active state
+  const setActiveLink = (link) => {
+    if (!link) return;
+    links.forEach((a) => {
+      const active = a === link;
+      if (active) {
+        a.setAttribute("aria-current", "page");
+        a.classList.add("bg-muted", "text-primary", "shadow-lg");
+      } else {
+        a.removeAttribute("aria-current");
+        a.classList.remove("bg-muted", "text-primary", "shadow-lg");
+      }
+    });
+    moveTo(link);
+  };
+
+  // Observe sections to update active link
+  const sections = Array.from(byId.keys())
+    .map((id) => document.getElementById(id))
+    .filter(Boolean);
+  if (!sections.length) return;
+
+  let currentId = null;
+  // Track explicit user intent during smooth scroll
+  let intentId = null;
+  let intentDeadline = 0;
+  const releaseIntent = () => {
+    intentId = null;
+    intentDeadline = 0;
+  };
+
+  const io = new IntersectionObserver(
+    (entries) => {
+      // Ignore IO while honoring a recent click intent
+      if (intentId && performance.now() < intentDeadline) return;
+      let best = null;
+      for (const e of entries) {
+        if (!e.isIntersecting) continue;
+        if (!best || e.intersectionRatio > best.intersectionRatio) best = e;
+      }
+      if (!best) return;
+      const id = best.target.id;
+      if (id && id !== currentId) {
+        currentId = id;
+        const link = byId.get(id);
+        setActiveLink(link);
+      }
+    },
+    {
+      // Bias to whichever section is near the vertical center
+      threshold: [0.25, 0.5, 0.75],
+      rootMargin: "-35% 0px -55% 0px",
+    }
+  );
+  sections.forEach((s) => io.observe(s));
+
+  // Also sync while scrolling (for smoother updates between IO thresholds)
+  const getHeaderOffset = () => {
+    const header = document.querySelector("header[role='banner']");
+    if (header) {
+      const cs = getComputedStyle(header);
+      if (cs.position === "fixed" || cs.position === "sticky") {
+        return header.offsetHeight || 0;
+      }
+    }
+    return 0;
+  };
+
+  const pickActiveSection = () => {
+    const offset = getHeaderOffset();
+    // Prefer the section whose top is at/above the header and bottom below it
+    for (const s of sections) {
+      const r = s.getBoundingClientRect();
+      if (r.top - offset <= 1 && r.bottom - offset > 1) return s.id;
+    }
+    // Fallback: choose the first section below the header, else the last
+    for (const s of sections) {
+      if (s.getBoundingClientRect().top - offset > 1) return s.id;
+    }
+    return sections[sections.length - 1].id;
+  };
+
+  let ticking = false;
+  const onScroll = () => {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(() => {
+      // If we have an intended target from a click, hold until reached or deadline
+      const now = performance.now();
+      if (intentId && now < intentDeadline) {
+        const targetSection = document.getElementById(intentId);
+        if (targetSection) {
+          const offset = getHeaderOffset();
+          const r = targetSection.getBoundingClientRect();
+          const nearTop = Math.abs(r.top - offset) < 8;
+          const coveringHeader = r.top - offset <= 1 && r.bottom - offset > 1;
+          if (nearTop || coveringHeader) {
+            currentId = intentId;
+            const link = byId.get(intentId);
+            setActiveLink(link);
+            releaseIntent();
+          } else {
+            // Maintain tracker on intended link during scroll
+            const link = byId.get(intentId);
+            if (link) moveTo(link);
+            ticking = false;
+            return;
+          }
+        }
+      }
+
+      const id = pickActiveSection();
+      if (id && id !== currentId) {
+        currentId = id;
+        const link = byId.get(id);
+        setActiveLink(link);
+      }
+      ticking = false;
+    });
+  };
+  window.addEventListener("scroll", onScroll, { passive: true });
+
+  // Sync on click immediately for snappy UI
+  links.forEach((a) => {
+    a.addEventListener("click", () => {
+      const id = (a.getAttribute("href") || "").replace(/^#/, "");
+      const target = byId.get(id);
+      if (target) {
+        // Lock to intended section during smooth scroll
+        intentId = id;
+        intentDeadline = performance.now() + (prefersReduced() ? 200 : 1600);
+        setActiveLink(target);
+      }
+    });
+  });
+
+  // Initial state: hash or first link
+  const initialId = (location.hash || links[0]?.getAttribute("href") || "")
+    .replace(/^#/, "");
+  const initialLink = byId.get(initialId) || links[0];
+  setActiveLink(initialLink);
+
+  // Keep aligned on resize
+  window.addEventListener("resize", () => {
+    const active = links.find((a) => a.getAttribute("aria-current") === "page");
+    if (active) moveTo(active);
+  });
+
+  // Re-align after fonts/images load which can change layout
+  window.addEventListener("load", () => {
+    const active = links.find((a) => a.getAttribute("aria-current") === "page");
+    if (active) moveTo(active);
+  });
+
+  // Re-align once web fonts have finished loading (if supported)
+  if (document.fonts?.ready) {
+    document.fonts.ready.then(() => {
+      const active = links.find((a) => a.getAttribute("aria-current") === "page");
+      if (active) moveTo(active);
+    });
+  }
+}

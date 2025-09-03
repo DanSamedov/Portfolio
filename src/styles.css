@@ -117,7 +117,48 @@
 
   /* Floating nav glass */
   .nav-glass {
-    @apply bg-background/60 border border-border/60 backdrop-blur-lg shadow-lg;
+    @apply relative overflow-visible border border-border/70 bg-background/45 backdrop-blur-sm shadow-xl;
+    /* Semi-transparent so the page colors/shapes show through */
+    background-image: none;
+    background-clip: padding-box;
+    --tracker-bias: -1px;
+  }
+
+  /* Small tracker above active nav link */
+  .nav-tracker {
+    position: absolute;
+    /* Remove gap so it hugs the nav */
+    top: -5px;
+    left: 0;
+    width: 30px;
+    height: 4px;
+    border-radius: 9999px 9999px 0 0;
+    background: #0f172a; /* slate-900 */
+    /* smaller, softer halo around the tracker */
+    box-shadow: 0 0 6px rgba(0, 0, 0, 0.12), 0 0 2px rgba(0, 0, 0, 0.06);
+    opacity: 0;
+    transform: translateX(0);
+    transition: transform 280ms cubic-bezier(.22,.61,.36,1), opacity 160ms ease;
+    pointer-events: none;
+    z-index: -1; /* render behind the header content */
+  }
+
+  /* Smaller, weaker circular halo */
+  .nav-tracker::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: clamp(30px, 7vw, 56px);
+    height: clamp(30px, 7vw, 56px);
+    background: radial-gradient(circle at center,
+        rgba(0, 0, 0, 0.14) 18%,
+        rgba(0, 0, 0, 0.08) 45%,
+        rgba(0, 0, 0, 0.0) 78%);
+    filter: blur(3px);
+    pointer-events: none;
+    z-index: -1;
   }
 
   /* Buttons */
@@ -188,15 +229,20 @@
 
   /* Nav link */
   .nav-link {
-    @apply relative inline-flex items-center gap-2 text-sm font-semibold px-3 sm:px-5 py-2 rounded-full transition-all duration-200 ease-in-out focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/60;
+    @apply relative inline-flex items-center justify-center text-center gap-2 font-semibold rounded-full transition-all duration-200 ease-in-out focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 text-foreground/90;
+    font-size: 1.05rem; /* bigger text */
+    padding: 0.6rem 1.3rem; /* bigger pill */
+    line-height: 1.1;
+    min-height: 2.5rem; /* ensure height for icon-only on mobile */
   }
 
   .nav-link:hover {
     transform: translateY(-1px);
+    @apply bg-muted/60;
   }
 
   .nav-link[aria-current="page"] {
-    @apply bg-muted text-primary shadow-lg;
+    @apply bg-muted text-primary shadow-xl ring-1 ring-border;
   }
 
   /* Hero */
