@@ -23,218 +23,227 @@ const rimL = new THREE.DirectionalLight(0x5bc0ff, 0.9);
 rimL.position.set(-6, 7, -5);
 scene.add(rimL);
 
-const MODEL_URL = "./src/assets/models/keyboard.glb";
-const loader = new GLTFLoader();
-const keys = [];
-let modelRoot = null;
+/* ------- press/hover config ------- */
+const PRESS_FRACTION = 0.5; // press 50% of key height
+const TILT_X = 0.06,
+  TILT_Z = -0.03;
+const IN_MS = 110,
+  OUT_MS = 160;
+const HOVER_EMISSIVE = 0.18;
+/* ---------------------------------- */
 
+const MODEL_URL = "./src/assets/models/keyboard2.glb";
+const loader = new GLTFLoader();
+
+/** Data containers **/
+const keyControllers = []; // objects we animate (groups or meshes named key_*)
+const rayTargets = []; // meshes we raycast against
+const hitToControl = new Map(); // mesh -> controller mapping
+let hovered = null;
+
+/* ---------- load & collect ---------- */
 loader.load(MODEL_URL, (g) => {
   const root = g.scene;
-  modelRoot = root;
   root.scale.setScalar(0.01);
   root.rotation.y = Math.PI;
   root.rotation.x = 0.25;
-
   scene.add(root);
-  // Prefer top-level meshes (direct children of the GLTF root) except the body
-  const topLevel = [];
-  root.traverse((o) => {
-    if (!o.isMesh) return;
-    if (o.name === "body") return;
-    if (o.parent === root) topLevel.push(o);
-  });
-  const pool = topLevel.length ? topLevel : [];
-  if (!pool.length) {
-    // Fallback: any mesh except body
-    root.traverse((o) => {
-      if (o.isMesh && o.name !== "body") pool.push(o);
+
+  collectKeys(root);
+
+  // Fallback if nothing matched: treat top-level meshes (except "body") as keys
+  if (keyControllers.length === 0) {
+    root.children.forEach((o) => {
+      if (o.isMesh && o.name !== "body") registerKey(o, o);
     });
   }
-  for (const o of pool) {
-    o.userData.restY = o.position.y;
-    o.userData.hovered = false;
-    o.userData.bouncing = false;
-    keys.push(o);
+
+  // Precompute pose/press targets
+  for (const ctrl of keyControllers) {
+    const boxW = new THREE.Box3().setFromObject(ctrl); // world bbox for full key
+    const sizeW = boxW.getSize(new THREE.Vector3());
+    const parentScale = ctrl.parent.getWorldScale(new THREE.Vector3());
+    const heightLocal = sizeW.y / parentScale.y; // convert to ctrl's local
+
+    ctrl.userData.restY = ctrl.position.y;
+    ctrl.userData.restRx = ctrl.rotation.x;
+    ctrl.userData.restRz = ctrl.rotation.z;
+    ctrl.userData.pressY = ctrl.userData.restY - heightLocal * PRESS_FRACTION;
+    ctrl.userData.pressRx = ctrl.userData.restRx + TILT_X;
+    ctrl.userData.pressRz = ctrl.userData.restRz + TILT_Z;
+    ctrl.userData.animToken = null;
+
+    // stabilize transparent sub-mats (if a joined decal exists on the same mesh)
+    ctrl.traverse((n) => {
+      if (!n.isMesh) return;
+      const mats = Array.isArray(n.material) ? n.material : [n.material];
+      for (const m of mats) {
+        if (!m) continue;
+        if (m.transparent || (m.name && /icon|logo/i.test(m.name))) {
+          m.transparent = true;
+          m.depthWrite = false;
+          m.alphaTest = 0.02;
+          m.side = THREE.FrontSide;
+          m.needsUpdate = true;
+        }
+      }
+    });
   }
 
   frameFromDirection(camera, root, new THREE.Vector3(-0.8, 0.75, 0.8), 1.22);
   render();
 });
 
-/* ---------- Hover + Press ---------- */
+/** Find all objects named key_* (mesh OR group), and pick a mesh under each for raycasting */
+function collectKeys(root) {
+  // 1) grab any node whose name starts with key_
+  const keyNodes = [];
+  root.traverse((o) => {
+    if (!o.name) return;
+    if (o.name.startsWith("key_")) keyNodes.push(o);
+  });
 
-const ray = new THREE.Raycaster();
-const mouse = new THREE.Vector2();
-const pressing = new Set();
-let hovered = null;
-const HOVER_LIFT = 0.012;
-
-// hover highlight helpers (handle single or multi-material)
-function setHighlight(mesh, on) {
-  const mats = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
-  for (const m of mats) {
-    if (!m || !("emissive" in m)) continue;
-    if (on) {
-      if (!m.userData._origEmissive) {
-        m.userData._origEmissive = m.emissive.clone();
-        m.userData._origIntensity = m.emissiveIntensity ?? 1;
-      }
-      m.emissive.set(0xffffff);
-      m.emissiveIntensity = 0.15;
-    } else if (m.userData._origEmissive) {
-      m.emissive.copy(m.userData._origEmissive);
-      m.emissiveIntensity = m.userData._origIntensity ?? 1;
-    } else {
-      m.emissive.set(0x000000);
-      m.emissiveIntensity = 1;
+  for (const node of keyNodes) {
+    // controller is the named node itself
+    const ctrl = node;
+    // find a mesh to raycast—prefer the ctrl if it's already a mesh
+    let targetMesh = node.isMesh ? node : null;
+    if (!targetMesh) {
+      targetMesh = node.getObjectByProperty("isMesh", true); // first descendant mesh
+      if (!targetMesh) continue; // skip if no geometry under this node
     }
+    registerKey(ctrl, targetMesh);
   }
 }
 
-// HOVER
+function registerKey(controller, targetMesh) {
+  keyControllers.push(controller);
+  rayTargets.push(targetMesh);
+  hitToControl.set(targetMesh, controller);
+}
+
+/* --------------------- Hover → press/release ------------------- */
+
+const ray = new THREE.Raycaster();
+const mouse = new THREE.Vector2();
+
 canvas.addEventListener("pointermove", (e) => {
   const r = canvas.getBoundingClientRect();
   mouse.x = ((e.clientX - r.left) / r.width) * 2 - 1;
   mouse.y = -((e.clientY - r.top) / r.height) * 2 + 1;
   ray.setFromCamera(mouse, camera);
 
-  const hit = ray.intersectObjects(keys, true)[0];
-  const next = hit ? getKeyRoot(hit.object) : null;
+  const hit = ray.intersectObjects(rayTargets, true)[0];
+  const next = hit ? resolveController(hit.object) : null;
 
-  if (hovered !== next) {
-    if (hovered && !pressing.has(hovered)) {
-      // clear previous hover (absolute restore to baseline)
-      if (hovered.userData) hovered.userData.bouncing = false;
-      hovered.userData.hovered = false;
-      hovered.position.y = hovered.userData.restY;
-      setHighlight(hovered, false);
+  if (next !== hovered) {
+    if (hovered) {
+      highlight(hovered, false);
+      animateKey(
+        hovered,
+        hovered.userData.restY,
+        hovered.userData.restRx,
+        hovered.userData.restRz,
+        OUT_MS
+      );
     }
-    if (next && !pressing.has(next)) {
-      // apply new hover state & bounce
-      next.userData.hovered = true;
-      next.position.y = (next.userData.restY ?? next.position.y) + HOVER_LIFT;
-      setHighlight(next, true);
-      bounceKey(next);
+    if (next) {
+      highlight(next, true);
+      animateKey(
+        next,
+        next.userData.pressY,
+        next.userData.pressRx,
+        next.userData.pressRz,
+        IN_MS
+      );
     }
     hovered = next;
     canvas.style.cursor = hovered ? "pointer" : "default";
-    render();
   }
 });
 
-// leave canvas → clear hover
 canvas.addEventListener("pointerleave", () => {
-  if (hovered && !pressing.has(hovered)) {
-    if (hovered.userData) hovered.userData.bouncing = false;
-    hovered.userData.hovered = false;
-    hovered.position.y = hovered.userData.restY;
-    setHighlight(hovered, false);
+  if (hovered) {
+    highlight(hovered, false);
+    animateKey(
+      hovered,
+      hovered.userData.restY,
+      hovered.userData.restRx,
+      hovered.userData.restRz,
+      OUT_MS
+    );
+    hovered = null;
+    canvas.style.cursor = "default";
   }
-  hovered = null;
-  canvas.style.cursor = "default";
-  render();
 });
 
-// PRESS
-canvas.addEventListener("pointerdown", (e) => {
-  const r = canvas.getBoundingClientRect();
-  mouse.x = ((e.clientX - r.left) / r.width) * 2 - 1;
-  mouse.y = -((e.clientY - r.top) / r.height) * 2 + 1;
-  ray.setFromCamera(mouse, camera);
-  const hit = ray.intersectObjects(keys, true)[0];
-  if (hit) press(getKeyRoot(hit.object));
-});
+function resolveController(hitObj) {
+  // climb from the hit mesh to the controller we registered
+  let n = hitObj;
+  while (n) {
+    if (keyControllers.includes(n)) return n;
+    // if the exact mesh was registered as a rayTarget, map it to its controller
+    if (hitToControl.has(n)) return hitToControl.get(n);
+    n = n.parent;
+  }
+  return null;
+}
 
-function press(obj) {
-  if (pressing.has(obj)) return;
-  pressing.add(obj);
+/* ---------------------- Helpers & anim ------------------------- */
 
-  const start = performance.now();
-  const down = 90,
-    up = 140;
-  const depth = 0.06,
-    tiltX = 0.04,
-    tiltZ = 0.02;
-
-  // start from current pose (works whether it's hovered or not)
-  const oy = obj.position.y,
-    orx = obj.rotation.x,
-    orz = obj.rotation.z;
-
-  requestAnimationFrame(function anim(t) {
-    const dt = t - start;
-    let p = dt < down ? dt / down : 1 - Math.min((dt - down) / up, 1);
-    p = p < 0.5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2;
-
-    obj.position.y = oy - depth * p;
-    obj.rotation.x = orx + tiltX * p;
-    obj.rotation.z = orz - tiltZ * p;
-
-    render();
-    if (dt < down + up) requestAnimationFrame(anim);
-    else {
-      // restore to latest baseline (hover may have changed during press)
-      const base = (obj.userData?.hovered
-        ? (obj.userData.restY ?? oy) + HOVER_LIFT
-        : (obj.userData.restY ?? oy));
-      obj.position.y = base;
-      obj.rotation.x = orx;
-      obj.rotation.z = orz;
-      pressing.delete(obj);
-      render();
+function highlight(object3D, on) {
+  object3D.traverse((n) => {
+    if (!n.isMesh) return;
+    const mats = Array.isArray(n.material) ? n.material : [n.material];
+    for (const m of mats) {
+      if (!m || !("emissive" in m)) continue;
+      if (on) {
+        if (!m.userData._e) {
+          m.userData._e = m.emissive.clone();
+          m.userData._i = m.emissiveIntensity ?? 1;
+        }
+        m.emissive.set(0xffffff);
+        m.emissiveIntensity = HOVER_EMISSIVE;
+      } else if (m.userData._e) {
+        m.emissive.copy(m.userData._e);
+        m.emissiveIntensity = m.userData._i ?? 1;
+      } else {
+        m.emissive.set(0x000000);
+        m.emissiveIntensity = 1;
+      }
     }
   });
 }
 
-// Quick press-like bounce when a key gets hovered
-function bounceKey(obj) {
-  if (!obj || pressing.has(obj)) return;
-  if (obj.userData?.bouncing) return;
-  obj.userData.bouncing = true;
+function animateKey(obj, ty, trx, trz, ms) {
+  const token = {};
+  obj.userData.animToken = token;
 
+  const sy = obj.position.y,
+    srx = obj.rotation.x,
+    srz = obj.rotation.z;
   const start = performance.now();
-  const down = 80, up = 120;
-  const depth = 0.02, tiltX = 0.01, tiltZ = 0.006;
+  const ease = (p) => (p < 0.5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2);
 
-  const oy = obj.position.y;
-  const orx = obj.rotation.x;
-  const orz = obj.rotation.z;
+  function step(t) {
+    if (obj.userData.animToken !== token) return;
+    const dt = Math.min(1, (t - start) / ms);
+    const p = ease(dt);
 
-  function anim(t) {
-    const dt = t - start;
-    let p = dt < down ? dt / down : 1 - Math.min((dt - down) / up, 1);
-    // easeInOutQuad
-    p = p < 0.5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2;
-
-    obj.position.y = oy - depth * p;
-    obj.rotation.x = orx + tiltX * p;
-    obj.rotation.z = orz - tiltZ * p;
+    obj.position.y = sy + (ty - sy) * p;
+    obj.rotation.x = srx + (trx - srx) * p;
+    obj.rotation.z = srz + (trz - srz) * p;
 
     render();
-    if (dt < down + up && obj.userData.bouncing) requestAnimationFrame(anim);
+    if (dt < 1) requestAnimationFrame(step);
     else {
-      obj.userData.bouncing = false;
-      // restore to the appropriate baseline
-      const base = (obj.userData?.hovered
-        ? (obj.userData.restY ?? oy) + HOVER_LIFT
-        : (obj.userData.restY ?? oy));
-      obj.position.y = base;
-      obj.rotation.x = orx;
-      obj.rotation.z = orz;
+      obj.position.y = ty;
+      obj.rotation.x = trx;
+      obj.rotation.z = trz;
       render();
     }
   }
-
-  requestAnimationFrame(anim);
-}
-
-function getKeyRoot(o) {
-  let n = o;
-  while (n && n.parent) {
-    if (keys.includes(n)) return n;
-    n = n.parent;
-  }
-  return o;
+  requestAnimationFrame(step);
 }
 
 /* ---------- Camera framing helper ---------- */
