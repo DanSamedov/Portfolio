@@ -63,6 +63,10 @@
 
 /* ===== Base layer ===== */
 @layer base {
+  :root {
+    --acc: hsl(220 90% 60%);
+    --r: 60px;
+  }
   html:focus-within {
     scroll-behavior: smooth;
   }

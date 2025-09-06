@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Danylo Samedov</title>
     <link rel="stylesheet" href="./dist/styles.css" />
-    <script defer src="./src/main.js"></script>
+    <script defer src="./src/js/main.js"></script>
   </head>
   <body class="scroll-smooth bg-slate-50">
     <div
@@ -1030,5 +1030,32 @@
         </div>
       </div>
     </footer>
+    <!-- Canvas container (Tailwind optional) -->
+    <div
+      class="relative w-full h-[70vh] max-h-[680px] rounded-2xl ring-1 ring-black/10 overflow-hidden"
+    >
+      <canvas id="kb" class="w-full h-full block"></canvas>
+
+      <!-- Optional overlay; style as you like -->
+      <div
+        class="pointer-events-none absolute right-3 bottom-3 max-w-[420px] rounded-xl bg-black/40 text-white backdrop-blur-md p-3 ring-1 ring-white/15"
+      >
+        <p class="uppercase tracking-[0.2em] text-[10px] opacity-80">Skill</p>
+        <h3 id="title" class="text-lg font-semibold leading-tight">—</h3>
+        <p id="desc" class="opacity-90 text-sm">Click a key.</p>
+      </div>
+    </div>
+
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://unpkg.com/three@0.159.0/build/three.module.js",
+          "three/addons/": "https://unpkg.com/three@0.159.0/examples/jsm/"
+        }
+      }
+    </script>
+
+    <canvas id="kb" class="w-full h-[70vh] block"></canvas>
+    <script type="module" src="./src/js/keyboard.js"></script>
   </body>
 </html>
