@@ -23,14 +23,13 @@ const rimL = new THREE.DirectionalLight(0x5bc0ff, 0.9);
 rimL.position.set(-6, 7, -5);
 scene.add(rimL);
 
-/* ------- press/hover config ------- */
-const PRESS_FRACTION = 0.5; // press 50% of key height
+/* ---- press config (animation only) ---- */
+const PRESS_FRACTION = 0.5; // press by 50% of key height
 const TILT_X = 0.06,
   TILT_Z = -0.03;
 const IN_MS = 110,
   OUT_MS = 160;
-const HOVER_EMISSIVE = 0.18;
-/* ---------------------------------- */
+/* -------------------------------------- */
 
 const MODEL_URL = "./src/assets/models/keyboard2.glb";
 const loader = new GLTFLoader();
@@ -51,7 +50,7 @@ loader.load(MODEL_URL, (g) => {
 
   collectKeys(root);
 
-  // Fallback if nothing matched: treat top-level meshes (except "body") as keys
+  // Fallback if nothing matched: use top-level meshes (except "body") as keys
   if (keyControllers.length === 0) {
     root.children.forEach((o) => {
       if (o.isMesh && o.name !== "body") registerKey(o, o);
@@ -73,7 +72,7 @@ loader.load(MODEL_URL, (g) => {
     ctrl.userData.pressRz = ctrl.userData.restRz + TILT_Z;
     ctrl.userData.animToken = null;
 
-    // stabilize transparent sub-mats (if a joined decal exists on the same mesh)
+    // Stabilize any transparent decal sub-mats (if joined logos exist)
     ctrl.traverse((n) => {
       if (!n.isMesh) return;
       const mats = Array.isArray(n.material) ? n.material : [n.material];
@@ -94,24 +93,18 @@ loader.load(MODEL_URL, (g) => {
   render();
 });
 
-/** Find all objects named key_* (mesh OR group), and pick a mesh under each for raycasting */
 function collectKeys(root) {
-  // 1) grab any node whose name starts with key_
+  // find any node named key_* (mesh or group)
   const keyNodes = [];
   root.traverse((o) => {
-    if (!o.name) return;
-    if (o.name.startsWith("key_")) keyNodes.push(o);
+    if (o.name?.startsWith?.("key_")) keyNodes.push(o);
   });
-
   for (const node of keyNodes) {
-    // controller is the named node itself
     const ctrl = node;
-    // find a mesh to raycast—prefer the ctrl if it's already a mesh
-    let targetMesh = node.isMesh ? node : null;
-    if (!targetMesh) {
-      targetMesh = node.getObjectByProperty("isMesh", true); // first descendant mesh
-      if (!targetMesh) continue; // skip if no geometry under this node
-    }
+    let targetMesh = node.isMesh
+      ? node
+      : node.getObjectByProperty("isMesh", true);
+    if (!targetMesh) continue; // skip if no geometry found
     registerKey(ctrl, targetMesh);
   }
 }
@@ -138,7 +131,6 @@ canvas.addEventListener("pointermove", (e) => {
 
   if (next !== hovered) {
     if (hovered) {
-      highlight(hovered, false);
       animateKey(
         hovered,
         hovered.userData.restY,
@@ -148,7 +140,6 @@ canvas.addEventListener("pointermove", (e) => {
       );
     }
     if (next) {
-      highlight(next, true);
       animateKey(
         next,
         next.userData.pressY,
@@ -164,7 +155,6 @@ canvas.addEventListener("pointermove", (e) => {
 
 canvas.addEventListener("pointerleave", () => {
   if (hovered) {
-    highlight(hovered, false);
     animateKey(
       hovered,
       hovered.userData.restY,
@@ -178,42 +168,17 @@ canvas.addEventListener("pointerleave", () => {
 });
 
 function resolveController(hitObj) {
-  // climb from the hit mesh to the controller we registered
+  // climb from hit mesh to the registered controller
   let n = hitObj;
   while (n) {
     if (keyControllers.includes(n)) return n;
-    // if the exact mesh was registered as a rayTarget, map it to its controller
     if (hitToControl.has(n)) return hitToControl.get(n);
     n = n.parent;
   }
   return null;
 }
 
-/* ---------------------- Helpers & anim ------------------------- */
-
-function highlight(object3D, on) {
-  object3D.traverse((n) => {
-    if (!n.isMesh) return;
-    const mats = Array.isArray(n.material) ? n.material : [n.material];
-    for (const m of mats) {
-      if (!m || !("emissive" in m)) continue;
-      if (on) {
-        if (!m.userData._e) {
-          m.userData._e = m.emissive.clone();
-          m.userData._i = m.emissiveIntensity ?? 1;
-        }
-        m.emissive.set(0xffffff);
-        m.emissiveIntensity = HOVER_EMISSIVE;
-      } else if (m.userData._e) {
-        m.emissive.copy(m.userData._e);
-        m.emissiveIntensity = m.userData._i ?? 1;
-      } else {
-        m.emissive.set(0x000000);
-        m.emissiveIntensity = 1;
-      }
-    }
-  });
-}
+/* ---------------------- Animation ------------------------- */
 
 function animateKey(obj, ty, trx, trz, ms) {
   const token = {};
