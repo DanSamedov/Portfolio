@@ -9,19 +9,22 @@ const renderer = new THREE.WebGLRenderer({
 });
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.2; // brighten overall scene
 renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(45, 2, 0.1, 100);
 camera.position.set(0, 4, 9);
 
-scene.add(new THREE.HemisphereLight(0xffffff, 0xe9edf5, 0.7));
-const keyL = new THREE.DirectionalLight(0xffe3c4, 1.0);
+scene.add(new THREE.HemisphereLight(0xffffff, 0xe9edf5, 0.95));
+const keyL = new THREE.DirectionalLight(0xffffff, 1.35);
 keyL.position.set(5, 8, 6);
 scene.add(keyL);
-const rimL = new THREE.DirectionalLight(0x5bc0ff, 0.9);
+const rimL = new THREE.DirectionalLight(0x5bc0ff, 1.1);
 rimL.position.set(-6, 7, -5);
 scene.add(rimL);
+// soft ambient fill to lift shadows subtly
+scene.add(new THREE.AmbientLight(0xffffff, 0.15));
 
 /* ---- press config (animation only) ---- */
 const PRESS_FRACTION = 0.5; // press by 50% of key height
@@ -31,8 +34,11 @@ const IN_MS = 110,
   OUT_MS = 160;
 /* -------------------------------------- */
 
-const MODEL_URL = "./src/assets/models/keyboard2.glb";
+const MODEL_URL = "./src/assets/models/keyboard.glb";
 const loader = new GLTFLoader();
+// Framing setup: head-on direction with a slightly higher pitch
+const FRAME_DIR = new THREE.Vector3(0, 1.0, 1.0);
+const FRAME_FILL = 0.8; // smaller = larger on screen
 
 /** Data containers **/
 const keyControllers = []; // objects we animate (groups or meshes named key_*)
@@ -47,6 +53,8 @@ loader.load(MODEL_URL, (g) => {
   root.rotation.y = Math.PI;
   root.rotation.x = 0.25;
   scene.add(root);
+  // Ensure world matrices are up-to-date for accurate sizing
+  scene.updateMatrixWorld(true);
 
   collectKeys(root);
 
@@ -59,10 +67,56 @@ loader.load(MODEL_URL, (g) => {
 
   // Precompute pose/press targets
   for (const ctrl of keyControllers) {
-    const boxW = new THREE.Box3().setFromObject(ctrl); // world bbox for full key
-    const sizeW = boxW.getSize(new THREE.Vector3());
-    const parentScale = ctrl.parent.getWorldScale(new THREE.Vector3());
-    const heightLocal = sizeW.y / parentScale.y; // convert to ctrl's local
+    // Choose the largest mesh under this key as the cap (ignore tiny decals)
+    let capMesh = null;
+    let bestVol = -Infinity;
+    ctrl.traverse((n) => {
+      if (!n.isMesh || !n.geometry) return;
+      n.geometry.computeBoundingBox?.();
+      const bb = n.geometry.boundingBox;
+      if (!bb) return;
+      const sx = Math.max(0, bb.max.x - bb.min.x);
+      const sy = Math.max(0, bb.max.y - bb.min.y);
+      const sz = Math.max(0, bb.max.z - bb.min.z);
+      const vol = sx * sy * sz;
+      if (vol > bestVol) {
+        bestVol = vol;
+        capMesh = n;
+      }
+    });
+    if (!capMesh) capMesh = ctrl.userData?.targetMesh || ctrl;
+
+    // Compute the key height in controller-local units by projecting the
+    // cap's local bounding-box corners into controller space and measuring Y
+    let heightLocal = 0.01; // minimal fallback to avoid zero
+    if (capMesh.isMesh && capMesh.geometry) {
+      capMesh.geometry.computeBoundingBox?.();
+      const bb = capMesh.geometry.boundingBox;
+      if (bb) {
+        const min = bb.min,
+          max = bb.max;
+        const corners = [
+          new THREE.Vector3(min.x, min.y, min.z),
+          new THREE.Vector3(min.x, min.y, max.z),
+          new THREE.Vector3(min.x, max.y, min.z),
+          new THREE.Vector3(min.x, max.y, max.z),
+          new THREE.Vector3(max.x, min.y, min.z),
+          new THREE.Vector3(max.x, min.y, max.z),
+          new THREE.Vector3(max.x, max.y, min.z),
+          new THREE.Vector3(max.x, max.y, max.z),
+        ];
+        let minY = Infinity,
+          maxY = -Infinity;
+        for (const c of corners) {
+          const world = capMesh.localToWorld(c.clone());
+          const inCtrl = ctrl.worldToLocal(world);
+          if (inCtrl.y < minY) minY = inCtrl.y;
+          if (inCtrl.y > maxY) maxY = inCtrl.y;
+        }
+        const span = maxY - minY;
+        if (span > 0) heightLocal = span;
+      }
+    }
 
     ctrl.userData.restY = ctrl.position.y;
     ctrl.userData.restRx = ctrl.rotation.x;
@@ -89,7 +143,7 @@ loader.load(MODEL_URL, (g) => {
     });
   }
 
-  frameFromDirection(camera, root, new THREE.Vector3(-0.8, 0.75, 0.8), 1.22);
+  frameFromDirection(camera, root, FRAME_DIR, FRAME_FILL);
   render();
 });
 
@@ -113,6 +167,8 @@ function registerKey(controller, targetMesh) {
   keyControllers.push(controller);
   rayTargets.push(targetMesh);
   hitToControl.set(targetMesh, controller);
+  // remember the mesh used for raycasting; helpful for sizing later
+  controller.userData.targetMesh = targetMesh;
 }
 
 /* --------------------- Hover → press/release ------------------- */
