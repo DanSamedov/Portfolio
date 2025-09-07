@@ -2,6 +2,8 @@ import * as THREE from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 
 const canvas = document.getElementById("kb");
+const titleEl = document.getElementById("title");
+const descEl = document.getElementById("desc");
 const renderer = new THREE.WebGLRenderer({
   canvas,
   antialias: true,
@@ -48,6 +50,33 @@ let hovered = null;
 let grid = null; // 2D array [row][col] of controllers (4x6)
 const keyMapByCode = Object.create(null); // event.code -> controller
 const keyMapByKey = Object.create(null); // event.key (lowercase) -> controller
+
+// Pretty names for known slugs
+const LABEL_OVERRIDES = {
+  js: "JavaScript",
+  javascript: "JavaScript",
+  html5: "HTML5",
+  css3: "CSS3",
+  scikitlearn: "Scikit-learn",
+  postgresql: "PostgreSQL",
+  mysql: "MySQL",
+  sqlalchemy: "SQLAlchemy",
+  numpy: "NumPy",
+  pandas: "Pandas",
+  matplotlib: "Matplotlib",
+  tailwindcss: "Tailwind CSS",
+  fastapi: "FastAPI",
+  websocket: "WebSocket",
+  docker: "Docker",
+  redis: "Redis",
+  telegram: "Telegram",
+  linux: "Linux",
+  git: "Git",
+  pytest: "Pytest",
+  selenium: "Selenium",
+  django: "Django",
+  c: "C",
+};
 
 /* ---------- load & collect ---------- */
 loader.load(MODEL_URL, (g) => {
@@ -176,6 +205,7 @@ function registerKey(controller, targetMesh) {
   // remember the mesh used for raycasting; helpful for sizing later
   controller.userData.targetMesh = targetMesh;
   controller.userData.pressRefs = 0; // reference counter for combined hover + keyboard
+  controller.userData.label = computeSkillLabel(controller);
 }
 
 /* --------------------- Hover → press/release ------------------- */
@@ -197,6 +227,8 @@ canvas.addEventListener("pointermove", (e) => {
     if (next) engagePress(next);
     hovered = next;
     canvas.style.cursor = hovered ? "pointer" : "default";
+    if (hovered) showOverlayFor(hovered);
+    else updateOverlayFallback();
   }
 });
 
@@ -205,6 +237,7 @@ canvas.addEventListener("pointerleave", () => {
     releasePress(hovered);
     hovered = null;
     canvas.style.cursor = "default";
+    updateOverlayFallback();
   }
 });
 
@@ -252,6 +285,34 @@ function animateKey(obj, ty, trx, trz, ms) {
   requestAnimationFrame(step);
 }
 
+/* ---------- Overlay helpers ---------- */
+function computeSkillLabel(ctrl) {
+  const raw = (ctrl?.name || ctrl?.userData?.targetMesh?.name || "").toString();
+  let slug = raw.replace(/^key[ _-]?/i, "").toLowerCase();
+  slug = slug.replace(/[^a-z0-9]+/g, " ").trim();
+  const compact = slug.replace(/\s+/g, "");
+  if (LABEL_OVERRIDES[slug]) return LABEL_OVERRIDES[slug];
+  if (LABEL_OVERRIDES[compact]) return LABEL_OVERRIDES[compact];
+  // Title case fallback
+  return (
+    slug
+      .split(/\s+/)
+      .filter(Boolean)
+      .map((w) => w[0]?.toUpperCase() + w.slice(1))
+      .join(" ") || "—"
+  );
+}
+
+function showOverlayFor(ctrl) {
+  const label = ctrl?.userData?.label || computeSkillLabel(ctrl);
+  if (titleEl) titleEl.textContent = label;
+}
+
+function clearOverlay() {
+  if (titleEl) titleEl.textContent = "—";
+  if (descEl) descEl.textContent = "Click a key.";
+}
+
 /* ---------- Press ref-count (hover + keyboard) ---------- */
 function engagePress(ctrl) {
   ctrl.userData.pressRefs = (ctrl.userData.pressRefs || 0) + 1;
@@ -264,6 +325,7 @@ function engagePress(ctrl) {
       IN_MS
     );
   }
+  showOverlayFor(ctrl);
 }
 
 function releasePress(ctrl) {
@@ -278,6 +340,7 @@ function releasePress(ctrl) {
       OUT_MS
     );
   }
+  updateOverlayFallback();
 }
 
 /* ---------- Camera framing helper ---------- */
@@ -333,7 +396,9 @@ function tryBuildGridMapping() {
     items.slice(18, 24),
   ];
   // Sort each row by X (left to right) and extract controllers
-  grid = rows.map((row) => row.sort((a, b) => a.pos.x - b.pos.x).map((o) => o.ctrl));
+  grid = rows.map((row) =>
+    row.sort((a, b) => a.pos.x - b.pos.x).map((o) => o.ctrl)
+  );
 
   // Create mapping: columns 0..5 => [Digit1..6, KeyQ..Y, KeyA..H, KeyZ..N]
   const colCodes = [
@@ -376,9 +441,7 @@ function onPhysicalKeyDown(e) {
   const t = e.target;
   if (
     t &&
-    (t.tagName === "INPUT" ||
-      t.tagName === "TEXTAREA" ||
-      t.isContentEditable)
+    (t.tagName === "INPUT" || t.tagName === "TEXTAREA" || t.isContentEditable)
   )
     return;
   // Avoid auto-repeat
@@ -393,9 +456,7 @@ function onPhysicalKeyUp(e) {
   const t = e.target;
   if (
     t &&
-    (t.tagName === "INPUT" ||
-      t.tagName === "TEXTAREA" ||
-      t.isContentEditable)
+    (t.tagName === "INPUT" || t.tagName === "TEXTAREA" || t.isContentEditable)
   )
     return;
   const lookup = e.code || e.key;
@@ -404,4 +465,14 @@ function onPhysicalKeyUp(e) {
   const ctrl = keyMapByCode[e.code] || keyMapByKey[(e.key || "").toLowerCase()];
   if (!ctrl) return;
   releasePress(ctrl);
+}
+
+function updateOverlayFallback() {
+  if (hovered) {
+    showOverlayFor(hovered);
+    return;
+  }
+  const pressed = keyControllers.find((k) => (k.userData.pressRefs || 0) > 0);
+  if (pressed) showOverlayFor(pressed);
+  else clearOverlay();
 }
