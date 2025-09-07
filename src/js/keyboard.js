@@ -45,6 +45,9 @@ const keyControllers = []; // objects we animate (groups or meshes named key_*)
 const rayTargets = []; // meshes we raycast against
 const hitToControl = new Map(); // mesh -> controller mapping
 let hovered = null;
+let grid = null; // 2D array [row][col] of controllers (4x6)
+const keyMapByCode = Object.create(null); // event.code -> controller
+const keyMapByKey = Object.create(null); // event.key (lowercase) -> controller
 
 /* ---------- load & collect ---------- */
 loader.load(MODEL_URL, (g) => {
@@ -143,6 +146,9 @@ loader.load(MODEL_URL, (g) => {
     });
   }
 
+  // Build grid + keyboard mapping (rows by Z, columns by X)
+  tryBuildGridMapping();
+
   frameFromDirection(camera, root, FRAME_DIR, FRAME_FILL);
   render();
 });
@@ -169,6 +175,7 @@ function registerKey(controller, targetMesh) {
   hitToControl.set(targetMesh, controller);
   // remember the mesh used for raycasting; helpful for sizing later
   controller.userData.targetMesh = targetMesh;
+  controller.userData.pressRefs = 0; // reference counter for combined hover + keyboard
 }
 
 /* --------------------- Hover → press/release ------------------- */
@@ -186,24 +193,8 @@ canvas.addEventListener("pointermove", (e) => {
   const next = hit ? resolveController(hit.object) : null;
 
   if (next !== hovered) {
-    if (hovered) {
-      animateKey(
-        hovered,
-        hovered.userData.restY,
-        hovered.userData.restRx,
-        hovered.userData.restRz,
-        OUT_MS
-      );
-    }
-    if (next) {
-      animateKey(
-        next,
-        next.userData.pressY,
-        next.userData.pressRx,
-        next.userData.pressRz,
-        IN_MS
-      );
-    }
+    if (hovered) releasePress(hovered);
+    if (next) engagePress(next);
     hovered = next;
     canvas.style.cursor = hovered ? "pointer" : "default";
   }
@@ -211,13 +202,7 @@ canvas.addEventListener("pointermove", (e) => {
 
 canvas.addEventListener("pointerleave", () => {
   if (hovered) {
-    animateKey(
-      hovered,
-      hovered.userData.restY,
-      hovered.userData.restRx,
-      hovered.userData.restRz,
-      OUT_MS
-    );
+    releasePress(hovered);
     hovered = null;
     canvas.style.cursor = "default";
   }
@@ -267,6 +252,34 @@ function animateKey(obj, ty, trx, trz, ms) {
   requestAnimationFrame(step);
 }
 
+/* ---------- Press ref-count (hover + keyboard) ---------- */
+function engagePress(ctrl) {
+  ctrl.userData.pressRefs = (ctrl.userData.pressRefs || 0) + 1;
+  if (ctrl.userData.pressRefs === 1) {
+    animateKey(
+      ctrl,
+      ctrl.userData.pressY,
+      ctrl.userData.pressRx,
+      ctrl.userData.pressRz,
+      IN_MS
+    );
+  }
+}
+
+function releasePress(ctrl) {
+  const n = Math.max(0, (ctrl.userData.pressRefs || 0) - 1);
+  ctrl.userData.pressRefs = n;
+  if (n === 0) {
+    animateKey(
+      ctrl,
+      ctrl.userData.restY,
+      ctrl.userData.restRx,
+      ctrl.userData.restRz,
+      OUT_MS
+    );
+  }
+}
+
 /* ---------- Camera framing helper ---------- */
 function frameFromDirection(camera, object, dir, fill = 1.2) {
   const box = new THREE.Box3().setFromObject(object);
@@ -299,3 +312,96 @@ function render() {
 }
 window.addEventListener("resize", render);
 render();
+
+/* ---------- Grid mapping and keyboard controls ---------- */
+function tryBuildGridMapping() {
+  if (keyControllers.length !== 24) {
+    // Skip mapping if not the expected layout
+    return;
+  }
+  // Get world positions
+  const items = keyControllers.map((ctrl) => ({
+    ctrl,
+    pos: ctrl.getWorldPosition(new THREE.Vector3()),
+  }));
+  // Sort by Z (back to front) then chunk into 4 rows of 6
+  items.sort((a, b) => a.pos.z - b.pos.z);
+  const rows = [
+    items.slice(0, 6),
+    items.slice(6, 12),
+    items.slice(12, 18),
+    items.slice(18, 24),
+  ];
+  // Sort each row by X (left to right) and extract controllers
+  grid = rows.map((row) => row.sort((a, b) => a.pos.x - b.pos.x).map((o) => o.ctrl));
+
+  // Create mapping: columns 0..5 => [Digit1..6, KeyQ..Y, KeyA..H, KeyZ..N]
+  const colCodes = [
+    ["Digit1", "KeyQ", "KeyA", "KeyZ"],
+    ["Digit2", "KeyW", "KeyS", "KeyX"],
+    ["Digit3", "KeyE", "KeyD", "KeyC"],
+    ["Digit4", "KeyR", "KeyF", "KeyV"],
+    ["Digit5", "KeyT", "KeyG", "KeyB"],
+    ["Digit6", "KeyY", "KeyH", "KeyN"],
+  ];
+  const colKeys = [
+    ["1", "q", "a", "z"],
+    ["2", "w", "s", "x"],
+    ["3", "e", "d", "c"],
+    ["4", "r", "f", "v"],
+    ["5", "t", "g", "b"],
+    ["6", "y", "h", "n"],
+  ];
+
+  for (let col = 0; col < 6; col++) {
+    for (let row = 0; row < 4; row++) {
+      const ctrl = grid[row][col];
+      const code = colCodes[col][row];
+      const key = colKeys[col][row];
+      keyMapByCode[code] = ctrl;
+      keyMapByKey[key] = ctrl;
+    }
+  }
+
+  // Register key listeners once when mapping becomes available
+  if (!tryBuildGridMapping._listenersAdded) {
+    document.addEventListener("keydown", onPhysicalKeyDown);
+    document.addEventListener("keyup", onPhysicalKeyUp);
+    tryBuildGridMapping._listenersAdded = true;
+  }
+}
+
+const held = new Set();
+function onPhysicalKeyDown(e) {
+  const t = e.target;
+  if (
+    t &&
+    (t.tagName === "INPUT" ||
+      t.tagName === "TEXTAREA" ||
+      t.isContentEditable)
+  )
+    return;
+  // Avoid auto-repeat
+  if (e.repeat) return;
+  const ctrl = keyMapByCode[e.code] || keyMapByKey[(e.key || "").toLowerCase()];
+  if (!ctrl) return;
+  held.add(e.code || e.key);
+  engagePress(ctrl);
+}
+
+function onPhysicalKeyUp(e) {
+  const t = e.target;
+  if (
+    t &&
+    (t.tagName === "INPUT" ||
+      t.tagName === "TEXTAREA" ||
+      t.isContentEditable)
+  )
+    return;
+  const lookup = e.code || e.key;
+  if (!held.has(lookup)) return;
+  held.delete(lookup);
+  const ctrl = keyMapByCode[e.code] || keyMapByKey[(e.key || "").toLowerCase()];
+  if (!ctrl) return;
+  releasePress(ctrl);
+}
