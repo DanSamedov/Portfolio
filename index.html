@@ -7,7 +7,9 @@
     <link rel="stylesheet" href="./dist/styles.css" />
     <style>
       /* pagination helper (kept separate from filter's Tailwind .hidden) */
-      .pager-hidden { display: none !important; }
+      .pager-hidden {
+        display: none !important;
+      }
     </style>
     <script defer src="./src/js/main.js"></script>
     <script defer src="./src/js/github-projects.js"></script>
@@ -415,18 +417,16 @@
           </div>
 
           <!-- Cards -->
-          <div
-            id="projects-grid"
-            class="grid grid-cols-1 gap-6 p-4"
-          >
+          <div id="projects-grid" class="grid grid-cols-1 gap-6 p-4">
             <!-- Card -->
             <div
-              class="project-card group relative cursor-pointer rounded-xl overflow-hidden transition-all duration-300"
+              class="project-card codenames-card group relative cursor-pointer rounded-xl overflow-hidden transition-all duration-300"
               data-project="websites"
               data-live="https://your-live-site.com"
               data-repo="https://github.com/DanSamedov/Codenames-Website"
               style="
-                box-shadow: rgba(200, 200, 200, 0.2) 2px 2px 6px, rgba(160, 160, 160, 0.15) 0px 6px 10px;
+                box-shadow: rgba(200, 200, 200, 0.2) 2px 2px 6px,
+                  rgba(160, 160, 160, 0.15) 0px 6px 10px;
                 background: radial-gradient(
                   circle at 50% 0%,
                   rgb(81, 251, 251),
@@ -458,43 +458,42 @@
                     class="w-12 h-12 rounded-full bg-white dark:bg-neutral-900 flex items-center justify-center text-[24px] shadow-md -ml-4 group-hover:ml-0 transition-all duration-500"
                     style="z-index: 3"
                   >
-                    <!-- React -->
-                    <svg
-                      viewBox="0 0 24 24"
-                      class="text-sky-500"
-                      width="1em"
-                      height="1em"
-                      fill="currentColor"
-                      aria-hidden="true"
-                    >
-                      <path
-                        d="M14.23 12a2.23 2.23 0 1 1-4.46 0 2.23 2.23 0 0 1 4.46 0ZM12 7.08c-1.54 0-2.96.2-4.02.54C6.9 8 .5 10.37.5 12s6.4 4 7.48 4.38c1.06.34 2.48.54 4.02.54s2.96-.2 4.02-.54C17.1 16 23.5 13.63 23.5 12s-6.4-4-7.48-4.38c-1.06-.34-2.48-.54-4.02-.54Z"
-                      />
-                    </svg>
+                    <img
+                      src="./src/assets/icons/django.svg"
+                      alt="Django"
+                      class="w-7 h-7"
+                      loading="lazy"
+                      width="28"
+                      height="28"
+                    />
                   </div>
+
                   <div
                     class="w-12 h-12 rounded-full bg-white dark:bg-neutral-900 flex items-center justify-center text-[24px] shadow-md -ml-4 group-hover:ml-0 transition-all duration-500"
                     style="z-index: 2"
                   >
-                    <span class="font-bold text-blue-600">TS</span>
+                    <img
+                      src="./src/assets/icons/websocket-svgrepo-com.svg"
+                      alt="Websockets"
+                      class="w-7 h-7"
+                      loading="lazy"
+                      width="28"
+                      height="28"
+                    />
                   </div>
+
                   <div
                     class="w-12 h-12 rounded-full bg-white dark:bg-neutral-900 flex items-center justify-center text-[24px] shadow-md -ml-4 group-hover:ml-0 transition-all duration-500"
                     style="z-index: 1"
                   >
-                    <!-- Node -->
-                    <svg
-                      viewBox="0 0 24 24"
-                      class="text-green-500"
-                      width="1em"
-                      height="1em"
-                      fill="currentColor"
-                      aria-hidden="true"
-                    >
-                      <path
-                        d="M12 .5 1.5 6.6v10.8L12 23.5l10.5-6.1V6.6L12 .5Zm4.6 14.3c0 1.8-1.1 2.8-3.1 2.8-.9 0-1.9-.2-2.7-.7V15c.8.5 1.6.8 2.5.8 1 0 1.6-.4 1.6-1.2 0-.6-.4-1-1.7-1.5-1.7-.6-2.8-1.3-2.8-3 0-1.8 1.4-2.8 3-2.8.9 0 1.7.2 2.4.6v1.9c-.7-.4-1.4-.6-2.2-.6-.8 0-1.3.3-1.3.9 0 .6.5.9 1.9 1.4 1.9.7 2.4 1.5 2.4 3z"
-                      />
-                    </svg>
+                    <img
+                      src="./src/assets/icons/mysql-svgrepo-com.svg"
+                      alt="Mysql"
+                      class="w-7 h-7"
+                      loading="lazy"
+                      width="28"
+                      height="28"
+                    />
                   </div>
                 </div>
               </div>
@@ -505,7 +504,7 @@
               >
                 <img
                   alt="Codenames Website preview"
-                  class="duration-500 object-contain rounded-t-2xl w-[80%]"
+                  class="card-preview duration-500 object-contain rounded-t-2xl w-[80%]"
                   src="./src/assets/static/codenames_portfolio.png"
                 />
               </div>
@@ -516,7 +515,8 @@
               class="project-card group relative cursor-pointer rounded-xl overflow-hidden transition-all duration-300"
               data-project="websites"
               style="
-                box-shadow: rgba(200, 200, 200, 0.2) 2px 2px 6px, rgba(160, 160, 160, 0.15) 0px 6px 10px;
+                box-shadow: rgba(200, 200, 200, 0.2) 2px 2px 6px,
+                  rgba(160, 160, 160, 0.15) 0px 6px 10px;
                 background: radial-gradient(
                   circle at 50% 0%,
                   rgb(20, 241, 149),
@@ -576,7 +576,8 @@
               class="project-card group relative cursor-pointer rounded-xl overflow-hidden transition-all duration-300"
               data-project="bots"
               style="
-                box-shadow: rgba(200, 200, 200, 0.2) 2px 2px 6px, rgba(160, 160, 160, 0.15) 0px 6px 10px;
+                box-shadow: rgba(200, 200, 200, 0.2) 2px 2px 6px,
+                  rgba(160, 160, 160, 0.15) 0px 6px 10px;
                 background: radial-gradient(
                   circle at 50% 0%,
                   rgb(102, 68, 238),
@@ -634,7 +635,8 @@
               class="project-card group relative cursor-pointer rounded-xl overflow-hidden transition-all duration-300"
               data-project="programs"
               style="
-                box-shadow: rgba(200, 200, 200, 0.2) 2px 2px 6px, rgba(160, 160, 160, 0.15) 0px 6px 10px;
+                box-shadow: rgba(200, 200, 200, 0.2) 2px 2px 6px,
+                  rgba(160, 160, 160, 0.15) 0px 6px 10px;
                 background: radial-gradient(
                   circle at 50% 0%,
                   rgb(20, 141, 241),

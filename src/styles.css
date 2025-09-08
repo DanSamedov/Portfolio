@@ -75,6 +75,7 @@
   html,
   body {
     min-height: 100%;
+    overflow-x: hidden; /* prevent accidental horizontal scroll from shadows/transforms */
   }
 
   /* Centralized site background */
@@ -197,7 +198,7 @@
   .project-card {
     /* unify size across cards (slightly smaller) */
     --project-card-h: 460px;
-    --project-card-image-h: 300px;
+    --project-card-image-h: 240px;
     @apply flex flex-col gap-3 pb-0 transition-all duration-300 ease-in-out hover:shadow-xl;
     min-height: var(--project-card-h);
   }
@@ -210,6 +211,43 @@
   .project-card> :last-child img {
     transition: transform 420ms cubic-bezier(.22, .61, .36, 1);
     will-change: transform;
+    max-width: 75%;
+  }
+
+  /* Codenames: enlarge preview when active (hover/focus) while pinned to bottom */
+    .project-card h3 {
+      color: #ffffff !important;
+    }
+  
+    .project-modal h2 {
+      color: #ffffff !important;
+    }
+  .codenames-card .card-preview {
+    transform-origin: bottom center;
+    will-change: transform, filter;
+    transform: translateY(0) scale(1);
+    transition: transform 260ms cubic-bezier(.22,.61,.36,1),
+                filter 260ms ease;
+  }
+  .codenames-card:hover .card-preview,
+  .codenames-card.group:hover .card-preview {
+    /* even subtler */
+    transform: translateY(-2px) scale(1.04);
+    filter: drop-shadow(0 8px 14px rgba(0,0,0,.20));
+  }
+  /* lock state to neutralize hover (used while modal is open) */
+  .project-card.hover-lock,
+  .project-card.hover-lock:hover { transform: none !important; background-color: transparent !important; }
+  .project-card.hover-lock > :last-child img { transform: translateY(0) scale(1) !important; filter: none !important; }
+  .codenames-card.hover-lock .card-preview { transform: translateY(0) scale(1) !important; filter: none !important; }
+  @media (max-width: 640px) {
+    .codenames-card:hover .card-preview { transform: translateY(-1px) scale(1.03) !important; }
+  }
+
+  @keyframes cn-pop {
+    0% { transform: scale(1); filter: brightness(.98); }
+    60% { transform: scale(1.1); filter: brightness(1); }
+    100% { transform: scale(1.08); }
   }
 
   /* Ensure consistent image area height regardless of utility max-h classes */
@@ -224,7 +262,7 @@
 
   @media (max-width: 640px) {
     .project-card { --project-card-h: 400px; }
-    .project-card> :last-child { --project-card-image-h: 260px; }
+    .project-card> :last-child {--project-card-image-h: 200px;}  
   }
 
   /* Skill tag */

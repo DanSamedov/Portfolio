@@ -311,12 +311,23 @@ function openProjectModal(card) {
   const title = card.querySelector("h3")?.textContent.trim() || "Project";
   const desc =
     card.querySelector("p")?.textContent.trim() || "Project description";
-  const imgSrc =
-    card.querySelector("img")?.getAttribute("src") ||
-    card
-      .querySelector(".project-image")
-      ?.style.backgroundImage?.replace(/^url\(["']?|["']?\)$/g, "") ||
-    "";
+  // Prefer the explicit preview image (bottom image), not icon pills
+  let imgSrc = "";
+  let imgEl =
+    card.querySelector(".card-preview") ||
+    card.lastElementChild?.querySelector?.("img");
+  if (!imgEl) {
+    const imgs = card.querySelectorAll("img");
+    if (imgs.length) imgEl = imgs[imgs.length - 1]; // fallback to the last image in the card
+  }
+  if (imgEl) imgSrc = imgEl.getAttribute("src") || "";
+  if (!imgSrc) {
+    imgSrc =
+      card
+        .querySelector(".project-image")
+        ?.style.backgroundImage?.replace(/^url\(["']?|["']?\)$/g, "") ||
+      "";
+  }
 
   const cs = getComputedStyle(card);
   const bg =
@@ -347,7 +358,7 @@ function openProjectModal(card) {
 
   const modal = document.createElement("div");
   modal.className =
-    "relative w-full max-w-3xl rounded-xl overflow-hidden group transition-all duration-500 ease-[cubic-bezier(.22,.61,.36,1)] translate-y-4";
+    "project-modal relative w-full max-w-4xl rounded-xl overflow-hidden group transition-all duration-500 ease-[cubic-bezier(.22,.61,.36,1)] translate-y-4";
   modal.style.boxShadow =
     "rgba(0,0,0,0.2) 0px 4px 12px, rgba(0,0,0,0.1) 0px 8px 24px";
   modal.style.background = bg;
@@ -356,6 +367,31 @@ function openProjectModal(card) {
     "perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1,1,1)";
 
   const titleId = "modal-title-" + Math.random().toString(36).slice(2, 9);
+
+  // Prevent hover-enlarged card from staying enlarged while modal is open
+  const unlock = () => {
+    card.classList.remove("hover-lock");
+    card.removeEventListener("mouseleave", unlock);
+  };
+  card.classList.add("hover-lock");
+  card.addEventListener("mouseleave", unlock, { once: true });
+
+  // Build non-animated icon pills for modal (mirror of card pills)
+  const cardPillEls = Array.from(
+    card.querySelectorAll(".w-12.h-12.rounded-full")
+  ).slice(0, 3);
+  const pillsHtml = cardPillEls
+    .map((el, i) => {
+      const inner = el.querySelector("img,svg,span");
+      const content = inner ? inner.outerHTML : "";
+      return `
+        <div class="w-10 h-10 rounded-full bg-white dark:bg-neutral-900 flex items-center justify-center text-[20px] shadow-md"
+             style="z-index:${3 - i}">
+          ${content}
+        </div>
+      `;
+    })
+    .join("");
 
   modal.innerHTML = `
     <button
@@ -375,25 +411,27 @@ function openProjectModal(card) {
   )}</h2>
       <p class="text-sm sm:text-base text-white/80">${esc(desc)}</p>
 
-      <div class="relative w-full min-h-[200px] sm:min-h-[420px] flex justify-center rounded-2xl">
+      <div class="relative w-full flex justify-center rounded-2xl">
         ${
           imgSrc
-            ? `<img src="${escAttr(imgSrc)}" alt="${escAttr(title)} preview"
-                    class="rounded-2xl w-[90%] sm:w-[80%] md:w-[400px] object-contain">`
+            ? `<div class="overflow-hidden rounded-3xl w-[94%] sm:w-[92%] md:w-[90%] max-w-[960px] shadow-lg">
+                  <img src="${escAttr(imgSrc)}" alt="${escAttr(title)} preview"
+                       class="block w-full h-auto object-contain">
+               </div>`
             : ""
         }
       </div>
 
-      <div class="flex flex-col md:flex-row items-center justify-between mt-4 gap-4">
-        <div class="flex flex-wrap justify-center sm:justify-start gap-3">
+      <div class="flex items-center justify-between mt-4 gap-4">
+        <div class="flex items-center gap-3">
           ${
             liveUrl
               ? `
               <a href="${escAttr(
                 liveUrl
               )}" target="_blank" rel="noopener noreferrer"
-                class="inline-flex items-center gap-2 leading-none bg-black text-white font-semibold px-4 py-2 rounded-3xl hover:opacity-80 transition focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70">
-                <svg class="shrink-0 w-4 h-4" viewBox="0 0 24 24" fill="none" aria-hidden="true" shape-rendering="geometricPrecision">
+                class="inline-flex items-center gap-2 leading-none bg-black text-white font-semibold px-5 py-2.5 text-base rounded-3xl hover:opacity-80 transition focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70">
+                <svg class="shrink-0 w-5 h-5" viewBox="0 0 24 24" fill="none" aria-hidden="true" shape-rendering="geometricPrecision">
                   <path vector-effect="non-scaling-stroke" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M15 3h6v6"/>
                   <path vector-effect="non-scaling-stroke" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M10 14L21 3"/>
                   <path vector-effect="non-scaling-stroke" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
@@ -408,8 +446,8 @@ function openProjectModal(card) {
               <a href="${escAttr(
                 repoUrl
               )}" target="_blank" rel="noopener noreferrer"
-                class="inline-flex items-center gap-2 leading-none bg-black text-white font-semibold px-4 py-2 rounded-3xl hover:opacity-80 transition focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70">
-                <svg class="shrink-0 w-4 h-4" viewBox="0 0 24 24" fill="none" aria-hidden="true" shape-rendering="geometricPrecision">
+                class="inline-flex items-center gap-2 leading-none bg-black text-white font-semibold px-5 py-2.5 text-base rounded-3xl hover:opacity-80 transition focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70">
+                <svg class="shrink-0 w-5 h-5" viewBox="0 0 24 24" fill="none" aria-hidden="true" shape-rendering="geometricPrecision">
                   <path vector-effect="non-scaling-stroke" stroke="currentColor" stroke-width="2"
                         d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
                 </svg>
@@ -418,6 +456,11 @@ function openProjectModal(card) {
               : ""
           }
         </div>
+        ${
+          pillsHtml
+            ? `<div class="flex items-center gap-2 ml-auto">${pillsHtml}</div>`
+            : ""
+        }
       </div>
     </div>
   `;
@@ -439,10 +482,13 @@ function openProjectModal(card) {
     overlay.classList.add("opacity-0");
     modal.classList.add("translate-y-4");
     setTimeout(() => {
+      // ensure hover lock is released on close
+      try { card.classList.remove("hover-lock"); } catch {}
       overlay.remove();
       document.body.style.overflow = prevOverflow;
       document.removeEventListener("keydown", trap);
-      card.focus?.();
+      // Avoid refocusing the card (which could retrigger focus styles)
+      card.blur?.();
     }, 250);
   };
   overlay.addEventListener("click", (e) => {
