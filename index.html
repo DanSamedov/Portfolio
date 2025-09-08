@@ -5,7 +5,12 @@
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Danylo Samedov</title>
     <link rel="stylesheet" href="./dist/styles.css" />
+    <style>
+      /* pagination helper (kept separate from filter's Tailwind .hidden) */
+      .pager-hidden { display: none !important; }
+    </style>
     <script defer src="./src/js/main.js"></script>
+    <script defer src="./src/js/github-projects.js"></script>
   </head>
   <body class="scroll-smooth bg-slate-50">
     <div
@@ -44,26 +49,6 @@
             <span class="hidden md:inline">Home</span>
           </a>
 
-          <a href="#projects" class="nav-link bg-muted text-primary">
-            <!-- Projects icon (mobile) -->
-            <svg
-              class="md:hidden h-5 w-5"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="1.5"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              aria-hidden="true"
-            >
-              <rect x="3" y="3" width="7" height="7" rx="1" />
-              <rect x="14" y="3" width="7" height="7" rx="1" />
-              <rect x="14" y="14" width="7" height="7" rx="1" />
-              <rect x="3" y="14" width="7" height="7" rx="1" />
-            </svg>
-            <span class="hidden md:inline">Projects</span>
-          </a>
-
           <a href="#skills" class="nav-link bg-muted text-primary">
             <!-- Skills icon (mobile) -->
             <svg
@@ -82,6 +67,26 @@
               <circle cx="12" cy="12" r="3" />
             </svg>
             <span class="hidden md:inline">Skills</span>
+          </a>
+
+          <a href="#projects" class="nav-link bg-muted text-primary">
+            <!-- Projects icon (mobile) -->
+            <svg
+              class="md:hidden h-5 w-5"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <rect x="3" y="3" width="7" height="7" rx="1" />
+              <rect x="14" y="3" width="7" height="7" rx="1" />
+              <rect x="14" y="14" width="7" height="7" rx="1" />
+              <rect x="3" y="14" width="7" height="7" rx="1" />
+            </svg>
+            <span class="hidden md:inline">Projects</span>
           </a>
 
           <a href="#contact" class="nav-link bg-muted text-primary">
@@ -305,6 +310,32 @@
         </div>
       </section>
 
+      <!-- Skills -->
+      <section id="skills" class="w-full scroll-mt-14 py-12">
+        <h2
+          id="skill3d"
+          class="text-center font-black text-4xl sm:text-6xl md:text-7xl leading-tight select-none pointer-events-none text-3d-black"
+        >
+          My Skills
+        </h2>
+        <p class="text-[#49739c] text-center">(Hint: press a key)</p>
+
+        <div class="relative w-full h-[70vh] max-h-[680px] overflow-hidden">
+          <canvas id="kb" class="w-full h-full block"></canvas>
+        </div>
+      </section>
+
+      <section id="typing" class="w-full scroll-mt-14 py-12">
+        <div class="mx-auto max-w-[960px] px-4">
+          <h2 class="section-header">Typing</h2>
+          <p class="text-[#49739c]">A quick hello while I’m typing 🙂</p>
+        </div>
+
+        <div class="relative w-full h-[60vh] max-h-[720px] overflow-hidden">
+          <canvas id="avatar3d" class="w-full h-full block"></canvas>
+        </div>
+      </section>
+
       <!-- PROJECTS -->
       <section id="projects" class="w-full scroll-mt-14 py-12">
         <div class="mx-auto max-w-[960px] px-4">
@@ -386,16 +417,16 @@
           <!-- Cards -->
           <div
             id="projects-grid"
-            class="grid grid-cols-1 sm:grid-cols-2 gap-6 p-4"
+            class="grid grid-cols-1 gap-6 p-4"
           >
             <!-- Card -->
             <div
-              class="project-card group relative cursor-pointer rounded-xl overflow-hidden border-0 ring-1 ring-white/10 hover:ring-white/20 dark:ring-white/5 dark:hover:ring-white/10 backdrop-blur-sm transition-all duration-700 ease-[cubic-bezier(.22,.61,.36,1)] hover:shadow-lg"
+              class="project-card group relative cursor-pointer rounded-xl overflow-hidden transition-all duration-300"
               data-project="websites"
               data-live="https://your-live-site.com"
-              data-repo="https://github.com/you/your-repo"
+              data-repo="https://github.com/DanSamedov/Codenames-Website"
               style="
-                box-shadow: rgba(0, 0, 0, 0.05) 0 2px 10px;
+                box-shadow: rgba(200, 200, 200, 0.2) 2px 2px 6px, rgba(160, 160, 160, 0.15) 0px 6px 10px;
                 background: radial-gradient(
                   circle at 50% 0%,
                   rgb(81, 251, 251),
@@ -405,7 +436,7 @@
             >
               <!-- hover overlay -->
               <div
-                class="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity duration-700 ease-[cubic-bezier(.22,.61,.36,1)] z-0"
+                class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-0"
               ></div>
 
               <!-- top content -->
@@ -424,7 +455,7 @@
                   class="flex justify-center md:justify-end transition-all duration-700 ease-[cubic-bezier(.22,.61,.36,1)]"
                 >
                   <div
-                    class="w-12 h-12 rounded-full bg-white dark:bg-neutral-900 flex items-center justify-center text-[24px] shadow-md -ml-2 group-hover:ml-0 transition-all duration-700 ease-[cubic-bezier(.22,.61,.36,1)]"
+                    class="w-12 h-12 rounded-full bg-white dark:bg-neutral-900 flex items-center justify-center text-[24px] shadow-md -ml-4 group-hover:ml-0 transition-all duration-500"
                     style="z-index: 3"
                   >
                     <!-- React -->
@@ -442,13 +473,13 @@
                     </svg>
                   </div>
                   <div
-                    class="w-12 h-12 rounded-full bg-white dark:bg-neutral-900 flex items-center justify-center text-[24px] shadow-md -ml-2 group-hover:ml-0 transition-all duration-700 ease-[cubic-bezier(.22,.61,.36,1)]"
+                    class="w-12 h-12 rounded-full bg-white dark:bg-neutral-900 flex items-center justify-center text-[24px] shadow-md -ml-4 group-hover:ml-0 transition-all duration-500"
                     style="z-index: 2"
                   >
                     <span class="font-bold text-blue-600">TS</span>
                   </div>
                   <div
-                    class="w-12 h-12 rounded-full bg-white dark:bg-neutral-900 flex items-center justify-center text-[24px] shadow-md -ml-2 group-hover:ml-0 transition-all duration-700 ease-[cubic-bezier(.22,.61,.36,1)]"
+                    class="w-12 h-12 rounded-full bg-white dark:bg-neutral-900 flex items-center justify-center text-[24px] shadow-md -ml-4 group-hover:ml-0 transition-all duration-500"
                     style="z-index: 1"
                   >
                     <!-- Node -->
@@ -470,22 +501,22 @@
 
               <!-- bottom image -->
               <div
-                class="relative bottom-[-40px] w-full flex justify-center items-end z-10 max-h-[180px] sm:max-h-[300px] md:max-h-none"
+                class="relative w-full flex justify-center items-end z-10 max-h-[180px] sm:max-h-[300px] md:max-h-none"
               >
                 <img
                   alt="Codenames Website preview"
-                  class="duration-700 ease-[cubic-bezier(.22,.61,.36,1)] group-hover:-translate-y-2 object-contain rounded-t-2xl w-[80%]"
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuBIuP4151KRv0iJLDSUUcJV2Q1uP6OnJTpswsH2JouBSClElDfTyIM5OXyIkc7qVr8X6uIiz8hrGnUvxQEuTuXZoZbvAtu2P6yIOYs74N_x4MvBIy0pE0Krj8r3TXBfcG0S61Ux0ctlISXf3XdFKQnyuVL2wCe1Eoh5GnyJF0b_U7k5ec-jWTXWoemaILBO96eXaEKr_Whuf56kQZxW4JFoR6wuPCdIxD8Xl_-KDQwul6ThvfW8yTgT3RPRBY4mM5CCNyVCdxWLcQ"
+                  class="duration-500 object-contain rounded-t-2xl w-[80%]"
+                  src="./src/assets/static/codenames_portfolio.png"
                 />
               </div>
             </div>
 
             <!-- Card -->
             <div
-              class="project-card group relative cursor-pointer rounded-xl overflow-hidden border-0 ring-1 ring-white/10 hover:ring-white/20 dark:ring-white/5 dark:hover:ring-white/10 backdrop-blur-sm transition-all duration-700 ease-[cubic-bezier(.22,.61,.36,1)] hover:shadow-lg"
+              class="project-card group relative cursor-pointer rounded-xl overflow-hidden transition-all duration-300"
               data-project="websites"
               style="
-                box-shadow: rgba(0, 0, 0, 0.05) 0 2px 10px;
+                box-shadow: rgba(200, 200, 200, 0.2) 2px 2px 6px, rgba(160, 160, 160, 0.15) 0px 6px 10px;
                 background: radial-gradient(
                   circle at 50% 0%,
                   rgb(20, 241, 149),
@@ -494,7 +525,7 @@
               "
             >
               <div
-                class="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity duration-700 ease-[cubic-bezier(.22,.61,.36,1)] z-0"
+                class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-0"
               ></div>
               <div
                 class="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6 px-6 pt-4"
@@ -510,19 +541,19 @@
                 </div>
                 <div class="flex justify-center md:justify-end">
                   <div
-                    class="w-12 h-12 rounded-full bg-white dark:bg-neutral-900 flex items-center justify-center text-[24px] shadow-md -ml-2 group-hover:ml-0 transition-all duration-700 ease-[cubic-bezier(.22,.61,.36,1)]"
+                    class="w-12 h-12 rounded-full bg-white dark:bg-neutral-900 flex items-center justify-center text-[24px] shadow-md -ml-4 group-hover:ml-0 transition-all duration-500"
                     style="z-index: 3"
                   >
                     <span class="font-bold text-indigo-600">HTML</span>
                   </div>
                   <div
-                    class="w-12 h-12 rounded-full bg-white dark:bg-neutral-900 flex items-center justify-center text-[24px] shadow-md -ml-2 group-hover:ml-0 transition-all duration-700 ease-[cubic-bezier(.22,.61,.36,1)]"
+                    class="w-12 h-12 rounded-full bg-white dark:bg-neutral-900 flex items-center justify-center text-[24px] shadow-md -ml-4 group-hover:ml-0 transition-all duration-500"
                     style="z-index: 2"
                   >
                     <span class="font-bold text-cyan-600">CSS</span>
                   </div>
                   <div
-                    class="w-12 h-12 rounded-full bg-white dark:bg-neutral-900 flex items-center justify-center text-[24px] shadow-md -ml-2 group-hover:ml-0 transition-all duration-700 ease-[cubic-bezier(.22,.61,.36,1)]"
+                    class="w-12 h-12 rounded-full bg-white dark:bg-neutral-900 flex items-center justify-center text-[24px] shadow-md -ml-4 group-hover:ml-0 transition-all duration-500"
                     style="z-index: 1"
                   >
                     <span class="font-bold text-emerald-600">JS</span>
@@ -530,11 +561,11 @@
                 </div>
               </div>
               <div
-                class="relative bottom-[-40px] w-full flex justify-center items-end z-10 max-h-[180px] sm:max-h-[300px] md:max-h-none"
+                class="relative w-full flex justify-center items-end z-10 max-h-[180px] sm:max-h-[300px] md:max-h-none"
               >
                 <img
                   alt="Portfolio preview"
-                  class="duration-700 ease-[cubic-bezier(.22,.61,.36,1)] group-hover:-translate-y-2 object-contain rounded-t-2xl w-[80%]"
+                  class="duration-500 object-contain rounded-t-2xl w-[80%]"
                   src="https://lh3.googleusercontent.com/aida-public/AB6AXuBIuP4151KRv0iJLDSUUcJV2Q1uP6OnJTpswsH2JouBSClElDfTyIM5OXyIkc7qVr8X6uIiz8hrGnUvxQEuTuXZoZbvAtu2P6yIOYs74N_x4MvBIy0pE0Krj8r3TXBfcG0S61Ux0ctlISXf3XdFKQnyuVL2wCe1Eoh5GnyJF0b_U7k5ec-jWTXWoemaILBO96eXaEKr_Whuf56kQZxW4JFoR6wuPCdIxD8Xl_-KDQwul6ThvfW8yTgT3RPRBY4mM5CCNyVCdxWLcQ"
                 />
               </div>
@@ -542,10 +573,10 @@
 
             <!-- Card -->
             <div
-              class="project-card group relative cursor-pointer rounded-xl overflow-hidden border-0 ring-1 ring-white/10 hover:ring-white/20 dark:ring-white/5 dark:hover:ring-white/10 backdrop-blur-sm transition-all duration-700 ease-[cubic-bezier(.22,.61,.36,1)] hover:shadow-lg"
+              class="project-card group relative cursor-pointer rounded-xl overflow-hidden transition-all duration-300"
               data-project="bots"
               style="
-                box-shadow: rgba(0, 0, 0, 0.05) 0 2px 10px;
+                box-shadow: rgba(200, 200, 200, 0.2) 2px 2px 6px, rgba(160, 160, 160, 0.15) 0px 6px 10px;
                 background: radial-gradient(
                   circle at 50% 0%,
                   rgb(102, 68, 238),
@@ -554,7 +585,7 @@
               "
             >
               <div
-                class="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity duration-700 ease-[cubic-bezier(.22,.61,.36,1)] z-0"
+                class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-0"
               ></div>
               <div
                 class="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6 px-6 pt-4"
@@ -568,19 +599,19 @@
                 </div>
                 <div class="flex justify-center md:justify-end">
                   <div
-                    class="w-12 h-12 rounded-full bg-white dark:bg-neutral-900 flex items-center justify-center text-[24px] shadow-md -ml-2 group-hover:ml-0 transition-all duration-700 ease-[cubic-bezier(.22,.61,.36,1)]"
+                    class="w-12 h-12 rounded-full bg-white dark:bg-neutral-900 flex items-center justify-center text-[24px] shadow-md -ml-4 group-hover:ml-0 transition-all duration-500"
                     style="z-index: 3"
                   >
                     <span class="font-bold text-sky-600">@</span>
                   </div>
                   <div
-                    class="w-12 h-12 rounded-full bg-white dark:bg-neutral-900 flex items-center justify-center text-[24px] shadow-md -ml-2 group-hover:ml-0 transition-all duration-700 ease-[cubic-bezier(.22,.61,.36,1)]"
+                    class="w-12 h-12 rounded-full bg-white dark:bg-neutral-900 flex items-center justify-center text-[24px] shadow-md -ml-4 group-hover:ml-0 transition-all duration-500"
                     style="z-index: 2"
                   >
                     <span class="font-bold text-green-600">API</span>
                   </div>
                   <div
-                    class="w-12 h-12 rounded-full bg-white dark:bg-neutral-900 flex items-center justify-center text-[24px] shadow-md -ml-2 group-hover:ml-0 transition-all duration-700 ease-[cubic-bezier(.22,.61,.36,1)]"
+                    class="w-12 h-12 rounded-full bg-white dark:bg-neutral-900 flex items-center justify-center text-[24px] shadow-md -ml-4 group-hover:ml-0 transition-all duration-500"
                     style="z-index: 1"
                   >
                     <span class="font-bold text-slate-800">DX</span>
@@ -588,11 +619,11 @@
                 </div>
               </div>
               <div
-                class="relative bottom-[-40px] w-full flex justify-center items-end z-10 max-h-[180px] sm:max-h-[300px] md:max-h-none"
+                class="relative w-full flex justify-center items-end z-10 max-h-[180px] sm:max-h-[300px] md:max-h-none"
               >
                 <img
                   alt="Telegram bot preview"
-                  class="duration-700 ease-[cubic-bezier(.22,.61,.36,1)] group-hover:-translate-y-2 object-contain rounded-t-2xl w-[80%]"
+                  class="duration-500 object-contain rounded-t-2xl w-[80%]"
                   src="https://lh3.googleusercontent.com/aida-public/AB6AXuCK_Y_vKSnxjallhE4KJftRL1roiQZgFdp4FQiFIT_Q4CoYK_SZat2ssEbsvLkij2UkMJNKFfGgcgNYKEAgMnLvDfmr6qdUlJuNRriytIDsUuZtlZvv50hKFUW094B9cF-vc6hUnKivTva83srjc4HCd_fnsU5BW4hQ1qbBqvFySx0OyPskciJ4wathWBhbaWcIw5xiWW1_zCK80AyxTar5GIWq5el8bPJgEYEf1eGihjgHB8MqfTSH9WXivH6XFUdI80Mo9GYlSw"
                 />
               </div>
@@ -600,10 +631,10 @@
 
             <!-- Card -->
             <div
-              class="project-card group relative cursor-pointer rounded-xl overflow-hidden border-0 ring-1 ring-white/10 hover:ring-white/20 dark:ring-white/5 dark:hover:ring-white/10 backdrop-blur-sm transition-all duration-700 ease-[cubic-bezier(.22,.61,.36,1)] hover:shadow-lg"
+              class="project-card group relative cursor-pointer rounded-xl overflow-hidden transition-all duration-300"
               data-project="programs"
               style="
-                box-shadow: rgba(0, 0, 0, 0.05) 0 2px 10px;
+                box-shadow: rgba(200, 200, 200, 0.2) 2px 2px 6px, rgba(160, 160, 160, 0.15) 0px 6px 10px;
                 background: radial-gradient(
                   circle at 50% 0%,
                   rgb(20, 141, 241),
@@ -612,7 +643,7 @@
               "
             >
               <div
-                class="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity duration-700 ease-[cubic-bezier(.22,.61,.36,1)] z-0"
+                class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-0"
               ></div>
               <div
                 class="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6 px-6 pt-4"
@@ -645,130 +676,15 @@
                 </div>
               </div>
               <div
-                class="relative bottom-[-40px] w-full flex justify-center items-end z-10 max-h-[180px] sm:max-h-[300px] md:max-h-none"
+                class="relative w-full flex justify-center items-end z-10 max-h-[180px] sm:max-h-[300px] md:max-h-none"
               >
                 <img
                   alt="Casino Predict preview"
-                  class="duration-700 ease-[cubic-bezier(.22,.61,.36,1)] group-hover:-translate-y-2 object-contain rounded-t-2xl w-[80%]"
+                  class="duration-500 object-contain rounded-t-2xl w-[80%]"
                   src="https://lh3.googleusercontent.com/aida-public/AB6AXuDJbDT_zJa01vi1xdYwheXvcx5QWiKzoNdcebzjni7iyIYvLMhoYxzKIRAKFrxHrTRxBhMy8HCT1-55XxKzxKk1wvpKmer3Nz2S6E70GWZ3MyTVv16oBx1zrLt4WriTlSYvWqp0Xm4fvggibwn82etizQcdol2D1v6Y9BWRXzuUm7UerHiPlqJLarnf-4gmwL5nKV7_8HIJU7G1P-rgGhVwV4v-qoNh_2ehfYZBSpNe2yB9L5QjDJJD6K4Ga9SiwRFLJk2NzJqsdw"
                 />
               </div>
             </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Skills -->
-      <section id="skills" class="w-full scroll-mt-14 py-12">
-        <div class="max-w-[960px] mx-auto px-4">
-          <h2 class="section-header">Skills</h2>
-
-          <div class="skills-grid">
-            <!-- Languages -->
-            <article
-              class="skill-card group"
-              tabindex="0"
-              aria-labelledby="category-lang"
-            >
-              <h3 id="category-lang" class="skill-title">Languages</h3>
-              <div class="mt-3 flex flex-wrap gap-2">
-                <span class="skill-pill">Python</span>
-                <span class="skill-pill">Java</span>
-                <span class="skill-pill">JavaScript</span>
-              </div>
-            </article>
-
-            <!-- Backend -->
-            <article
-              class="skill-card group"
-              tabindex="0"
-              aria-labelledby="category-backend"
-            >
-              <h3 id="category-backend" class="skill-title">Backend</h3>
-              <div class="mt-3 flex flex-wrap gap-2">
-                <span class="skill-pill">Django</span>
-                <span class="skill-pill">FastAPI</span>
-                <span class="skill-pill">REST APIs</span>
-                <span class="skill-pill">WebSockets</span>
-                <span class="skill-pill">Celery</span>
-              </div>
-            </article>
-
-            <!-- Frontend -->
-            <article
-              class="skill-card group"
-              tabindex="0"
-              aria-labelledby="category-frontend"
-            >
-              <h3 id="category-frontend" class="skill-title">Frontend</h3>
-              <div class="mt-3 flex flex-wrap gap-2">
-                <span class="skill-pill">HTML</span>
-                <span class="skill-pill">CSS</span>
-                <span class="skill-pill">Tailwind</span>
-              </div>
-            </article>
-
-            <!-- Data & ML -->
-            <article
-              class="skill-card group"
-              tabindex="0"
-              aria-labelledby="category-dataml"
-            >
-              <h3 id="category-dataml" class="skill-title">Data & ML</h3>
-              <div class="mt-3 flex flex-wrap gap-2">
-                <span class="skill-pill">Pandas</span>
-                <span class="skill-pill">NumPy</span>
-                <span class="skill-pill">Matplotlib</span>
-                <span class="skill-pill">Scikit-learn</span>
-              </div>
-            </article>
-
-            <!-- Databases -->
-            <article
-              class="skill-card group"
-              tabindex="0"
-              aria-labelledby="category-db"
-            >
-              <h3 id="category-db" class="skill-title">Databases</h3>
-              <div class="mt-3 flex flex-wrap gap-2">
-                <span class="skill-pill">PostgreSQL</span>
-                <span class="skill-pill">MySQL</span>
-                <span class="skill-pill">SQLAlchemy</span>
-                <span class="skill-pill">Redis</span>
-              </div>
-            </article>
-
-            <!-- Testing & Automation -->
-            <article
-              class="skill-card group"
-              tabindex="0"
-              aria-labelledby="category-testing"
-            >
-              <h3 id="category-testing" class="skill-title">
-                Testing & Automation
-              </h3>
-              <div class="mt-3 flex flex-wrap gap-2">
-                <span class="skill-pill">Pytest</span>
-                <span class="skill-pill">Selenium</span>
-                <span class="skill-pill">Telegram Bots</span>
-              </div>
-            </article>
-
-            <!-- DevOps & Tools -->
-            <article
-              class="skill-card group"
-              tabindex="0"
-              aria-labelledby="category-devops"
-            >
-              <h3 id="category-devops" class="skill-title">DevOps & Tools</h3>
-              <div class="mt-3 flex flex-wrap gap-2">
-                <span class="skill-pill">Docker</span>
-                <span class="skill-pill">Linux</span>
-                <span class="skill-pill">Git</span>
-                <span class="skill-pill">GitHub Actions</span>
-                <span class="skill-pill">Server Management</span>
-              </div>
-            </article>
           </div>
         </div>
       </section>
@@ -1030,22 +946,6 @@
         </div>
       </div>
     </footer>
-    <!-- Canvas container (Tailwind optional) -->
-    <div
-      class="relative w-full h-[70vh] max-h-[680px] rounded-2xl ring-1 ring-black/10 overflow-hidden"
-    >
-      <canvas id="kb" class="w-full h-full block"></canvas>
-
-      <!-- Skill overlay shown on hover/press -->
-      <div
-        class="pointer-events-none absolute right-3 bottom-3 max-w-[420px] rounded-xl bg-black/40 text-white backdrop-blur-md p-3 ring-1 ring-white/15"
-      >
-        <p class="uppercase tracking-[0.2em] text-[10px] opacity-80">Skill</p>
-        <h3 id="title" class="text-lg font-semibold leading-tight">—</h3>
-        <p id="desc" class="opacity-90 text-sm">Click a key.</p>
-      </div>
-    </div>
-
     <script type="importmap">
       {
         "imports": {
@@ -1054,6 +954,8 @@
         }
       }
     </script>
+
+    <script type="module" src="./src/js/avatar.js"></script>
 
     <script type="module" src="./src/js/keyboard.js"></script>
   </body>

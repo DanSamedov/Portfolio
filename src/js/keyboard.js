@@ -2,6 +2,7 @@ import * as THREE from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 
 const canvas = document.getElementById("kb");
+const bannerEl = document.getElementById("skill3d");
 const titleEl = document.getElementById("title");
 const descEl = document.getElementById("desc");
 const renderer = new THREE.WebGLRenderer({
@@ -305,11 +306,13 @@ function computeSkillLabel(ctrl) {
 
 function showOverlayFor(ctrl) {
   const label = ctrl?.userData?.label || computeSkillLabel(ctrl);
-  if (titleEl) titleEl.textContent = label;
+  if (bannerEl) bannerEl.textContent = label;
+  if (titleEl) titleEl.textContent = label; // legacy in-canvas overlay, if present
 }
 
 function clearOverlay() {
-  if (titleEl) titleEl.textContent = "—";
+  if (bannerEl) bannerEl.textContent = "My Skills";
+  if (titleEl) titleEl.textContent = "My Skills";
   if (descEl) descEl.textContent = "Click a key.";
 }
 

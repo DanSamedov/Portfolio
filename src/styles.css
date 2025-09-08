@@ -195,7 +195,11 @@
 
   /* Project card (gentle lift only) */
   .project-card {
-    @apply flex flex-col gap-3 pb-3 transition-all duration-300 ease-in-out hover:shadow-xl;
+    /* unify size across cards (slightly smaller) */
+    --project-card-h: 460px;
+    --project-card-image-h: 300px;
+    @apply flex flex-col gap-3 pb-0 transition-all duration-300 ease-in-out hover:shadow-xl;
+    min-height: var(--project-card-h);
   }
 
   .project-card:hover {
@@ -206,6 +210,21 @@
   .project-card> :last-child img {
     transition: transform 420ms cubic-bezier(.22, .61, .36, 1);
     will-change: transform;
+  }
+
+  /* Ensure consistent image area height regardless of utility max-h classes */
+  .project-card> :last-child {
+    height: var(--project-card-image-h);
+    max-height: none !important;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    margin-top: auto; /* push image area to bottom of card */
+  }
+
+  @media (max-width: 640px) {
+    .project-card { --project-card-h: 400px; }
+    .project-card> :last-child { --project-card-image-h: 260px; }
   }
 
   /* Skill tag */
@@ -365,6 +384,28 @@
   .animate-scroll-cue svg {
     animation: cue-bounce 1.25s ease-in-out infinite;
     animation-delay: .08s;
+  }
+
+  .text-3d-black {
+    /* darker fill */
+    background: linear-gradient(180deg, #0b1016 0%, #090d12 44%, #05080b 66%, #000000 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+
+    /* dim bevel, stronger dark shadow */
+    text-shadow:
+      0 1px 0 rgba(255, 255, 255, .12),
+      0 2px 0 rgba(205, 215, 225, .08),
+      0 10px 16px rgba(0, 0, 0, .32),
+      0 22px 34px rgba(0, 0, 0, .24);
+
+    transform: perspective(900px) rotateX(8deg);
+
+    /* tighter, darker edge */
+    -webkit-text-stroke: .3px rgba(0, 0, 0, .5);
+
+    position: relative;
   }
 }
 
