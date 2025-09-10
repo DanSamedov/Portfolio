@@ -325,8 +325,7 @@ function openProjectModal(card) {
     imgSrc =
       card
         .querySelector(".project-image")
-        ?.style.backgroundImage?.replace(/^url\(["']?|["']?\)$/g, "") ||
-      "";
+        ?.style.backgroundImage?.replace(/^url\(["']?|["']?\)$/g, "") || "";
   }
 
   const cs = getComputedStyle(card);
@@ -483,7 +482,9 @@ function openProjectModal(card) {
     modal.classList.add("translate-y-4");
     setTimeout(() => {
       // ensure hover lock is released on close
-      try { card.classList.remove("hover-lock"); } catch {}
+      try {
+        card.classList.remove("hover-lock");
+      } catch {}
       overlay.remove();
       document.body.style.overflow = prevOverflow;
       document.removeEventListener("keydown", trap);

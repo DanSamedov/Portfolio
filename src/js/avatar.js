@@ -1,10 +1,9 @@
 import * as THREE from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 
-const AVATAR_URL = "./src/assets/models/avatar_typing.glb";
-const CLIP_BELOW_WAIST = true;
-
+const URL = "./src/assets/models/avatar_and_keyboard.glb";
 const canvas = document.getElementById("avatar3d");
+
 const renderer = new THREE.WebGLRenderer({
   canvas,
   antialias: true,
@@ -12,137 +11,128 @@ const renderer = new THREE.WebGLRenderer({
 });
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure = 1.5; // brighter exposure
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-renderer.localClippingEnabled = true;
 
 const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(45, 2, 0.1, 100);
+const camera = new THREE.PerspectiveCamera(35, 2, 0.1, 100);
 
-// Lighting (soft ambient + key + rim)
-scene.add(new THREE.HemisphereLight(0xffffff, 0x0b0d0f, 1.1));
-const keyL = new THREE.DirectionalLight(0xffffff, 1.7);
-keyL.position.set(5, 8, 6);
-scene.add(keyL);
-const rimL = new THREE.DirectionalLight(0x5bc0ff, 1.3);
-rimL.position.set(-6, 7, -5);
-scene.add(rimL);
-scene.add(new THREE.AmbientLight(0xffffff, 0.28));
+scene.add(new THREE.HemisphereLight(0xffffff, 0x0b0d0f, 0.9));
+const key = new THREE.DirectionalLight(0xffffff, 1.3);
+key.position.set(5, 8, 6);
+scene.add(key);
+const rim = new THREE.DirectionalLight(0xffffff, 1.0);
+rim.position.set(-6, 7, -5);
+scene.add(rim);
+scene.add(new THREE.AmbientLight(0xffffff, 0.15));
 
-let mixer = null;
-
-// Load avatar + animation
 const loader = new GLTFLoader();
-loader.load(AVATAR_URL, (gltf) => {
-  const avatar = gltf.scene;
-  avatar.scale.setScalar(0.01);
-  avatar.rotation.y = Math.PI; // face the same way as your keyboard
-  scene.add(avatar);
+let mixer;
 
-  // Better shading
-  avatar.traverse((o) => {
-    if (o.isMesh) {
-      o.castShadow = true;
-      o.receiveShadow = true;
+loader.load(
+  URL,
+  (gltf) => {
+    const root = gltf.scene;
+    root.scale.setScalar(0.03); // tweak overall size here if needed
+    root.rotation.y = Math.PI / -2.5; // face your layout
+    scene.add(root);
+
+    // play a valid animation (pick longest non-zero duration clip)
+    const clips = gltf.animations || [];
+    if (clips.length) {
+      const preferred = clips.find(
+        (c) => /typing|type|idle/i.test(c.name) && c.duration > 0
+      );
+      let clip =
+        preferred ||
+        clips.reduce(
+          (best, c) =>
+            !best || (c.duration || 0) > (best.duration || 0) ? c : best,
+          null
+        );
+      if (clip && clip.duration > 0) {
+        // Normalize start time so first keyframe is at t=0 to avoid initial hold
+        clip = normalizeClipStart(clip);
+        mixer = new THREE.AnimationMixer(root);
+        const action = mixer.clipAction(clip);
+        action.reset();
+        action.enabled = true;
+        action.clampWhenFinished = false;
+        // Use ping-pong to avoid any end-frame seam
+        action.setLoop(THREE.LoopPingPong, Infinity);
+        // action.setEffectiveTimeScale(1.0); // tweak speed if desired
+        action.play();
+        // Start a bit into the clip to avoid any initial holds
+        const startAt = Math.min(
+          Math.max(0.01, clip.duration * 0.25),
+          clip.duration - 0.01
+        );
+        action.time = startAt;
+        // Pre-warm the mixer once so the first visible frame is animated
+        mixer.update(1 / 120);
+      } else {
+        console.warn("[avatar] No playable animations (zero duration)");
+      }
     }
-  });
 
-  // Play first animation (Mixamo exports one by default)
-  if (gltf.animations?.length) {
-    mixer = new THREE.AnimationMixer(avatar);
-    mixer.clipAction(gltf.animations[0]).play();
-  }
+    // frame avatar a bit larger to better fill the circle
+    frameObject(camera, root, new THREE.Vector3(0, 0.2, 1.5), 2);
+  },
+  undefined,
+  (err) => console.error("[hero] load error:", err)
+);
 
-  // Ensure matrices are current before framing
-  scene.updateMatrixWorld(true);
-
-  // Frame the camera first so world transforms are finalized,
-  // then apply clipping (so we don't clip the whole model by mistake).
-  // Left-side three-quarter view (x<0 = camera to the left)
-  frameToObject(camera, avatar, new THREE.Vector3(-1.2, 0.2, -0.5), 1.8);
-
-  // Add a soft front fill from the camera direction to brighten the face
-  const fillL = new THREE.DirectionalLight(0xffffff, 0.6);
-  fillL.position.copy(camera.position.clone().normalize().multiplyScalar(5));
-  scene.add(fillL);
-
-  // Optional: hide legs by clipping below hips (after framing)
-  if (CLIP_BELOW_WAIST) clipBelowWaist(avatar);
-  render();
-});
-
-// --- helpers ---
-function frameToObject(
-  cam,
-  obj,
-  dir = new THREE.Vector3(0, 1.0, 1.0),
-  fill = 0.95
-) {
-  // Make sure transforms are up-to-date for accurate bounds
-  obj.updateWorldMatrix(true, true);
-
+function frameObject(cam, obj, dir = new THREE.Vector3(0, 1, 1), fill = 0.9) {
+  obj.updateMatrixWorld(true);
   const box = new THREE.Box3().setFromObject(obj);
   const size = box.getSize(new THREE.Vector3());
   const center = box.getCenter(new THREE.Vector3());
-  obj.position.sub(center); // center the model
 
-  // Guard against zero-size bounding boxes
   const maxDim = Math.max(size.x, size.y, size.z) || 1;
   const vFov = THREE.MathUtils.degToRad(cam.fov);
   let dist = (maxDim / 2 / Math.tan(vFov / 2)) * fill;
-  if (!isFinite(dist) || dist <= 0) dist = 2.5; // sensible fallback
-
   const d = dir.clone().normalize().multiplyScalar(dist);
-  cam.position.copy(d);
+
+  cam.position.copy(center.clone().add(d));
   cam.near = Math.max(0.01, dist / 100);
   cam.far = Math.max(cam.near + 1, dist * 100);
   cam.updateProjectionMatrix();
-  cam.lookAt(0, 0, 0);
+  cam.lookAt(center);
 }
 
-function clipBelowWaist(root) {
-  // Try common Mixamo bone names
-  const hips =
-    root.getObjectByName("Hips") ||
-    root.getObjectByName("mixamorig:Hips") ||
-    root.getObjectByName("mixamorig_Hips") ||
-    root;
-
-  const p = new THREE.Vector3();
-  hips.getWorldPosition(p);
-
-  // y-up plane just below hips
-  const plane = new THREE.Plane(new THREE.Vector3(0, 1, 0), -(p.y - 0.02));
-
-  root.traverse((o) => {
-    if (!o.isMesh) return;
-    const mats = Array.isArray(o.material) ? o.material : [o.material];
-    for (const m of mats) {
-      m.clippingPlanes = [plane];
-      m.clipShadows = true;
-      m.needsUpdate = true;
-    }
-  });
-}
-
-// --- render loop ---
 const clock = new THREE.Clock();
+/** Shift all tracks so the earliest key starts at 0s */
+function normalizeClipStart(srcClip) {
+  const clip = srcClip.clone();
+  let t0 = Infinity;
+  for (const tr of clip.tracks) {
+    if (tr.times && tr.times.length) t0 = Math.min(t0, tr.times[0]);
+  }
+  if (t0 !== Infinity && t0 > 0) {
+    for (const tr of clip.tracks) {
+      for (let i = 0; i < tr.times.length; i++) tr.times[i] -= t0;
+    }
+    clip.resetDuration();
+  }
+  return clip;
+}
 function render() {
   const w = canvas.clientWidth,
     h = canvas.clientHeight;
+  // Avoid invalid aspect (e.g., if canvas is temporarily 0x0)
+  if (!w || !h) {
+    requestAnimationFrame(render);
+    return;
+  }
   if (canvas.width !== w || canvas.height !== h) {
     renderer.setSize(w, h, false);
     camera.aspect = w / h;
     camera.updateProjectionMatrix();
   }
+  if (mixer) {
+    const dt = Math.min(clock.getDelta(), 1 / 30); // clamp to prevent large jumps
+    mixer.update(dt);
+  }
   renderer.render(scene, camera);
+  requestAnimationFrame(render);
 }
-
-function loop() {
-  const dt = clock.getDelta();
-  if (mixer) mixer.update(dt);
-  render();
-  requestAnimationFrame(loop);
-}
-window.addEventListener("resize", render);
-loop();
+render();

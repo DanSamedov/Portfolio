@@ -222,6 +222,7 @@
     .project-modal h2 {
       color: #ffffff !important;
     }
+
   .codenames-card .card-preview {
     transform-origin: bottom center;
     will-change: transform, filter;

@@ -267,16 +267,11 @@
                 </div>
               </div>
 
-              <!-- Right: Avatar -->
-              <div
-                class="w-48 h-48 sm:w-72 sm:h-72 relative shrink-0 rounded-full overflow-hidden ring-1 ring-border/70 shadow-[0_12px_30px_rgba(0,0,0,0.12)]"
-              >
-                <img
-                  alt="Danylo Samedov"
-                  src="./src/assets/static/me.png"
-                  class="object-cover w-full h-full rounded-full"
-                />
-              </div>
+              <!-- Right: Avatar (3D canvas) -->
+              <canvas
+                id="avatar3d"
+                class="absolute inset-0 w-full h-full"
+              ></canvas>
             </div>
           </div>
 
@@ -324,17 +319,6 @@
 
         <div class="relative w-full h-[70vh] max-h-[680px] overflow-hidden">
           <canvas id="kb" class="w-full h-full block"></canvas>
-        </div>
-      </section>
-
-      <section id="typing" class="w-full scroll-mt-14 py-12">
-        <div class="mx-auto max-w-[960px] px-4">
-          <h2 class="section-header">Typing</h2>
-          <p class="text-[#49739c]">A quick hello while I’m typing 🙂</p>
-        </div>
-
-        <div class="relative w-full h-[60vh] max-h-[720px] overflow-hidden">
-          <canvas id="avatar3d" class="w-full h-full block"></canvas>
         </div>
       </section>
 
@@ -514,6 +498,7 @@
             <div
               class="project-card group relative cursor-pointer rounded-xl overflow-hidden transition-all duration-300"
               data-project="websites"
+              data-live="https://your-live-site.com"
               style="
                 box-shadow: rgba(200, 200, 200, 0.2) 2px 2px 6px,
                   rgba(160, 160, 160, 0.15) 0px 6px 10px;
@@ -539,34 +524,62 @@
                     layout.
                   </p>
                 </div>
-                <div class="flex justify-center md:justify-end">
+                <!-- icon pills -->
+                <div
+                  class="flex justify-center md:justify-end transition-all duration-700 ease-[cubic-bezier(.22,.61,.36,1)]"
+                >
                   <div
                     class="w-12 h-12 rounded-full bg-white dark:bg-neutral-900 flex items-center justify-center text-[24px] shadow-md -ml-4 group-hover:ml-0 transition-all duration-500"
                     style="z-index: 3"
                   >
-                    <span class="font-bold text-indigo-600">HTML</span>
+                    <img
+                      src="./src/assets/icons/javascript.svg"
+                      alt="Js"
+                      class="w-7 h-7"
+                      loading="lazy"
+                      width="28"
+                      height="28"
+                    />
                   </div>
+
                   <div
                     class="w-12 h-12 rounded-full bg-white dark:bg-neutral-900 flex items-center justify-center text-[24px] shadow-md -ml-4 group-hover:ml-0 transition-all duration-500"
                     style="z-index: 2"
                   >
-                    <span class="font-bold text-cyan-600">CSS</span>
+                    <img
+                      src="./src/assets/icons/html5.svg"
+                      alt="Html"
+                      class="w-7 h-7"
+                      loading="lazy"
+                      width="28"
+                      height="28"
+                    />
                   </div>
+
                   <div
                     class="w-12 h-12 rounded-full bg-white dark:bg-neutral-900 flex items-center justify-center text-[24px] shadow-md -ml-4 group-hover:ml-0 transition-all duration-500"
                     style="z-index: 1"
                   >
-                    <span class="font-bold text-emerald-600">JS</span>
+                    <img
+                      src="./src/assets/icons/tailwindcss.svg"
+                      alt="Tailwind"
+                      class="w-7 h-7"
+                      loading="lazy"
+                      width="28"
+                      height="28"
+                    />
                   </div>
                 </div>
               </div>
+
+              <!-- bottom image -->
               <div
                 class="relative w-full flex justify-center items-end z-10 max-h-[180px] sm:max-h-[300px] md:max-h-none"
               >
                 <img
-                  alt="Portfolio preview"
-                  class="duration-500 object-contain rounded-t-2xl w-[80%]"
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuBIuP4151KRv0iJLDSUUcJV2Q1uP6OnJTpswsH2JouBSClElDfTyIM5OXyIkc7qVr8X6uIiz8hrGnUvxQEuTuXZoZbvAtu2P6yIOYs74N_x4MvBIy0pE0Krj8r3TXBfcG0S61Ux0ctlISXf3XdFKQnyuVL2wCe1Eoh5GnyJF0b_U7k5ec-jWTXWoemaILBO96eXaEKr_Whuf56kQZxW4JFoR6wuPCdIxD8Xl_-KDQwul6ThvfW8yTgT3RPRBY4mM5CCNyVCdxWLcQ"
+                  alt="Codenames Website preview"
+                  class="card-preview duration-500 object-contain rounded-t-2xl w-[80%]"
+                  src="./src/assets/static/portfolio_design.png"
                 />
               </div>
             </div>
