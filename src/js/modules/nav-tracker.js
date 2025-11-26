@@ -107,14 +107,23 @@ export function initNavSectionTracker() {
 
   const pickActiveSection = () => {
     const offset = getHeaderOffset();
+    const viewportCenter = window.innerHeight / 2;
+
+    let bestMatch = null;
+    let smallestDistance = Infinity;
+
     for (const s of sections) {
       const r = s.getBoundingClientRect();
-      if (r.top - offset <= 1 && r.bottom - offset > 1) return s.id;
+      const sectionCenter = r.top + r.height / 2;
+      const distance = Math.abs(viewportCenter - sectionCenter);
+
+      // If a section is close to the center, it's a good candidate
+      if (distance < smallestDistance) {
+        smallestDistance = distance;
+        bestMatch = s.id;
+      }
     }
-    for (const s of sections) {
-      if (s.getBoundingClientRect().top - offset > 1) return s.id;
-    }
-    return sections[sections.length - 1].id;
+    return bestMatch || sections[0].id;
   };
 
   let ticking = false;
