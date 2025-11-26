@@ -6,7 +6,6 @@
     <title>Danylo Samedov</title>
     <link rel="stylesheet" href="./dist/styles.css" />
     <style>
-      /* pagination helper (kept separate from filter's Tailwind .hidden) */
       .pager-hidden {
         display: none !important;
       }
@@ -172,7 +171,6 @@
                   <a
                     href="./src/assets/static/cv.pdf"
                     download="cv.pdf"
-                    role="button"
                     aria-label="Download resume"
                     class="group relative inline-flex justify-center items-center w-32 h-10 cursor-pointer overflow-hidden rounded-full border border-border bg-white/90 shadow-sm p-2 text-center font-semibold no-underline"
                   >
@@ -452,7 +450,7 @@
           <div class="grid md:grid-cols-5 gap-8 md:gap-12 items-start">
             <div class="md:col-span-2 text-center md:text-left space-y-4">
               <h2
-                class="flex items-center justify-center md:justify-start gap-3 text-4xl sm:text-5xl font-extrabold text-[#0d141c]"
+                class="flex items-center justify-center md:justify-start gap-3 text-4xl sm:text-5xl font-extrabold text-foreground"
               >
                 Contact Me
                 <svg
@@ -469,11 +467,13 @@
                   <polyline points="22,6 12,13 2,6"></polyline>
                 </svg>
               </h2>
-              <p class="text-[#49739c]">Let’s work together or just say hi</p>
+              <p class="text-muted-foreground">
+                Let’s work together or just say hi
+              </p>
 
               <!-- Email pill (with copy) -->
               <div
-                class="group inline-flex h-10 items-center rounded-full text-[#0d141c] border border-border bg-white/90 shadow-sm transition-colors duration-300 ease-in-out hover:bg-primary hover:text-white hover:border-primary"
+                class="group inline-flex h-10 items-center rounded-full text-foreground border border-border bg-white/90 shadow-sm transition-colors duration-300 ease-in-out hover:bg-primary hover:text-white hover:border-primary"
               >
                 <span class="pl-4 pr-2 py-2 select-none font-semibold">
                   samedovdanylo@gmail.com
@@ -481,7 +481,7 @@
 
                 <button
                   type="button"
-                  class="ml-1.5 mr-1.5 h-8 rounded-full px-3 text-sm font-semibold border border-border bg-primary text-white transition-colors duration-300 ease-in-out group-hover:bg-white/90 group-hover:text-[#0d141c] group-hover:border-white/70 group-focus-within:bg-white/90 group-focus-within:text-[#0d141c] focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
+                  class="ml-1.5 mr-1.5 h-8 rounded-full px-3 text-sm font-semibold border border-border bg-primary text-white transition-colors duration-300 ease-in-out group-hover:bg-white/90 group-hover:text-foreground group-hover:border-white/70 group-focus-within:bg-white/90 group-focus-within:text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
                   data-copy="samedovdanylo@gmail.com"
                   data-copied="Copied!"
                   aria-label="Copy email to clipboard"
@@ -494,7 +494,6 @@
               <a
                 href="./src/assets/static/cv.pdf"
                 download="cv.pdf"
-                role="button"
                 aria-label="Download resume"
                 class="group relative inline-block w-32 h-10 cursor-pointer overflow-hidden rounded-full border border-border bg-white/90 shadow-sm p-2 text-center font-semibold no-underline"
               >
@@ -530,19 +529,14 @@
                 ></div>
               </a>
 
-              <p class="text-[#49739c]">Follow Me</p>
+              <p class="text-muted-foreground">Follow Me</p>
               <div class="mt-6 flex gap-4">
                 <!-- Reusable tile classes applied to all -->
                 <a
                   href="https://github.com/DanSamedov"
                   target="_blank"
                   rel="noopener noreferrer"
-                  class="p-5 rounded-xl transition-all duration-300 transform hover:-translate-y-1.5 bg-white/70 dark:bg-neutral-900/70 backdrop-blur-sm text-slate-900/90 dark:text-white/90"
-                  style="
-                    box-shadow: rgba(0, 0, 0, 0.5) 0 15px 25px,
-                      rgba(0, 0, 0, 0.35) 0 10px 15px,
-                      rgba(0, 0, 0, 0.25) 0 4px 6px;
-                  "
+                  class="p-5 rounded-xl transition-all duration-300 transform hover:-translate-y-1.5 bg-white/70 dark:bg-neutral-900/70 backdrop-blur-sm text-slate-900/90 dark:text-white/90 shadow-xl"
                 >
                   <!-- GitHub -->
                   <svg
@@ -565,12 +559,7 @@
                   href="https://www.linkedin.com/in/danylo-samedov-b557132b1/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  class="p-5 rounded-xl transition-all duration-300 transform hover:-translate-y-1.5 bg-white/70 dark:bg-neutral-900/70 backdrop-blur-sm text-slate-900/90 dark:text-white/90"
-                  style="
-                    box-shadow: rgba(0, 0, 0, 0.5) 0 15px 25px,
-                      rgba(0, 0, 0, 0.35) 0 10px 15px,
-                      rgba(0, 0, 0, 0.25) 0 4px 6px;
-                  "
+                  class="p-5 rounded-xl transition-all duration-300 transform hover:-translate-y-1.5 bg-white/70 dark:bg-neutral-900/70 backdrop-blur-sm text-slate-900/90 dark:text-white/90 shadow-xl"
                 >
                   <!-- LinkedIn -->
                   <svg
@@ -601,9 +590,9 @@
                 <input
                   name="name"
                   type="text"
-                  placeholder="Your Name"
+                  placeholder="Name"
                   required
-                  class="w-full h-12 rounded-xl bg-white border border-border px-4 text-[#0d141c] placeholder:text-[#7a8ea4] shadow-sm focus:outline-none focus:ring-4 focus:ring-primary/20 focus:border-primary transition"
+                  class="w-full h-12 rounded-xl bg-white border border-border px-4 text-foreground placeholder:text-[#7a8ea4] shadow-sm focus:outline-none focus:ring-4 focus:ring-primary/20 focus:border-primary transition"
                 />
               </label>
 
@@ -612,9 +601,9 @@
                 <input
                   name="email"
                   type="email"
-                  placeholder="Your Email"
+                  placeholder="Email"
                   required
-                  class="w-full h-12 rounded-xl bg-white border border-border px-4 text-[#0d141c] placeholder:text-[#7a8ea4] shadow-sm focus:outline-none focus:ring-4 focus:ring-primary/20 focus:border-primary transition"
+                  class="w-full h-12 rounded-xl bg-white border border-border px-4 text-foreground placeholder:text-[#7a8ea4] shadow-sm focus:outline-none focus:ring-4 focus:ring-primary/20 focus:border-primary transition"
                 />
               </label>
 
@@ -622,16 +611,16 @@
                 <span class="sr-only">Your Message</span>
                 <textarea
                   name="message"
-                  placeholder="Your Message"
+                  placeholder="Message"
                   required
-                  class="w-full min-h-36 rounded-xl bg-white border border-border p-4 text-[#0d141c] placeholder:text-[#7a8ea4] shadow-sm resize-y focus:outline-none focus:ring-4 focus:ring-primary/20 focus:border-primary transition"
+                  class="w-full min-h-36 rounded-xl bg-white border border-border p-4 text-foreground placeholder:text-[#7a8ea4] shadow-sm resize-y focus:outline-none focus:ring-4 focus:ring-primary/20 focus:border-primary transition"
                 ></textarea>
               </label>
 
               <div class="flex justify-center pt-1">
                 <button
                   type="submit"
-                  class="group relative inline-flex items-center gap-2 rounded-full h-12 px-6 bg-[#0d141c] text-white text-sm sm:text-base font-semibold overflow-hidden hover:bg-[#0b1620] active:translate-y-[1px] transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-[#0d141c]/20"
+                  class="group relative inline-flex items-center gap-2 rounded-full h-12 px-6 bg-foreground text-white text-sm sm:text-base font-semibold overflow-hidden hover:bg-[#0b1620] active:translate-y-[1px] transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-foreground/20"
                   onclick="handleSubmit(event)"
                 >
                   <span
