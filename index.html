@@ -400,22 +400,15 @@
             </div>
           </div>
 
-          <!-- Cards -->
-          <div id="projects-grid" class="grid grid-cols-1 gap-6 p-4">
-            <!-- Card -->
+          <!-- Cards: This grid will be populated by projects-renderer.js -->
+          <div id="projects-grid" class="grid grid-cols-1 gap-6 p-4"></div>
+
+          <template id="project-card-template">
             <div
-              class="project-card codenames-card group relative cursor-pointer rounded-xl overflow-hidden transition-all duration-300"
-              data-project="websites"
-              data-live="https://your-live-site.com"
-              data-repo="https://github.com/DanSamedov/Codenames-Website"
+              class="project-card group relative cursor-pointer rounded-xl overflow-hidden transition-all duration-300"
               style="
                 box-shadow: rgba(200, 200, 200, 0.2) 2px 2px 6px,
                   rgba(160, 160, 160, 0.15) 0px 6px 10px;
-                background: radial-gradient(
-                  circle at 50% 0%,
-                  rgb(81, 251, 251),
-                  rgb(13, 1, 60)
-                );
               "
             >
               <!-- hover overlay -->
@@ -428,58 +421,14 @@
                 class="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6 px-6 pt-4"
               >
                 <div class="text-white w-full md:w-2/3">
-                  <h3 class="text-xl md:text-2xl font-bold">Codenames</h3>
-                  <p class="mt-2 text-sm md:text-base text-white/80">
-                    Party game played in the browser.
-                  </p>
+                  <h3 class="text-xl md:text-2xl font-bold"></h3>
+                  <p class="mt-2 text-sm md:text-base text-white/80"></p>
                 </div>
 
                 <!-- icon pills -->
                 <div
-                  class="flex justify-center md:justify-end transition-all duration-700 ease-[cubic-bezier(.22,.61,.36,1)]"
-                >
-                  <div
-                    class="w-12 h-12 rounded-full bg-white dark:bg-neutral-900 flex items-center justify-center text-[24px] shadow-md -ml-4 group-hover:ml-0 transition-all duration-500"
-                    style="z-index: 3"
-                  >
-                    <img
-                      src="./src/assets/icons/django.svg"
-                      alt="Django"
-                      class="w-7 h-7"
-                      loading="lazy"
-                      width="28"
-                      height="28"
-                    />
-                  </div>
-
-                  <div
-                    class="w-12 h-12 rounded-full bg-white dark:bg-neutral-900 flex items-center justify-center text-[24px] shadow-md -ml-4 group-hover:ml-0 transition-all duration-500"
-                    style="z-index: 2"
-                  >
-                    <img
-                      src="./src/assets/icons/websocket-svgrepo-com.svg"
-                      alt="Websockets"
-                      class="w-7 h-7"
-                      loading="lazy"
-                      width="28"
-                      height="28"
-                    />
-                  </div>
-
-                  <div
-                    class="w-12 h-12 rounded-full bg-white dark:bg-neutral-900 flex items-center justify-center text-[24px] shadow-md -ml-4 group-hover:ml-0 transition-all duration-500"
-                    style="z-index: 1"
-                  >
-                    <img
-                      src="./src/assets/icons/mysql-svgrepo-com.svg"
-                      alt="Mysql"
-                      class="w-7 h-7"
-                      loading="lazy"
-                      width="28"
-                      height="28"
-                    />
-                  </div>
-                </div>
+                  class="tech-pills flex justify-center md:justify-end transition-all duration-700 ease-[cubic-bezier(.22,.61,.36,1)]"
+                ></div>
               </div>
 
               <!-- bottom image -->
@@ -487,220 +436,13 @@
                 class="relative w-full flex justify-center items-end z-10 max-h-[180px] sm:max-h-[300px] md:max-h-none"
               >
                 <img
-                  alt="Codenames Website preview"
+                  alt=""
                   class="card-preview duration-500 object-contain rounded-t-2xl w-[80%]"
-                  src="./src/assets/static/codenames_portfolio.png"
+                  src=""
                 />
               </div>
             </div>
-
-            <!-- Card -->
-            <div
-              class="project-card group relative cursor-pointer rounded-xl overflow-hidden transition-all duration-300"
-              data-project="websites"
-              data-live="https://your-live-site.com"
-              style="
-                box-shadow: rgba(200, 200, 200, 0.2) 2px 2px 6px,
-                  rgba(160, 160, 160, 0.15) 0px 6px 10px;
-                background: radial-gradient(
-                  circle at 50% 0%,
-                  rgb(20, 241, 149),
-                  rgb(13, 1, 60)
-                );
-              "
-            >
-              <div
-                class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-0"
-              ></div>
-              <div
-                class="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6 px-6 pt-4"
-              >
-                <div class="text-white w-full md:w-2/3">
-                  <h3 class="text-xl md:text-2xl font-bold">
-                    Portfolio Website
-                  </h3>
-                  <p class="mt-2 text-sm md:text-base text-white/80">
-                    Personal site with smooth sections, filters, and responsive
-                    layout.
-                  </p>
-                </div>
-                <!-- icon pills -->
-                <div
-                  class="flex justify-center md:justify-end transition-all duration-700 ease-[cubic-bezier(.22,.61,.36,1)]"
-                >
-                  <div
-                    class="w-12 h-12 rounded-full bg-white dark:bg-neutral-900 flex items-center justify-center text-[24px] shadow-md -ml-4 group-hover:ml-0 transition-all duration-500"
-                    style="z-index: 3"
-                  >
-                    <img
-                      src="./src/assets/icons/javascript.svg"
-                      alt="Js"
-                      class="w-7 h-7"
-                      loading="lazy"
-                      width="28"
-                      height="28"
-                    />
-                  </div>
-
-                  <div
-                    class="w-12 h-12 rounded-full bg-white dark:bg-neutral-900 flex items-center justify-center text-[24px] shadow-md -ml-4 group-hover:ml-0 transition-all duration-500"
-                    style="z-index: 2"
-                  >
-                    <img
-                      src="./src/assets/icons/html5.svg"
-                      alt="Html"
-                      class="w-7 h-7"
-                      loading="lazy"
-                      width="28"
-                      height="28"
-                    />
-                  </div>
-
-                  <div
-                    class="w-12 h-12 rounded-full bg-white dark:bg-neutral-900 flex items-center justify-center text-[24px] shadow-md -ml-4 group-hover:ml-0 transition-all duration-500"
-                    style="z-index: 1"
-                  >
-                    <img
-                      src="./src/assets/icons/tailwindcss.svg"
-                      alt="Tailwind"
-                      class="w-7 h-7"
-                      loading="lazy"
-                      width="28"
-                      height="28"
-                    />
-                  </div>
-                </div>
-              </div>
-
-              <!-- bottom image -->
-              <div
-                class="relative w-full flex justify-center items-end z-10 max-h-[180px] sm:max-h-[300px] md:max-h-none"
-              >
-                <img
-                  alt="Codenames Website preview"
-                  class="card-preview duration-500 object-contain rounded-t-2xl w-[80%]"
-                  src="./src/assets/static/portfolio_design.png"
-                />
-              </div>
-            </div>
-
-            <!-- Card -->
-            <div
-              class="project-card group relative cursor-pointer rounded-xl overflow-hidden transition-all duration-300"
-              data-project="bots"
-              style="
-                box-shadow: rgba(200, 200, 200, 0.2) 2px 2px 6px,
-                  rgba(160, 160, 160, 0.15) 0px 6px 10px;
-                background: radial-gradient(
-                  circle at 50% 0%,
-                  rgb(102, 68, 238),
-                  rgb(13, 1, 60)
-                );
-              "
-            >
-              <div
-                class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-0"
-              ></div>
-              <div
-                class="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6 px-6 pt-4"
-              >
-                <div class="text-white w-full md:w-2/3">
-                  <h3 class="text-xl md:text-2xl font-bold">Telegram Bot</h3>
-                  <p class="mt-2 text-sm md:text-base text-white/80">
-                    Automates tasks and notifications with commands and
-                    webhooks.
-                  </p>
-                </div>
-                <div class="flex justify-center md:justify-end">
-                  <div
-                    class="w-12 h-12 rounded-full bg-white dark:bg-neutral-900 flex items-center justify-center text-[24px] shadow-md -ml-4 group-hover:ml-0 transition-all duration-500"
-                    style="z-index: 3"
-                  >
-                    <span class="font-bold text-sky-600">@</span>
-                  </div>
-                  <div
-                    class="w-12 h-12 rounded-full bg-white dark:bg-neutral-900 flex items-center justify-center text-[24px] shadow-md -ml-4 group-hover:ml-0 transition-all duration-500"
-                    style="z-index: 2"
-                  >
-                    <span class="font-bold text-green-600">API</span>
-                  </div>
-                  <div
-                    class="w-12 h-12 rounded-full bg-white dark:bg-neutral-900 flex items-center justify-center text-[24px] shadow-md -ml-4 group-hover:ml-0 transition-all duration-500"
-                    style="z-index: 1"
-                  >
-                    <span class="font-bold text-slate-800">DX</span>
-                  </div>
-                </div>
-              </div>
-              <div
-                class="relative w-full flex justify-center items-end z-10 max-h-[180px] sm:max-h-[300px] md:max-h-none"
-              >
-                <img
-                  alt="Telegram bot preview"
-                  class="duration-500 object-contain rounded-t-2xl w-[80%]"
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuCK_Y_vKSnxjallhE4KJftRL1roiQZgFdp4FQiFIT_Q4CoYK_SZat2ssEbsvLkij2UkMJNKFfGgcgNYKEAgMnLvDfmr6qdUlJuNRriytIDsUuZtlZvv50hKFUW094B9cF-vc6hUnKivTva83srjc4HCd_fnsU5BW4hQ1qbBqvFySx0OyPskciJ4wathWBhbaWcIw5xiWW1_zCK80AyxTar5GIWq5el8bPJgEYEf1eGihjgHB8MqfTSH9WXivH6XFUdI80Mo9GYlSw"
-                />
-              </div>
-            </div>
-
-            <!-- Card -->
-            <div
-              class="project-card group relative cursor-pointer rounded-xl overflow-hidden transition-all duration-300"
-              data-project="programs"
-              style="
-                box-shadow: rgba(200, 200, 200, 0.2) 2px 2px 6px,
-                  rgba(160, 160, 160, 0.15) 0px 6px 10px;
-                background: radial-gradient(
-                  circle at 50% 0%,
-                  rgb(20, 141, 241),
-                  rgb(13, 1, 60)
-                );
-              "
-            >
-              <div
-                class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-0"
-              ></div>
-              <div
-                class="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6 px-6 pt-4"
-              >
-                <div class="text-white w-full md:w-2/3">
-                  <h3 class="text-xl md:text-2xl font-bold">Casino Predict</h3>
-                  <p class="mt-2 text-sm md:text-base text-white/80">
-                    Stats-heavy simulator with charts and strategy testing.
-                  </p>
-                </div>
-                <div class="flex justify-center md:justify-end">
-                  <div
-                    class="w-12 h-12 rounded-full bg-white dark:bg-neutral-900 flex items-center justify-center text-[24px] shadow-md -ml-2 group-hover:ml-0 transition-all duration-700 ease-[cubic-bezier(.22,.61,.36,1)]"
-                    style="z-index: 3"
-                  >
-                    <span class="font-bold text-rose-600">Py</span>
-                  </div>
-                  <div
-                    class="w-12 h-12 rounded-full bg-white dark:bg-neutral-900 flex items-center justify-center text-[24px] shadow-md -ml-2 group-hover:ml-0 transition-all duration-700 ease-[cubic-bezier(.22,.61,.36,1)]"
-                    style="z-index: 2"
-                  >
-                    <span class="font-bold text-violet-600">DB</span>
-                  </div>
-                  <div
-                    class="w-12 h-12 rounded-full bg-white dark:bg-neutral-900 flex items-center justify-center text-[24px] shadow-md -ml-2 group-hover:ml-0 transition-all duration-700 ease-[cubic-bezier(.22,.61,.36,1)]"
-                    style="z-index: 1"
-                  >
-                    <span class="font-bold text-emerald-600">ML</span>
-                  </div>
-                </div>
-              </div>
-              <div
-                class="relative w-full flex justify-center items-end z-10 max-h-[180px] sm:max-h-[300px] md:max-h-none"
-              >
-                <img
-                  alt="Casino Predict preview"
-                  class="duration-500 object-contain rounded-t-2xl w-[80%]"
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuDJbDT_zJa01vi1xdYwheXvcx5QWiKzoNdcebzjni7iyIYvLMhoYxzKIRAKFrxHrTRxBhMy8HCT1-55XxKzxKk1wvpKmer3Nz2S6E70GWZ3MyTVv16oBx1zrLt4WriTlSYvWqp0Xm4fvggibwn82etizQcdol2D1v6Y9BWRXzuUm7UerHiPlqJLarnf-4gmwL5nKV7_8HIJU7G1P-rgGhVwV4v-qoNh_2ehfYZBSpNe2yB9L5QjDJJD6K4Ga9SiwRFLJk2NzJqsdw"
-                />
-              </div>
-            </div>
-          </div>
+          </template>
         </div>
       </section>
 

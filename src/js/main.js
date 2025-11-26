@@ -12,6 +12,7 @@ import { initProjectModals } from "./modules/project-modal.js";
 import { initRoleRotator } from "./modules/role-rotator.js";
 import { setupScrollCue } from "./modules/scroll-cue.js";
 import { initScrollProgressBar } from "./modules/scroll-progress.js";
+import { renderProjects } from "./projects-renderer.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   // Smooth-scroll internal anchors
@@ -45,6 +46,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // Initialize all modules
+  renderProjects();
   initAnimations();
   initContactForm();
   initCopyToClipboard();
