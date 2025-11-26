@@ -8,6 +8,7 @@ const renderer = new THREE.WebGLRenderer({
   canvas,
   antialias: true,
   alpha: true,
+  powerPreference: "high-performance",
 });
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -23,7 +24,7 @@ scene.add(key);
 const rim = new THREE.DirectionalLight(0xffffff, 1.0);
 rim.position.set(-6, 7, -5);
 scene.add(rim);
-scene.add(new THREE.AmbientLight(0xffffff, 0.15));
+// kept minimal lighting: hemisphere + key directional light
 
 const loader = new GLTFLoader();
 let mixer;
@@ -54,11 +55,9 @@ loader.load(
         clip = normalizeClipStart(clip);
         mixer = new THREE.AnimationMixer(root);
         const action = mixer.clipAction(clip);
-        action.reset();
-        action.enabled = true;
-        action.clampWhenFinished = false;
-        // Use ping-pong to avoid any end-frame seam
-        action.setLoop(THREE.LoopPingPong, Infinity);
+        // defaults are sufficient here; explicit reset/enabled/clamp aren't required
+        // Loop the animation
+        action.setLoop(THREE.LoopRepeat, Infinity);
         // action.setEffectiveTimeScale(1.0); // tweak speed if desired
         action.play();
         // Start a bit into the clip to avoid any initial holds
@@ -81,7 +80,7 @@ loader.load(
   (err) => console.error("[hero] load error:", err)
 );
 
-function frameObject(cam, obj, dir = new THREE.Vector3(0, 1, 1), fill = 0.9) {
+function frameObject(cam, obj, dir, fill = 0.9) {
   obj.updateMatrixWorld(true);
   const box = new THREE.Box3().setFromObject(obj);
   const size = box.getSize(new THREE.Vector3());
@@ -100,6 +99,11 @@ function frameObject(cam, obj, dir = new THREE.Vector3(0, 1, 1), fill = 0.9) {
 }
 
 const clock = new THREE.Clock();
+
+const box = new THREE.Box3();
+const size = new THREE.Vector3();
+const center = new THREE.Vector3();
+
 /** Shift all tracks so the earliest key starts at 0s */
 function normalizeClipStart(srcClip) {
   const clip = srcClip.clone();
@@ -115,24 +119,35 @@ function normalizeClipStart(srcClip) {
   }
   return clip;
 }
-function render() {
-  const w = canvas.clientWidth,
-    h = canvas.clientHeight;
-  // Avoid invalid aspect (e.g., if canvas is temporarily 0x0)
-  if (!w || !h) {
-    requestAnimationFrame(render);
-    return;
-  }
+
+function handleResize() {
+  const w = canvas.clientWidth;
+  const h = canvas.clientHeight;
   if (canvas.width !== w || canvas.height !== h) {
     renderer.setSize(w, h, false);
     camera.aspect = w / h;
     camera.updateProjectionMatrix();
   }
+}
+
+function render() {
+  requestAnimationFrame(render);
+
   if (mixer) {
     const dt = Math.min(clock.getDelta(), 1 / 30); // clamp to prevent large jumps
     mixer.update(dt);
   }
+
+  // Avoid invalid aspect (e.g., if canvas is temporarily 0x0)
+  if (!canvas.clientWidth || !canvas.clientHeight) {
+    return;
+  }
+
   renderer.render(scene, camera);
-  requestAnimationFrame(render);
 }
+
+// Initial setup and start rendering
+handleResize();
+const resizeObserver = new ResizeObserver(handleResize);
+resizeObserver.observe(canvas, { box: "content-box" });
 render();
