@@ -1,5 +1,3 @@
-import React from "react";
-
 const TechPill = ({ tech }) => {
   const pillClasses =
     "w-12 h-12 rounded-full bg-white dark:bg-neutral-900 flex items-center justify-center text-[24px] shadow-md -ml-4 group-hover:ml-0 transition-all duration-500";
@@ -34,7 +32,7 @@ const TechPill = ({ tech }) => {
   );
 };
 
-const ProjectCard = ({ project }) => {
+const ProjectCard = ({ project, onCardClick }) => {
   return (
     <div
       className="project-card group relative cursor-pointer rounded-xl overflow-hidden transition-all duration-300"
@@ -44,8 +42,14 @@ const ProjectCard = ({ project }) => {
         background: project.background,
       }}
       data-project={project.category}
-      data-live={project.liveUrl}
-      data-repo={project.repoUrl}
+      onClick={onCardClick}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          onCardClick();
+        }
+      }}
+      tabIndex="0"
+      role="button"
     >
       <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-0"></div>
 

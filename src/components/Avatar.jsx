@@ -1,4 +1,4 @@
-import React, { Suspense } from "react";
+import { Suspense, useEffect } from "react";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls, useGLTF, useAnimations } from "@react-three/drei";
 
@@ -8,7 +8,7 @@ function Model(props) {
   );
   const { ref, actions } = useAnimations(animations, scene);
 
-  React.useEffect(() => {
+  useEffect(() => {
     actions[Object.keys(actions)[0]].play();
   }, [actions]);
 

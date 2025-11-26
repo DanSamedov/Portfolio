@@ -1,9 +1,28 @@
-import React from "react";
+import React, { useEffect } from "react";
 import RoleRotator from "./RoleRotator";
 import Avatar from "./Avatar";
 
 const Home = () => {
   const phrases = ["Backend Developer", "CS & Econometrics Student"];
+
+  useEffect(() => {
+    const scrollCue = document.getElementById("scroll-cue");
+    if (!scrollCue) return;
+
+    const targetId = scrollCue.dataset.target;
+    const targetElement = document.querySelector(targetId);
+    if (!targetElement) return;
+
+    const handleClick = () => {
+      targetElement.scrollIntoView({ behavior: "smooth" });
+    };
+
+    scrollCue.addEventListener("click", handleClick);
+
+    return () => {
+      scrollCue.removeEventListener("click", handleClick);
+    };
+  }, []);
 
   return (
     <section id="home" className="relative w-full min-h-dvh scroll-mt-14 pt-16">

@@ -1,4 +1,3 @@
-import React from "react";
 import NavTracker from "./NavTracker";
 
 const Header = () => {

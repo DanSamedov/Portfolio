@@ -1,6 +1,23 @@
-import React from "react";
+import { useState, useCallback } from "react";
 
 const Contact = () => {
+  const [copyButtonText, setCopyButtonText] = useState("Copy");
+
+  const handleCopyEmail = useCallback(() => {
+    const email = "samedovdanylo@gmail.com";
+    navigator.clipboard.writeText(email).then(
+      () => {
+        setCopyButtonText("Copied!");
+        setTimeout(() => setCopyButtonText("Copy"), 2000);
+      },
+      (err) => {
+        console.error("Failed to copy email: ", err);
+        setCopyButtonText("Failed!");
+        setTimeout(() => setCopyButtonText("Copy"), 2000);
+      }
+    );
+  }, []);
+
   const handleSubmit = (event) => {
     event.preventDefault();
     // Handle form submission
@@ -39,11 +56,10 @@ const Contact = () => {
               <button
                 type="button"
                 className="ml-1.5 mr-1.5 h-8 rounded-full px-3 text-sm font-semibold border border-border bg-primary text-white transition-colors duration-300 ease-in-out group-hover:bg-white/90 group-hover:text-foreground group-hover:border-white/70 group-focus-within:bg-white/90 group-focus-within:text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
-                data-copy="samedovdanylo@gmail.com"
-                data-copied="Copied!"
+                onClick={handleCopyEmail}
                 aria-label="Copy email to clipboard"
               >
-                Copy
+                {copyButtonText}
               </button>
             </div>
 
