@@ -1,7 +1,8 @@
-import { useState, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
+import { useNavigation } from "../context/NavigationContext";
 
 const NavTracker = () => {
-  const [activeLink, setActiveLink] = useState("home");
+  const { activeLink, setActiveLink, smoothScrollTo } = useNavigation();
   const navRef = useRef(null);
   const trackerRef = useRef(null);
   const intentId = useRef(null);
@@ -147,12 +148,12 @@ const NavTracker = () => {
     sections.forEach((section) => observer.observe(section));
 
     return () => sections.forEach((section) => observer.unobserve(section));
-  }, [links]);
+  }, [links, setActiveLink]);
 
   const handleLinkClick = (id) => {
     intentId.current = id;
     intentDeadline.current = performance.now() + (reduced ? 200 : 1600);
-    setActiveLink(id);
+    smoothScrollTo(id);
   };
 
   return (
@@ -170,9 +171,6 @@ const NavTracker = () => {
           }`}
           onClick={(e) => {
             e.preventDefault();
-            document
-              .getElementById(id)
-              ?.scrollIntoView({ behavior: reduced ? "auto" : "smooth" });
             handleLinkClick(id);
           }}
         >

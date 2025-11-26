@@ -1,28 +1,16 @@
-import React, { useEffect } from "react";
+import React from "react";
 import RoleRotator from "./RoleRotator";
 import Avatar from "./Avatar";
+import { useNavigation } from "../context/NavigationContext";
 
 const Home = () => {
   const phrases = ["Backend Developer", "CS & Econometrics Student"];
+  const { smoothScrollTo } = useNavigation();
 
-  useEffect(() => {
-    const scrollCue = document.getElementById("scroll-cue");
-    if (!scrollCue) return;
-
-    const targetId = scrollCue.dataset.target;
-    const targetElement = document.querySelector(targetId);
-    if (!targetElement) return;
-
-    const handleClick = () => {
-      targetElement.scrollIntoView({ behavior: "smooth" });
-    };
-
-    scrollCue.addEventListener("click", handleClick);
-
-    return () => {
-      scrollCue.removeEventListener("click", handleClick);
-    };
-  }, []);
+  const handleScrollClick = (e, targetId) => {
+    e.preventDefault();
+    smoothScrollTo(targetId);
+  };
 
   return (
     <section id="home" className="relative w-full min-h-dvh scroll-mt-14 pt-16">
@@ -101,6 +89,7 @@ const Home = () => {
 
                 <a
                   href="#contact"
+                  onClick={(e) => handleScrollClick(e, "contact")}
                   aria-label="Go to contact section"
                   className="group relative inline-flex justify-center items-center h-10 overflow-hidden rounded-full border border-border bg-white/90 shadow-sm px-4 text-center font-semibold"
                 >
@@ -154,7 +143,7 @@ const Home = () => {
             id="scroll-cue"
             type="button"
             aria-label="Scroll to next section"
-            data-target="#projects"
+            onClick={(e) => handleScrollClick(e, "projects")}
             className="group animate-scroll-cue flex flex-col items-center text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 rounded-md"
           >
             <span className="text-xs sm:text-sm mb-1 sm:mb-2 font-medium">
