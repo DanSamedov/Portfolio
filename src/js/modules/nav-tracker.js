@@ -63,6 +63,7 @@ export function initNavSectionTracker() {
     .filter(Boolean);
   if (!sections.length) return;
 
+  let isLoading = true;
   let currentId = null;
   let intentId = null;
   let intentDeadline = 0;
@@ -128,7 +129,7 @@ export function initNavSectionTracker() {
 
   let ticking = false;
   const onScroll = () => {
-    if (ticking) return;
+    if (ticking || isLoading) return;
     ticking = true;
     requestAnimationFrame(() => {
       const now = performance.now();
@@ -202,4 +203,9 @@ export function initNavSectionTracker() {
       if (active) moveTo(active);
     });
   }
+
+  setTimeout(() => {
+    isLoading = false;
+    onScroll();
+  }, 100);
 }
