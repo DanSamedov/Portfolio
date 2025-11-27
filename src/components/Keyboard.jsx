@@ -65,7 +65,7 @@ const Key = ({ node, onHover, onLeave, isPressed }) => {
 
   useFrame(() => {
     const targetPosition = isPressed ? pressedPosition : restPosition;
-    const animationSpeed = isPressed ? 0.25 : 0.2;
+    const animationSpeed = isPressed ? 0.2 : 0.2;
     node.position.lerp(targetPosition, animationSpeed);
   });
 
