@@ -1,15 +1,11 @@
 import { Suspense, useState, useEffect, useRef, useMemo } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { useGLTF } from "@react-three/drei";
+import { useGLTF, Center } from "@react-three/drei";
 import * as THREE from "three";
-import { a, useSpring } from "@react-spring/three";
 
 const MODEL_URL = "./src/assets/models/keyboard.glb";
 useGLTF.preload(MODEL_URL);
-
-const PRESS_FRACTION = 0.5;
-const TILT_X = 0.06;
-const TILT_Z = -0.03;
+const PRESS_FRACTION = 5;
 
 const LABEL_OVERRIDES = {
   js: "JavaScript",
@@ -56,28 +52,25 @@ function computeSkillLabel(name) {
 const Key = ({ node, onHover, onLeave, isPressed }) => {
   const skillLabel = useMemo(() => computeSkillLabel(node.name), [node.name]);
   const keyHeight = 0.5;
+  const restPosition = useMemo(() => node.position.clone(), [node.position]);
+  const pressedPosition = useMemo(
+    () =>
+      new THREE.Vector3(
+        node.position.x,
+        node.position.y - keyHeight * PRESS_FRACTION,
+        node.position.z
+      ),
+    [node.position, keyHeight]
+  );
 
-  const { position, rotation } = useSpring({
-    position: isPressed
-      ? [
-          node.position.x,
-          node.position.y - keyHeight * PRESS_FRACTION,
-          node.position.z,
-        ]
-      : [node.position.x, node.position.y, node.position.z],
-    rotation: isPressed
-      ? [node.rotation.x + TILT_X, node.rotation.y, node.rotation.z + TILT_Z]
-      : [node.rotation.x, node.rotation.y, node.rotation.z],
-    config: {
-      mass: 1,
-      tension: 1200,
-      friction: 40,
-      duration: isPressed ? 110 : 160,
-    },
+  useFrame(() => {
+    const targetPosition = isPressed ? pressedPosition : restPosition;
+    const animationSpeed = isPressed ? 0.25 : 0.2;
+    node.position.lerp(targetPosition, animationSpeed);
   });
 
   return (
-    <a.primitive
+    <primitive
       object={node}
       onPointerEnter={(e) => {
         e.stopPropagation();
@@ -87,18 +80,24 @@ const Key = ({ node, onHover, onLeave, isPressed }) => {
         e.stopPropagation();
         onLeave(skillLabel);
       }}
-      position={position}
-      rotation={rotation}
     />
   );
 };
 
-const Keyboard = () => {
+const Keyboard = ({ onSkillChange }) => {
   const { nodes } = useGLTF(MODEL_URL);
-  const [activeSkill, setActiveSkill] = useState("My Skills");
+
+  const [activeSkill, setActiveSkill] = useState("Skills");
+
   const [pressedKeys, setPressedKeys] = useState(new Set());
   const [hoveredKey, setHoveredKey] = useState(null);
   const containerRef = useRef();
+
+  useEffect(() => {
+    if (onSkillChange) {
+      onSkillChange(activeSkill);
+    }
+  }, [activeSkill, onSkillChange]);
 
   const keys = useMemo(() => {
     return Object.values(nodes).filter((node) => node.name.startsWith("key_"));
@@ -111,9 +110,8 @@ const Keyboard = () => {
 
   const keyMap = useMemo(() => {
     if (keys.length !== 24) return {};
-
     const items = keys.map((ctrl) => ({ ctrl, pos: ctrl.position.clone() }));
-    items.sort((a, b) => a.pos.z - b.pos.z);
+    items.sort((a, b) => b.pos.z - a.pos.z);
     const rows = [
       items.slice(0, 6),
       items.slice(6, 12),
@@ -121,9 +119,8 @@ const Keyboard = () => {
       items.slice(18, 24),
     ];
     const grid = rows.map((row) =>
-      row.sort((a, b) => a.pos.x - b.pos.x).map((o) => o.ctrl)
+      row.sort((a, b) => b.pos.x - a.pos.x).map((o) => o.ctrl)
     );
-
     const keyMapByCode = {};
     const colCodes = [
       ["Digit1", "KeyQ", "KeyA", "KeyZ"],
@@ -133,7 +130,6 @@ const Keyboard = () => {
       ["Digit5", "KeyT", "KeyG", "KeyB"],
       ["Digit6", "KeyY", "KeyH", "KeyN"],
     ];
-
     for (let col = 0; col < 6; col++) {
       for (let row = 0; row < 4; row++) {
         const ctrl = grid[row][col];
@@ -161,7 +157,7 @@ const Keyboard = () => {
           const next = new Set(prev);
           next.delete(keyName);
           if (next.size === 0 && !hoveredKey) {
-            setActiveSkill("My Skills");
+            setActiveSkill("Skills");
           }
           return next;
         });
@@ -174,18 +170,12 @@ const Keyboard = () => {
       window.removeEventListener("keydown", handleKeyDown);
       window.removeEventListener("keyup", handleKeyUp);
     };
-  }, [keyMap]);
+  }, [keyMap, hoveredKey]);
 
   return (
     <div ref={containerRef} className="relative w-full h-full touch-none">
-      <div
-        id="skill-banner"
-        className="absolute top-4 left-1/2 -translate-x-1/2 z-10 bg-background/50 backdrop-blur-sm text-foreground font-semibold px-4 py-2 rounded-lg shadow-lg text-center pointer-events-none"
-      >
-        {activeSkill}
-      </div>
       <Canvas
-        camera={{ position: [0, 4, 9], fov: 45, near: 0.1, far: 100 }}
+        camera={{ position: [0, 0, 50], fov: 45, near: 0.1, far: 100 }}
         dpr={Math.min(devicePixelRatio, 2)}
         gl={{
           antialias: true,
@@ -193,11 +183,6 @@ const Keyboard = () => {
           outputColorSpace: THREE.SRGBColorSpace,
           toneMapping: THREE.ACESFilmicToneMapping,
           toneMappingExposure: 1.2,
-        }}
-        onCreated={({ scene }) => {
-          scene.rotation.y = Math.PI * 2;
-          scene.rotation.x = 1;
-          scene.scale.setScalar(0.1);
         }}
       >
         <hemisphereLight intensity={0.95} groundColor={0xe9edf5} />
@@ -209,29 +194,31 @@ const Keyboard = () => {
         />
         <ambientLight intensity={0.15} />
         <Suspense fallback={null}>
-          <group>
-            {keyboardBody && <primitive object={keyboardBody} />}
-            {keys.map((keyNode) => (
-              <Key
-                key={keyNode.name}
-                node={keyNode}
-                onHover={(label) => {
-                  setHoveredKey(label);
-                  setActiveSkill(label);
-                }}
-                onLeave={() => {
-                  setHoveredKey(null);
-                  if (pressedKeys.size === 0) {
-                    setActiveSkill("My Skills");
+          <Center>
+            <group rotation={[Math.PI + 1, Math.PI * 2, Math.PI]} scale={0.5}>
+              {keyboardBody && <primitive object={keyboardBody} />}
+              {keys.map((keyNode) => (
+                <Key
+                  key={keyNode.name}
+                  node={keyNode}
+                  onHover={(label) => {
+                    setHoveredKey(label);
+                    setActiveSkill(label);
+                  }}
+                  onLeave={() => {
+                    setHoveredKey(null);
+                    if (pressedKeys.size === 0) {
+                      setActiveSkill("Skills");
+                    }
+                  }}
+                  isPressed={
+                    pressedKeys.has(keyNode.name) ||
+                    hoveredKey === computeSkillLabel(keyNode.name)
                   }
-                }}
-                isPressed={
-                  pressedKeys.has(keyNode.name) ||
-                  hoveredKey === computeSkillLabel(keyNode.name)
-                }
-              />
-            ))}
-          </group>
+                />
+              ))}
+            </group>
+          </Center>
         </Suspense>
       </Canvas>
     </div>

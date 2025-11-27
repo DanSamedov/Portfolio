@@ -52,12 +52,12 @@ const Avatar = () => {
       <directionalLight position={[5, 8, 6]} intensity={1.3} />
       <directionalLight position={[-6, 7, -5]} intensity={1.0} />
       <Suspense fallback={null}>
-        <Model scale={0.03} rotation-y={Math.PI / -2.5} />
+        <Model scale={1.1} rotation-y={Math.PI / -3} rotation-x={0.5} />
       </Suspense>
       <OrbitControls
         enableZoom={false}
         enablePan={false}
-        target={[0, 0.8, 0]}
+        target={[-1.5, 1, -0.65]}
       />
     </Canvas>
   );
