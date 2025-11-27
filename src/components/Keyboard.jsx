@@ -68,7 +68,12 @@ const Key = ({ node, onHover, onLeave, isPressed }) => {
     rotation: isPressed
       ? [node.rotation.x + TILT_X, node.rotation.y, node.rotation.z + TILT_Z]
       : [node.rotation.x, node.rotation.y, node.rotation.z],
-    config: { mass: 1, tension: 300, friction: 20 },
+    config: {
+      mass: 1,
+      tension: 1200,
+      friction: 40,
+      duration: isPressed ? 110 : 160,
+    },
   });
 
   return (
@@ -80,7 +85,7 @@ const Key = ({ node, onHover, onLeave, isPressed }) => {
       }}
       onPointerLeave={(e) => {
         e.stopPropagation();
-        onLeave();
+        onLeave(skillLabel);
       }}
       position={position}
       rotation={rotation}
@@ -92,11 +97,17 @@ const Keyboard = () => {
   const { nodes } = useGLTF(MODEL_URL);
   const [activeSkill, setActiveSkill] = useState("My Skills");
   const [pressedKeys, setPressedKeys] = useState(new Set());
+  const [hoveredKey, setHoveredKey] = useState(null);
   const containerRef = useRef();
 
   const keys = useMemo(() => {
     return Object.values(nodes).filter((node) => node.name.startsWith("key_"));
   }, [nodes]);
+
+  const keyboardBody = useMemo(
+    () => Object.values(nodes).find((node) => node.name === "body"),
+    [nodes]
+  );
 
   const keyMap = useMemo(() => {
     if (keys.length !== 24) return {};
@@ -149,9 +160,11 @@ const Keyboard = () => {
         setPressedKeys((prev) => {
           const next = new Set(prev);
           next.delete(keyName);
+          if (next.size === 0 && !hoveredKey) {
+            setActiveSkill("My Skills");
+          }
           return next;
         });
-        setActiveSkill("My Skills");
       }
     };
 
@@ -182,9 +195,9 @@ const Keyboard = () => {
           toneMappingExposure: 1.2,
         }}
         onCreated={({ scene }) => {
-          scene.rotation.y = Math.PI;
-          scene.rotation.x = 0.25;
-          scene.scale.setScalar(0.01);
+          scene.rotation.y = Math.PI * 2;
+          scene.rotation.x = 1;
+          scene.scale.setScalar(0.1);
         }}
       >
         <hemisphereLight intensity={0.95} groundColor={0xe9edf5} />
@@ -197,21 +210,27 @@ const Keyboard = () => {
         <ambientLight intensity={0.15} />
         <Suspense fallback={null}>
           <group>
+            {keyboardBody && <primitive object={keyboardBody} />}
             {keys.map((keyNode) => (
               <Key
                 key={keyNode.name}
                 node={keyNode}
-                onHover={setActiveSkill}
-                onLeave={() => {
-                  if (pressedKeys.size === 0) setActiveSkill("My Skills");
+                onHover={(label) => {
+                  setHoveredKey(label);
+                  setActiveSkill(label);
                 }}
-                isPressed={pressedKeys.has(keyNode.name)}
+                onLeave={() => {
+                  setHoveredKey(null);
+                  if (pressedKeys.size === 0) {
+                    setActiveSkill("My Skills");
+                  }
+                }}
+                isPressed={
+                  pressedKeys.has(keyNode.name) ||
+                  hoveredKey === computeSkillLabel(keyNode.name)
+                }
               />
             ))}
-            {Object.values(nodes).map((node) => {
-              if (node.name.startsWith("key_") || !node.isMesh) return null;
-              return <primitive key={node.uuid} object={node} />;
-            })}
           </group>
         </Suspense>
       </Canvas>
