@@ -479,6 +479,10 @@
 
     position: relative;
   }
+
+  .project-card-inner.is-flipped {
+    transform: rotateY(180deg);
+  }
 }
 
 /* ===== Utilities layer ===== */
