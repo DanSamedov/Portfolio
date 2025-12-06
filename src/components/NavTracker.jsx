@@ -123,32 +123,23 @@ const NavTracker = () => {
         if (intentId.current && performance.now() < intentDeadline.current)
           return;
 
-        let bestEntry = null;
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            if (
-              !bestEntry ||
-              entry.intersectionRatio > bestEntry.intersectionRatio
-            ) {
-              bestEntry = entry;
-            }
-          }
-        });
-
-        if (bestEntry) {
-          setActiveLink(bestEntry.target.id);
+        const visibleEntries = entries.filter((entry) => entry.isIntersecting);
+        
+        if (visibleEntries.length > 0) {
+           visibleEntries.sort((a, b) => b.intersectionRect.height - a.intersectionRect.height);
+           setActiveLink(visibleEntries[0].target.id);
         }
       },
       {
-        threshold: [0.25, 0.5, 0.75],
-        rootMargin: "-35% 0px -55% 0px",
+        threshold: 0,
+        rootMargin: "-45% 0px -45% 0px",
       }
     );
 
     sections.forEach((section) => observer.observe(section));
 
     return () => sections.forEach((section) => observer.unobserve(section));
-  }, [links, setActiveLink]);
+  }, [setActiveLink]);
 
   const handleLinkClick = (id) => {
     intentId.current = id;

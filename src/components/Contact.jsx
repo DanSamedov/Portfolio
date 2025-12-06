@@ -72,7 +72,7 @@ const Contact = () => {
                 href="https://github.com/DanSamedov"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="p-5 rounded-xl transition-all duration-300 transform hover:-translate-y-1.5 bg-white/70 backdrop-blur-sm text-slate-900/90 shadow-xl"
+                className="p-5 rounded-xl transition-all duration-300 transform hover:-translate-y-1.5 bg-white backdrop-blur-sm text-slate-900/90 shadow-xl border border-border/50"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -92,7 +92,7 @@ const Contact = () => {
                 href="https://www.linkedin.com/in/danylo-samedov-b557132b1/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="p-5 rounded-xl transition-all duration-300 transform hover:-translate-y-1.5 bg-white/70 backdrop-blur-sm text-slate-900/90 shadow-xl"
+                className="p-5 rounded-xl transition-all duration-300 transform hover:-translate-y-1.5 bg-white backdrop-blur-sm text-slate-900/90 shadow-xl border border-border/50"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -117,32 +117,32 @@ const Contact = () => {
             onSubmit={handleSubmit}
           >
             <label className="block">
-              <span className="sr-only">Your Name</span>
+              <span className="sr-only">Name</span>
               <input
                 name="name"
                 type="text"
-                placeholder="Your Name"
+                placeholder="Name"
                 required
                 className="w-full h-12 rounded-xl bg-white border border-border px-4 text-foreground placeholder:text-[#7a8ea4] shadow-sm focus:outline-none focus:ring-4 focus:ring-primary/20 focus:border-primary transition"
               />
             </label>
 
             <label className="block">
-              <span className="sr-only">Your Email</span>
+              <span className="sr-only">Email</span>
               <input
                 name="email"
                 type="email"
-                placeholder="Your Email"
+                placeholder="Email"
                 required
                 className="w-full h-12 rounded-xl bg-white border border-border px-4 text-foreground placeholder:text-[#7a8ea4] shadow-sm focus:outline-none focus:ring-4 focus:ring-primary/20 focus:border-primary transition"
               />
             </label>
 
             <label className="block">
-              <span className="sr-only">Your Message</span>
+              <span className="sr-only">Message</span>
               <textarea
                 name="message"
-                placeholder="Your Message"
+                placeholder="Message"
                 required
                 className="w-full min-h-36 rounded-xl bg-white border border-border p-4 text-foreground placeholder:text-[#7a8ea4] shadow-sm resize-y focus:outline-none focus:ring-4 focus:ring-primary/20 focus:border-primary transition"
               ></textarea>
