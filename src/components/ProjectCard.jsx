@@ -2,7 +2,7 @@ import { useState } from "react";
 
 const TechPill = ({ tech }) => {
   const pillClasses =
-    "w-12 h-12 rounded-full bg-white dark:bg-neutral-900 flex items-center justify-center text-[24px] shadow-md -ml-4 group-hover:ml-0 transition-all duration-500";
+    "w-12 h-12 rounded-full bg-white flex items-center justify-center text-[24px] shadow-md -ml-4 group-hover:ml-0 transition-all duration-500";
 
   if (tech.isText) {
     let textClass = "font-bold";
@@ -56,7 +56,6 @@ const ProjectCard = ({ project }) => {
           height: "100%",
         }}
       >
-        {/* Front of the card */}
         <div
           className="project-card-front group relative cursor-pointer rounded-xl overflow-hidden transition-all duration-300 w-full h-full absolute"
           style={{
@@ -100,7 +99,6 @@ const ProjectCard = ({ project }) => {
           </div>
         </div>
 
-        {/* Back of the card */}
         <div
           className="project-card-back absolute top-0 left-0 w-full h-full rounded-xl overflow-hidden text-white shadow-2xl p-6 cursor-pointer"
           style={{
@@ -151,7 +149,7 @@ const ProjectCard = ({ project }) => {
               {project.tech.map((tech) => (
                 <div
                   key={tech.name}
-                  className="w-10 h-10 rounded-full bg-white dark:bg-neutral-900 flex items-center justify-center text-[20px] shadow-md"
+                  className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-[20px] shadow-md"
                 >
                   {tech.isText ? (
                     <span className="font-bold text-black">{tech.name}</span>

@@ -72,7 +72,7 @@ const Contact = () => {
                 href="https://github.com/DanSamedov"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="p-5 rounded-xl transition-all duration-300 transform hover:-translate-y-1.5 bg-white/70 dark:bg-neutral-900/70 backdrop-blur-sm text-slate-900/90 dark:text-white/90 shadow-xl"
+                className="p-5 rounded-xl transition-all duration-300 transform hover:-translate-y-1.5 bg-white/70 backdrop-blur-sm text-slate-900/90 shadow-xl"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -92,7 +92,7 @@ const Contact = () => {
                 href="https://www.linkedin.com/in/danylo-samedov-b557132b1/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="p-5 rounded-xl transition-all duration-300 transform hover:-translate-y-1.5 bg-white/70 dark:bg-neutral-900/70 backdrop-blur-sm text-slate-900/90 dark:text-white/90 shadow-xl"
+                className="p-5 rounded-xl transition-all duration-300 transform hover:-translate-y-1.5 bg-white/70 backdrop-blur-sm text-slate-900/90 shadow-xl"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"

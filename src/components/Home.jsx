@@ -1,4 +1,3 @@
-import React from "react";
 import RoleRotator from "./RoleRotator";
 import Avatar from "./Avatar";
 import { useNavigation } from "../context/NavigationContext";
