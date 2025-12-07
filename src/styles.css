@@ -311,7 +311,7 @@
   }
 
   .social-icon-bg {
-    @apply rounded-full bg-muted p-2.5 transition-all duration-200 ease-in-out;
+    @apply rounded-xl bg-muted p-2.5 transition-all duration-200 ease-in-out;
   }
 
   .social-icon:hover .social-icon-bg {
@@ -320,7 +320,7 @@
 
   /* Nav link */
   .nav-link {
-    @apply relative inline-flex items-center justify-center text-center gap-2 font-semibold rounded-full transition-all duration-200 ease-in-out focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 text-foreground/90;
+    @apply relative inline-flex items-center justify-center text-center gap-2 font-semibold rounded-xl transition-all duration-200 ease-in-out focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 text-foreground/90;
     font-size: 1.05rem; /* bigger text */
     padding: 0.6rem 1.3rem; /* bigger pill */
     line-height: 1.1;

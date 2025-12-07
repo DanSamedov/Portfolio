@@ -49,14 +49,14 @@ const Contact = () => {
               Let’s work together or just say hi
             </p>
 
-            <div className="group inline-flex h-10 items-center rounded-full text-foreground border border-border bg-white/90 shadow-sm transition-colors duration-300 ease-in-out hover:bg-primary hover:text-white hover:border-primary">
+            <div className="group inline-flex h-10 items-center rounded-xl text-foreground border border-border bg-white/90 shadow-sm transition-colors duration-300 ease-in-out hover:bg-primary hover:text-white hover:border-primary">
               <span className="pl-4 pr-2 py-2 select-none font-semibold">
                 samedovdanylo@gmail.com
               </span>
 
               <button
                 type="button"
-                className="ml-1.5 mr-1.5 h-8 rounded-full px-3 text-sm font-semibold border border-border bg-primary text-white transition-colors duration-300 ease-in-out group-hover:bg-white/90 group-hover:text-foreground group-hover:border-white/70 group-focus-within:bg-white/90 group-focus-within:text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
+                className="ml-1.5 mr-1.5 h-8 rounded-xl px-3 text-sm font-semibold border border-border bg-primary text-white transition-colors duration-300 ease-in-out group-hover:bg-white/90 group-hover:text-foreground group-hover:border-white/70 group-focus-within:bg-white/90 group-focus-within:text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
                 onClick={handleCopyEmail}
                 aria-label="Copy email to clipboard"
               >
@@ -151,7 +151,7 @@ const Contact = () => {
             <div className="flex justify-center pt-1">
               <button
                 type="submit"
-                className="group relative inline-flex items-center gap-2 rounded-full h-12 px-6 bg-foreground text-white text-sm sm:text-base font-semibold overflow-hidden hover:bg-[#0b1620] active:translate-y-[1px] transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-foreground/20"
+                className="group relative inline-flex items-center gap-2 rounded-xl h-12 px-6 bg-foreground text-white text-sm sm:text-base font-semibold overflow-hidden hover:bg-[#0b1620] active:translate-y-[1px] transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-foreground/20"
               >
                 <span className="absolute inset-0 bg-gradient-to-r from-primary/20 to-primary/40 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 ease-out"></span>
 

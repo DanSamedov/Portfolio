@@ -8,9 +8,9 @@ const GooeyNav = ({
     { label: "Projects", href: "#projects", id: "projects" },
     { label: "Contact", href: "#contact", id: "contact" },
   ],
-  animationTime = 600,
+  animationTime = 450,
   particleCount = 15,
-  particleDistances = [90, 10],
+  particleDistances = [60, 10],
   particleR = 100,
   timeVariance = 300,
 }) => {
@@ -207,9 +207,10 @@ const GooeyNav = ({
             transition: color 0.3s ease;
             font-weight: 600;
             font-size: 1.05rem;
+            text-shadow: none;
           }
           .effect.text.active {
-            color: black;
+            color: var(--color-background);
           }
           .effect.filter {
             /* Removed filter and mix-blend-mode to avoid black square artifact */
@@ -219,23 +220,7 @@ const GooeyNav = ({
             content: none;
           }
           .effect.filter::after {
-            content: "";
-            position: absolute;
-            inset: 0;
-            background: white;
-            transform: scale(0);
-            opacity: 0;
-            z-index: -1;
-            border-radius: 9999px;
-          }
-          .effect.active::after {
-            animation: pill 0.3s ease both;
-          }
-          @keyframes pill {
-            to {
-              transform: scale(1);
-              opacity: 1;
-            }
+            content: none;
           }
           .particle,
           .point {
@@ -304,21 +289,21 @@ const GooeyNav = ({
               opacity: 0;
             }
           }
-          li.active,
-          li.active a {
-            color: #e8390d !important;
+          .gooey-nav li.active,
+          .gooey-nav li.active a {
+            color: transparent !important;
             text-shadow: none;
           }
-          li.active::after {
+          .gooey-nav li.active::after {
             opacity: 1;
             transform: scale(1);
           }
-          li::after {
+          .gooey-nav li::after {
             content: "";
             position: absolute;
             inset: 0;
-            border-radius: 9999px;
-            background: white;
+            border-radius: 12px;
+            background: var(--color-accent);
             opacity: 0;
             transform: scale(0);
             transition: all 0.3s ease;
@@ -326,24 +311,18 @@ const GooeyNav = ({
           }
         `}
       </style>
-      <div className="relative nav-glass rounded-full" ref={containerRef}>
+      <div className="relative nav-glass rounded-xl" ref={containerRef}>
         <nav className="flex relative" style={{ transform: 'translate3d(0,0,0.01px)' }}>
           <ul
             ref={navRef}
-            className="flex gap-2 sm:gap-4 list-none p-1 m-0 relative z-[3]"
-            style={{
-              color: 'white'
-            }}
+            className="gooey-nav flex gap-4 sm:gap-6 list-none py-1 px-3 m-0 relative z-[3]"
           >
             {items.map((item, index) => (
               <li
                 key={index}
-                className={`rounded-full relative cursor-pointer transition-[background-color_color_box-shadow] duration-300 ease text-foreground/90 ${
-                  activeIndex === index ? 'active text-accent-force' : ''
+                className={`rounded-xl relative cursor-pointer transition-[background-color_color_box-shadow] duration-300 ease text-foreground/90 ${
+                  activeIndex === index ? 'active' : ''
                 }`}
-                style={{
-                  color: activeIndex === index ? 'var(--color-accent)' : undefined
-                }}
               >
                 <a
                   onClick={e => handleClick(e, index, item.id)}

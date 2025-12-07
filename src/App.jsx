@@ -1,4 +1,3 @@
-import React from "react";
 import { NavigationProvider } from "./context/NavigationContext.jsx";
 import Header from "./components/Header";
 import Home from "./components/Home";
@@ -11,15 +10,17 @@ import ScrollProgressBar from "./components/ScrollProgressBar";
 function App() {
   return (
     <NavigationProvider>
-      <Header />
-      <ScrollProgressBar />
-      <main>
-        <Home />
-        <Skills />
-        <Projects />
-        <Contact />
-      </main>
-      <Footer />
+      <div className="relative min-h-screen w-full overflow-x-hidden">
+        <Header />
+        <main className="flex-1 w-full max-w-[100vw] overflow-x-hidden">
+          <Home />
+          <Skills />
+          <Projects />
+          <Contact />
+        </main>
+        <Footer />
+        <ScrollProgressBar />
+      </div>
     </NavigationProvider>
   );
 }
