@@ -22,7 +22,7 @@ const ProjectFilter = ({ setFilter }) => {
           onToggle={(e) => setIsOpen(e.currentTarget.open)}
         >
           <summary
-            className="flex items-center gap-2 rounded-xl px-3 py-2 border border-border bg-muted text-foreground cursor-pointer list-none focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 [&::-webkit-details-marker]:hidden"
+            className="flex items-center gap-2 rounded-lg px-3 py-2 border border-border bg-muted text-foreground cursor-pointer list-none focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 [&::-webkit-details-marker]:hidden"
             role="button"
             aria-haspopup="listbox"
           >

@@ -4,7 +4,7 @@ const ResumeButton = () => {
       href="./src/assets/static/cv.pdf"
       download="cv.pdf"
       aria-label="Download resume"
-      className="group relative inline-flex justify-center items-center w-32 h-10 cursor-pointer overflow-hidden rounded-xl border border-border bg-white/90 shadow-sm p-2 text-center font-semibold no-underline"
+      className="group relative inline-flex justify-center items-center w-32 h-10 cursor-pointer overflow-hidden rounded-xl border border-border bg-muted shadow-sm p-2 text-center font-semibold no-underline text-foreground"
     >
       <span className="inline-block translate-x-1 transition-all duration-300 group-hover:translate-x-12 group-hover:opacity-0">
         Resume

@@ -13,7 +13,7 @@ const GooeyNav = ({
   particleDistances = [90, 10],
   particleR = 100,
   timeVariance = 200,
-  colors = ['black'],
+  colors = ['var(--color-foreground)'],
 }) => {
   const { activeLink, setActiveLink, smoothScrollTo } = useNavigation();
   const containerRef = useRef(null);
@@ -304,7 +304,7 @@ const GooeyNav = ({
             position: absolute;
             inset: 0;
             border-radius: 12px;
-            background: black;
+            background: var(--color-foreground);
             opacity: 0;
             transform: scale(0);
             transition: all 0.3s ease;

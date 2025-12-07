@@ -59,7 +59,7 @@ const Home = () => {
                   href="#contact"
                   onClick={(e) => handleScrollClick(e, "contact")}
                   aria-label="Go to contact section"
-                  className="group relative inline-flex justify-center items-center h-10 overflow-hidden rounded-xl border border-border bg-white/90 shadow-sm px-4 text-center font-semibold"
+                  className="group relative inline-flex justify-center items-center h-10 overflow-hidden rounded-xl border border-border bg-muted shadow-sm px-4 text-center font-semibold text-foreground"
                 >
                   <span className="inline-flex items-center gap-2 transition-all duration-300 group-hover:translate-x-12 group-hover:opacity-0">
                     <svg
@@ -112,7 +112,7 @@ const Home = () => {
             type="button"
             aria-label="Scroll to next section"
             onClick={(e) => handleScrollClick(e, "skills")}
-            className="group animate-scroll-cue flex flex-col items-center text-gray-400 dark:text-gray-500 hover:text-gray-800 transition-colors cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 rounded-md"
+            className="group animate-scroll-cue flex flex-col items-center text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 transition-colors cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 rounded-md"
           >
             <span className="text-xs sm:text-sm mb-1 sm:mb-2 font-medium">
               Scroll down

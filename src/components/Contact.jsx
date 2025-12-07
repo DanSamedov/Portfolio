@@ -49,14 +49,14 @@ const Contact = () => {
               Let’s work together or just say hi
             </p>
 
-            <div className="group inline-flex h-10 items-center rounded-xl text-foreground border border-border bg-white/90 shadow-sm transition-colors duration-300 ease-in-out hover:bg-primary hover:text-white hover:border-primary">
+            <div className="group inline-flex h-10 items-center rounded-xl text-foreground border border-border bg-muted shadow-sm transition-colors duration-300 ease-in-out hover:bg-primary hover:text-white hover:border-primary">
               <span className="pl-4 pr-2 py-2 select-none font-semibold">
                 samedovdanylo@gmail.com
               </span>
 
               <button
                 type="button"
-                className="ml-1.5 mr-1.5 h-8 rounded-xl px-3 text-sm font-semibold border border-border bg-primary text-white transition-colors duration-300 ease-in-out group-hover:bg-white/90 group-hover:text-foreground group-hover:border-white/70 group-focus-within:bg-white/90 group-focus-within:text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
+                className="ml-1.5 mr-1.5 h-8 rounded-xl px-3 text-sm font-semibold border border-border bg-primary text-white transition-colors duration-300 ease-in-out group-hover:bg-muted group-hover:text-foreground group-hover:border-border group-focus-within:bg-muted group-focus-within:text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
                 onClick={handleCopyEmail}
                 aria-label="Copy email to clipboard"
               >
@@ -72,7 +72,7 @@ const Contact = () => {
                 href="https://github.com/DanSamedov"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="p-5 rounded-xl transition-all duration-300 transform hover:-translate-y-1.5 bg-white backdrop-blur-sm text-slate-900/90 shadow-xl border border-border/50"
+                className="p-5 rounded-xl transition-all duration-300 transform hover:-translate-y-1.5 bg-muted backdrop-blur-sm text-foreground shadow-xl border border-border/50"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -92,7 +92,7 @@ const Contact = () => {
                 href="https://www.linkedin.com/in/danylo-samedov-b557132b1/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="p-5 rounded-xl transition-all duration-300 transform hover:-translate-y-1.5 bg-white backdrop-blur-sm text-slate-900/90 shadow-xl border border-border/50"
+                className="p-5 rounded-xl transition-all duration-300 transform hover:-translate-y-1.5 bg-muted backdrop-blur-sm text-foreground shadow-xl border border-border/50"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -113,7 +113,7 @@ const Contact = () => {
           </div>
 
           <form
-            className="md:col-span-3 rounded-2xl border border-border bg-white/80 backdrop-blur p-6 shadow-sm space-y-4"
+            className="md:col-span-3 rounded-2xl border border-border bg-muted/80 backdrop-blur p-6 shadow-sm space-y-4"
             onSubmit={handleSubmit}
           >
             <label className="block">
@@ -123,7 +123,7 @@ const Contact = () => {
                 type="text"
                 placeholder="Name"
                 required
-                className="w-full h-12 rounded-xl bg-white border border-border px-4 text-foreground placeholder:text-[#7a8ea4] shadow-sm focus:outline-none focus:ring-4 focus:ring-primary/20 focus:border-primary transition"
+                className="w-full h-12 rounded-xl bg-background border border-border px-4 text-foreground placeholder:text-muted-foreground shadow-sm focus:outline-none focus:ring-4 focus:ring-primary/20 focus:border-primary transition"
               />
             </label>
 
@@ -134,7 +134,7 @@ const Contact = () => {
                 type="email"
                 placeholder="Email"
                 required
-                className="w-full h-12 rounded-xl bg-white border border-border px-4 text-foreground placeholder:text-[#7a8ea4] shadow-sm focus:outline-none focus:ring-4 focus:ring-primary/20 focus:border-primary transition"
+                className="w-full h-12 rounded-xl bg-background border border-border px-4 text-foreground placeholder:text-muted-foreground shadow-sm focus:outline-none focus:ring-4 focus:ring-primary/20 focus:border-primary transition"
               />
             </label>
 
@@ -144,14 +144,14 @@ const Contact = () => {
                 name="message"
                 placeholder="Message"
                 required
-                className="w-full min-h-36 rounded-xl bg-white border border-border p-4 text-foreground placeholder:text-[#7a8ea4] shadow-sm resize-y focus:outline-none focus:ring-4 focus:ring-primary/20 focus:border-primary transition"
+                className="w-full min-h-36 rounded-xl bg-background border border-border p-4 text-foreground placeholder:text-muted-foreground shadow-sm resize-y focus:outline-none focus:ring-4 focus:ring-primary/20 focus:border-primary transition"
               ></textarea>
             </label>
 
             <div className="flex justify-center pt-1">
               <button
                 type="submit"
-                className="group relative inline-flex items-center gap-2 rounded-xl h-12 px-6 bg-foreground text-white text-sm sm:text-base font-semibold overflow-hidden hover:bg-[#0b1620] active:translate-y-[1px] transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-foreground/20"
+                className="group relative inline-flex items-center gap-2 rounded-xl h-12 px-6 bg-primary text-primary-foreground text-sm sm:text-base font-semibold overflow-hidden hover:bg-primary/90 active:translate-y-[1px] transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-primary/20"
               >
                 <span className="absolute inset-0 bg-gradient-to-r from-primary/20 to-primary/40 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 ease-out"></span>
 

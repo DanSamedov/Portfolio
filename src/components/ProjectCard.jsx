@@ -2,13 +2,13 @@ import { useState } from "react";
 
 const TechPill = ({ tech }) => {
   const pillClasses =
-    "w-12 h-12 rounded-full bg-white flex items-center justify-center text-[24px] shadow-md -ml-4 group-hover:ml-0 transition-all duration-500";
+    "w-12 h-12 rounded-full bg-muted flex items-center justify-center text-[24px] shadow-md -ml-4 group-hover:ml-0 transition-all duration-500";
 
   if (tech.isText) {
     let textClass = "font-bold";
     if (tech.name === "@") textClass += " text-sky-600";
     if (tech.name === "API") textClass += " text-green-600";
-    if (tech.name === "DX") textClass += " text-slate-800";
+    if (tech.name === "DX") textClass += " text-foreground";
     if (tech.name === "Py") textClass += " text-rose-600";
     if (tech.name === "DB") textClass += " text-violet-600";
     if (tech.name === "ML") textClass += " text-emerald-600";
@@ -127,7 +127,7 @@ const ProjectCard = ({ project }) => {
                   href={project.liveUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 bg-black text-white font-semibold px-5 py-2.5 text-base rounded-3xl hover:opacity-80 transition"
+                  className="inline-flex items-center gap-2 bg-foreground text-background font-semibold px-5 py-2.5 text-base rounded-3xl hover:opacity-80 transition"
                   onClick={(e) => e.stopPropagation()}
                 >
                   Live Preview
@@ -138,7 +138,7 @@ const ProjectCard = ({ project }) => {
                   href={project.repoUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 bg-black text-white font-semibold px-5 py-2.5 text-base rounded-3xl hover:opacity-80 transition"
+                  className="inline-flex items-center gap-2 bg-foreground text-background font-semibold px-5 py-2.5 text-base rounded-3xl hover:opacity-80 transition"
                   onClick={(e) => e.stopPropagation()}
                 >
                   GitHub
@@ -149,10 +149,10 @@ const ProjectCard = ({ project }) => {
               {project.tech.map((tech) => (
                 <div
                   key={tech.name}
-                  className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-[20px] shadow-md"
+                  className="w-10 h-10 rounded-full bg-muted flex items-center justify-center text-[20px] shadow-md"
                 >
                   {tech.isText ? (
-                    <span className="font-bold text-black">{tech.name}</span>
+                    <span className="font-bold text-foreground">{tech.name}</span>
                   ) : (
                     <img src={tech.icon} alt={tech.name} className="w-6 h-6" />
                   )}

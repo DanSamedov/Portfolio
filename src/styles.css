@@ -51,6 +51,7 @@
 /* Dark theme palette */
 :root.dark,
 [data-theme="dark"] {
+  --color-background: #020617; /* slate-950 */
   --color-foreground: #e6edf6;
   --color-muted: #0f172a;
   --color-muted-foreground: #93a4b7;
