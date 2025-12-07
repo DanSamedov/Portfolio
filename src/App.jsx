@@ -13,7 +13,7 @@ function App() {
   return (
     <NavigationProvider>
       <ThemeProvider>
-        <TargetCursor targetSelector="button, a, summary, .nav-link, .project-card, .cursor-target, .skill-tag, .social-icon, .filter-btn, input, textarea" />
+        <TargetCursor targetSelector="button, a, summary, .nav-link, .project-card, .project-link, .cursor-target, .skill-tag, .social-icon, .filter-btn, input, textarea" />
         <div className="relative min-h-screen w-full overflow-x-hidden text-foreground selection:bg-primary/30">
           <Header />
           <main className="flex-1 w-full max-w-[100vw] overflow-x-hidden">
