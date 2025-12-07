@@ -57,6 +57,7 @@ const Avatar = () => {
       <OrbitControls
         enableZoom={false}
         enablePan={false}
+        enableRotate={false}
         target={[-1.5, 1, -0.65]}
       />
     </Canvas>

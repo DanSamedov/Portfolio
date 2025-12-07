@@ -35,7 +35,7 @@ const Projects = () => {
           {visibleCount < projects.length && (
             <button
               onClick={showMoreProjects}
-              className="inline-flex items-center gap-2 h-10 rounded-full px-5 font-semibold border border-border bg-white/90 text-[#0d141c] shadow-sm transition-colors duration-300 ease-in-out hover:bg-primary hover:text-white"
+              className="inline-flex items-center gap-2 h-10 rounded-xl px-5 font-semibold border border-border bg-white/90 text-[#0d141c] shadow-sm transition-colors duration-300 ease-in-out hover:bg-primary hover:text-white"
             >
               <span>Show More</span>
               <svg
@@ -57,7 +57,7 @@ const Projects = () => {
           {visibleCount > 3 && (
             <button
               onClick={showLessProjects}
-              className="inline-flex items-center gap-2 h-10 rounded-full px-5 font-semibold border border-border bg-white/90 text-[#0d141c] shadow-sm transition-colors duration-300 ease-in-out hover:bg-primary hover:text-white"
+              className="inline-flex items-center gap-2 h-10 rounded-xl px-5 font-semibold border border-border bg-white/90 text-[#0d141c] shadow-sm transition-colors duration-300 ease-in-out hover:bg-primary hover:text-white"
             >
               <span>Show Less</span>
               <svg

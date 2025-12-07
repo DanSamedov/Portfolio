@@ -202,14 +202,29 @@ const TargetCursor = ({
         });
       });
 
+      // Remove mix-blend-mode on hover (already normal, but ensure it stays)
+      gsap.to(cursorRef.current, { mixBlendMode: 'normal', duration: 0.2 });
+      // Color is already accent, but ensure it stays
+      gsap.to(dotRef.current, { backgroundColor: 'var(--color-accent)', duration: 0.2 });
+      corners.forEach(corner => {
+        gsap.to(corner, { borderColor: 'var(--color-accent)', duration: 0.2 });
+      });
+
       const leaveHandler = () => {
         gsap.ticker.remove(tickerFnRef.current);
         isActiveRef.current = false;
         targetCornerPositionsRef.current = null;
         gsap.set(activeStrengthRef, { current: 0, overwrite: true });
         activeTarget = null;
+        
+        // Revert mix-blend-mode (keep normal) and color (keep accent)
+        gsap.to(cursorRef.current, { mixBlendMode: 'normal', duration: 0.2 });
+        gsap.to(dotRef.current, { backgroundColor: 'var(--color-accent)', duration: 0.2 });
         if (cornersRef.current) {
           const corners = Array.from(cornersRef.current);
+          corners.forEach(corner => {
+            gsap.to(corner, { borderColor: 'var(--color-accent)', duration: 0.2 });
+          });
           gsap.killTweensOf(corners);
           const { cornerSize } = constants;
           const positions = [
@@ -288,27 +303,27 @@ const TargetCursor = ({
     <div
       ref={cursorRef}
       className="fixed top-0 left-0 w-0 h-0 pointer-events-none z-[9999]"
-      style={{ willChange: 'transform', mixBlendMode: 'difference' }}
+      style={{ willChange: 'transform', mixBlendMode: 'normal' }}
     >
       <div
         ref={dotRef}
-        className="absolute top-1/2 left-1/2 w-1 h-1 bg-white rounded-full -translate-x-1/2 -translate-y-1/2"
+        className="absolute top-1/2 left-1/2 w-1 h-1 bg-[var(--color-accent)] rounded-full -translate-x-1/2 -translate-y-1/2"
         style={{ willChange: 'transform' }}
       />
       <div
-        className="target-cursor-corner absolute top-1/2 left-1/2 w-3 h-3 border-[3px] border-white -translate-x-[150%] -translate-y-[150%] border-r-0 border-b-0"
+        className="target-cursor-corner absolute top-1/2 left-1/2 w-3 h-3 border-[3px] border-[var(--color-accent)] -translate-x-[150%] -translate-y-[150%] border-r-0 border-b-0"
         style={{ willChange: 'transform' }}
       />
       <div
-        className="target-cursor-corner absolute top-1/2 left-1/2 w-3 h-3 border-[3px] border-white translate-x-1/2 -translate-y-[150%] border-l-0 border-b-0"
+        className="target-cursor-corner absolute top-1/2 left-1/2 w-3 h-3 border-[3px] border-[var(--color-accent)] translate-x-1/2 -translate-y-[150%] border-l-0 border-b-0"
         style={{ willChange: 'transform' }}
       />
       <div
-        className="target-cursor-corner absolute top-1/2 left-1/2 w-3 h-3 border-[3px] border-white translate-x-1/2 translate-y-1/2 border-l-0 border-t-0"
+        className="target-cursor-corner absolute top-1/2 left-1/2 w-3 h-3 border-[3px] border-[var(--color-accent)] translate-x-1/2 translate-y-1/2 border-l-0 border-t-0"
         style={{ willChange: 'transform' }}
       />
       <div
-        className="target-cursor-corner absolute top-1/2 left-1/2 w-3 h-3 border-[3px] border-white -translate-x-[150%] translate-y-1/2 border-r-0 border-t-0"
+        className="target-cursor-corner absolute top-1/2 left-1/2 w-3 h-3 border-[3px] border-[var(--color-accent)] -translate-x-[150%] translate-y-1/2 border-r-0 border-t-0"
         style={{ willChange: 'transform' }}
       />
     </div>

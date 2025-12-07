@@ -9,10 +9,11 @@ const GooeyNav = ({
     { label: "Contact", href: "#contact", id: "contact" },
   ],
   animationTime = 450,
-  particleCount = 15,
-  particleDistances = [60, 10],
+  particleCount = 20,
+  particleDistances = [90, 10],
   particleR = 100,
-  timeVariance = 300,
+  timeVariance = 200,
+  colors = ['black'],
 }) => {
   const { activeLink, setActiveLink, smoothScrollTo } = useNavigation();
   const containerRef = useRef(null);
@@ -75,8 +76,8 @@ const GooeyNav = ({
       end: getXY(d[1] + noise(7), particleCount - i, particleCount),
       time: t,
       scale: 1 + noise(0.2),
-      // Use accent color variable
-      color: 'var(--color-accent)', 
+      // Select color based on index
+      color: colors[i % colors.length], 
       rotate: rotate > 0 ? (rotate + r / 20) * 10 : (rotate - r / 20) * 10
     };
   };
@@ -213,7 +214,7 @@ const GooeyNav = ({
             color: var(--color-background);
           }
           .effect.filter {
-            /* Removed filter and mix-blend-mode to avoid black square artifact */
+            filter: url(#goo);
           }
           .effect.filter::before {
             /* Removed black background pseudo-element */
@@ -303,7 +304,7 @@ const GooeyNav = ({
             position: absolute;
             inset: 0;
             border-radius: 12px;
-            background: var(--color-accent);
+            background: black;
             opacity: 0;
             transform: scale(0);
             transition: all 0.3s ease;
@@ -339,6 +340,22 @@ const GooeyNav = ({
         <span className="effect filter" ref={filterRef} />
         <span className="effect text" ref={textRef} />
       </div>
+      
+      {/* SVG Filter Definition */}
+      <svg style={{ position: 'absolute', width: 0, height: 0 }}>
+        <defs>
+          <filter id="goo">
+            <feGaussianBlur in="SourceGraphic" result="blur" stdDeviation="10" />
+            <feColorMatrix
+              in="blur"
+              mode="matrix"
+              values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -7"
+              result="goo"
+            />
+            <feComposite in="SourceGraphic" in2="goo" operator="atop" />
+          </filter>
+        </defs>
+      </svg>
     </>
   );
 };

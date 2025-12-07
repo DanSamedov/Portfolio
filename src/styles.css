@@ -119,6 +119,13 @@
   * {
     @apply transition-colors duration-200 ease-in-out;
   }
+
+  /* Hide default cursor on non-touch devices where custom cursor is used */
+  @media (hover: hover) and (pointer: fine) {
+    body, a, button, input, textarea, select, [role="button"] {
+      cursor: none !important;
+    }
+  }
 }
 
 /* ===== Components layer ===== */

@@ -112,7 +112,7 @@ const Home = () => {
             type="button"
             aria-label="Scroll to next section"
             onClick={(e) => handleScrollClick(e, "skills")}
-            className="group animate-scroll-cue flex flex-col items-center text-gray-400 dark:text-gray-500 hover:text-accent transition-colors cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 rounded-md"
+            className="group animate-scroll-cue flex flex-col items-center text-gray-400 dark:text-gray-500 hover:text-gray-800 transition-colors cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 rounded-md"
           >
             <span className="text-xs sm:text-sm mb-1 sm:mb-2 font-medium">
               Scroll down
