@@ -58,7 +58,7 @@ const ProjectCard = ({ project }) => {
       >
         {/* FRONT OF CARD */}
         <div
-          className="project-card-front group cursor-pointer rounded-xl overflow-hidden w-full h-full"
+          className="project-card-front cursor-target group cursor-pointer rounded-xl overflow-hidden w-full h-full"
           style={{
             boxShadow: "0 0 15px rgba(232, 57, 13, 0.3), 0 0 30px rgba(232, 57, 13, 0.12)",
             background: project.background,

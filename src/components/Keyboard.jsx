@@ -1,5 +1,5 @@
-import { Suspense, useState, useEffect, useRef, useMemo } from "react";
-import { Canvas, useFrame } from "@react-three/fiber";
+import { Suspense, useState, useEffect, useRef, useMemo, useCallback } from "react";
+import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { useGLTF, Center } from "@react-three/drei";
 import * as THREE from "three";
 
@@ -84,6 +84,75 @@ const Key = ({ node, onHover, onLeave, isPressed }) => {
   );
 };
 
+// Component that runs inside Canvas to project 3D key positions to screen coordinates
+const KeyOverlaysUpdater = ({ keys, groupRef, onUpdateRects }) => {
+  const { camera, gl, size } = useThree();
+  const tempBox = useMemo(() => new THREE.Box3(), []);
+  const tempVec = useMemo(() => new THREE.Vector3(), []);
+  const frameCount = useRef(0);
+
+  useFrame(() => {
+    // Only update every 3 frames for performance
+    frameCount.current++;
+    if (frameCount.current % 3 !== 0) return;
+    
+    if (!groupRef.current || keys.length === 0) return;
+
+    const rects = {};
+    const canvas = gl.domElement;
+    const canvasRect = canvas.getBoundingClientRect();
+
+    keys.forEach((keyNode) => {
+      // Get bounding box in world space
+      tempBox.setFromObject(keyNode);
+      
+      if (tempBox.isEmpty()) return;
+
+      // Get the 8 corners of the bounding box
+      const corners = [
+        new THREE.Vector3(tempBox.min.x, tempBox.min.y, tempBox.min.z),
+        new THREE.Vector3(tempBox.min.x, tempBox.min.y, tempBox.max.z),
+        new THREE.Vector3(tempBox.min.x, tempBox.max.y, tempBox.min.z),
+        new THREE.Vector3(tempBox.min.x, tempBox.max.y, tempBox.max.z),
+        new THREE.Vector3(tempBox.max.x, tempBox.min.y, tempBox.min.z),
+        new THREE.Vector3(tempBox.max.x, tempBox.min.y, tempBox.max.z),
+        new THREE.Vector3(tempBox.max.x, tempBox.max.y, tempBox.min.z),
+        new THREE.Vector3(tempBox.max.x, tempBox.max.y, tempBox.max.z),
+      ];
+
+      // Project all corners to screen space and find bounds
+      let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+
+      corners.forEach((corner) => {
+        tempVec.copy(corner);
+        tempVec.project(camera);
+
+        // Convert from NDC (-1 to 1) to canvas-relative pixels
+        const screenX = ((tempVec.x + 1) / 2) * canvasRect.width;
+        const screenY = ((1 - tempVec.y) / 2) * canvasRect.height;
+
+        minX = Math.min(minX, screenX);
+        maxX = Math.max(maxX, screenX);
+        minY = Math.min(minY, screenY);
+        maxY = Math.max(maxY, screenY);
+      });
+
+      // Add some padding for better targeting
+      const padding = -32;
+      rects[keyNode.name] = {
+        left: minX - padding,
+        top: minY - padding,
+        width: maxX - minX + padding * 2,
+        height: maxY - minY + padding * 2,
+      };
+    });
+
+    onUpdateRects(rects);
+  });
+
+  return null;
+};
+
 const Keyboard = ({ onSkillChange }) => {
   const { nodes } = useGLTF(MODEL_URL);
 
@@ -91,7 +160,13 @@ const Keyboard = ({ onSkillChange }) => {
 
   const [pressedKeys, setPressedKeys] = useState(new Set());
   const [hoveredKey, setHoveredKey] = useState(null);
+  const [keyScreenRects, setKeyScreenRects] = useState({});
   const containerRef = useRef();
+  const groupRef = useRef();
+
+  const handleUpdateRects = useCallback((rects) => {
+    setKeyScreenRects(rects);
+  }, []);
 
   useEffect(() => {
     if (onSkillChange) {
@@ -194,8 +269,13 @@ const Keyboard = ({ onSkillChange }) => {
         />
         <ambientLight intensity={0.15} />
         <Suspense fallback={null}>
+          <KeyOverlaysUpdater
+            keys={keys}
+            groupRef={groupRef}
+            onUpdateRects={handleUpdateRects}
+          />
           <Center>
-            <group rotation={[Math.PI + 1, Math.PI * 2, Math.PI]} scale={0.5}>
+            <group ref={groupRef} rotation={[Math.PI + 1, Math.PI * 2, Math.PI]} scale={0.5}>
               {keyboardBody && <primitive object={keyboardBody} />}
               {keys.map((keyNode) => (
                 <Key
@@ -221,6 +301,35 @@ const Keyboard = ({ onSkillChange }) => {
           </Center>
         </Suspense>
       </Canvas>
+      
+      {/* DOM overlays for cursor targeting */}
+      {Object.entries(keyScreenRects).map(([keyName, rect]) => {
+        const skillLabel = computeSkillLabel(keyName);
+        return (
+          <div
+            key={keyName}
+            className="cursor-target"
+            style={{
+              position: 'absolute',
+              left: rect.left,
+              top: rect.top,
+              width: rect.width,
+              height: rect.height,
+              pointerEvents: 'auto',
+            }}
+            onMouseEnter={() => {
+              setHoveredKey(skillLabel);
+              setActiveSkill(skillLabel);
+            }}
+            onMouseLeave={() => {
+              setHoveredKey(null);
+              if (pressedKeys.size === 0) {
+                setActiveSkill("Skills");
+              }
+            }}
+          />
+        );
+      })}
     </div>
   );
 };
