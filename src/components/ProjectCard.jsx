@@ -153,7 +153,7 @@ const ProjectCard = ({ project }) => {
           <div className="hidden md:flex relative w-full justify-center items-end z-10 max-h-[180px] sm:max-h-[300px] md:max-h-none mt-6">
             <img
               alt={`${project.title} preview`}
-              className="card-preview duration-500 object-contain rounded-t-2xl w-[80%]"
+              className="card-preview duration-500 object-contain rounded-xl w-[80%]"
               src={project.image}
             />
           </div>

@@ -39,16 +39,20 @@ function Model(props) {
 
 const Avatar = () => {
   const [isMobile, setIsMobile] = useState(false);
+  const [isTablet, setIsTablet] = useState(false);
 
   useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 768);
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+      setIsTablet(window.innerWidth >= 768 && window.innerWidth < 1024);
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const scale = isMobile ? 2 : 1.1;
-  const position = isMobile ? [-0.5, -0.75, 0] : [0, 0, 0];
+  const scale = isMobile ? 2 : isTablet ? 1 : 1.1;
+  const position = isMobile ? [-0.5, -0.75, 0] : isTablet ? [-0.25, 0, 0] : [0, 0, 0];
 
   return (
     <Canvas

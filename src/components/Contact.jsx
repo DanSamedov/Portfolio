@@ -27,7 +27,7 @@ const Contact = () => {
   return (
     <section id="contact" className="w-full scroll-mt-14 py-12">
       <div className="mx-auto max-w-[960px] px-4">
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-8 md:gap-12 items-start">
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-8 md:gap-20 items-start">
           <div className="md:col-span-2 text-center md:text-left space-y-4">
             <h2 className="flex items-center justify-center md:justify-start gap-3 text-4xl sm:text-5xl font-extrabold text-foreground">
               Contact Me
