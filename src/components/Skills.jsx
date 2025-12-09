@@ -27,9 +27,9 @@ const Skills = () => {
           />
         </div>
         <p className="text-center text-gray-500 mt-2 text-sm animate-pulse">
-          (Type on your keyboard or click the keys)
+          (Type on your keyboard or tap the keys)
         </p>
-        <div className="relative -mt-40 aspect-video min-h-[500px]">
+        <div className="relative -mt-20 sm:-mt-40 aspect-video min-h-[300px] sm:min-h-[500px]">
           <Keyboard onSkillChange={setSkillTitle} />
         </div>
       </div>

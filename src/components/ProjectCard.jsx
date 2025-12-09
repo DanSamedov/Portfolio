@@ -43,8 +43,6 @@ const ProjectCard = ({ project }) => {
       className="project-card-container"
       style={{ 
         perspective: "1200px", 
-        minHeight: "480px",
-        height: "480px",
       }}
     >
       <div
@@ -86,16 +84,73 @@ const ProjectCard = ({ project }) => {
               <p className="mt-2 text-sm md:text-base text-white/80">
                 {project.description}
               </p>
+              
+              {/* Mobile Action Buttons (Front) */}
+              {(project.liveUrl || project.repoUrl) && (
+                <div className="md:hidden mt-4 flex flex-wrap items-center gap-3">
+                  {project.liveUrl && (
+                    <a
+                      href={project.liveUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={(e) => e.stopPropagation()}
+                      className="project-link inline-flex items-center gap-2 bg-white text-gray-900 font-semibold px-4 py-2 text-sm rounded-xl hover:opacity-80 transition cursor-pointer z-20"
+                    >
+                      Live Preview
+                    </a>
+                  )}
+                  {project.repoUrl && (
+                    <a
+                      href={project.repoUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={(e) => e.stopPropagation()}
+                      className="project-link inline-flex items-center gap-2 bg-white text-gray-900 font-semibold px-4 py-2 text-sm rounded-xl hover:opacity-80 transition cursor-pointer z-20"
+                    >
+                      GitHub
+                    </a>
+                  )}
+                </div>
+              )}
+              
+              {/* Mobile Technologies Text */}
+              <p className="md:hidden mt-4 text-sm font-semibold text-white">
+                Technologies used <span className="text-xs font-normal text-white/60">(try to drag them)</span>
+              </p>
             </div>
 
-            <div className="tech-pills flex justify-center md:justify-end transition-all duration-700 ease-[cubic-bezier(.22,.61,.36,1)]">
+            <div className="tech-pills hidden md:flex justify-center md:justify-end transition-all duration-700 ease-[cubic-bezier(.22,.61,.36,1)]">
               {project.tech.map((tech, i) => (
                 <TechPill key={i} tech={tech} />
               ))}
             </div>
           </div>
 
-          <div className="relative w-full flex justify-center items-end z-10 max-h-[180px] sm:max-h-[300px] md:max-h-none mt-6">
+          {/* Mobile Stickers (Front) */}
+          <div className="md:hidden absolute inset-0 overflow-hidden pointer-events-none" style={{ zIndex: 40 }}>
+            {project.tech.filter(tech => !tech.isText && tech.icon).map((tech, index) => {
+              const col = index % 3;
+              const row = Math.floor(index / 3);
+              return (
+                <StickerPeel
+                  key={tech.name}
+                  imageSrc={tech.icon}
+                  label={tech.name}
+                  width={60}
+                  rotate={0}
+                  peelDirection={0}
+                  shadowIntensity={0.4}
+                  lightingIntensity={0.08}
+                  peelBackHoverPct={25}
+                  peelBackActivePct={35}
+                  initialPosition={{ x: 10 + col * 110, y: 210 + row * 90 }}
+                  className="pointer-events-auto"
+                />
+              );
+            })}
+          </div>
+
+          <div className="hidden md:flex relative w-full justify-center items-end z-10 max-h-[180px] sm:max-h-[300px] md:max-h-none mt-6">
             <img
               alt={`${project.title} preview`}
               className="card-preview duration-500 object-contain rounded-t-2xl w-[80%]"
@@ -122,8 +177,11 @@ const ProjectCard = ({ project }) => {
           {/* Flip back button */}
           <button
             type="button"
-            onClick={() => setIsFlipped(false)}
-            className="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/30 hover:bg-white/50 flex items-center justify-center transition-colors cursor-pointer z-30"
+            onClick={(e) => {
+              e.stopPropagation();
+              setIsFlipped(false);
+            }}
+            className="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/30 hover:bg-white/50 flex items-center justify-center transition-colors cursor-pointer z-50"
             aria-label="Flip card back"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -138,9 +196,9 @@ const ProjectCard = ({ project }) => {
               {project.full_description || project.description}
             </p>
 
-            {/* Action Buttons */}
+            {/* Action Buttons (Back - Desktop Only) */}
             {(project.liveUrl || project.repoUrl) && (
-              <div className="mt-4">
+              <div className="mt-4 hidden md:block">
                 <div className="flex flex-wrap items-center gap-3">
                   {project.liveUrl && (
                     <a
@@ -167,16 +225,16 @@ const ProjectCard = ({ project }) => {
             )}
           </div>
 
-          {/* Bottom Section - Stickers Area */}
-          <div className="px-6 mt-4 relative z-10">
+          {/* Bottom Section - Stickers Area (Desktop Only) */}
+          <div className="hidden md:block px-6 mt-4 relative z-10">
             <p className="text-base tracking-wide mb-2">
               <span className="font-semibold text-white">Technologies used</span>{" "}
               <span className="text-white/60">(try to drag them)</span>
             </p>
           </div>
           
-          {/* Sticker container that covers entire card for dragging */}
-          <div className="absolute inset-0 overflow-hidden pointer-events-none" style={{ zIndex: 5 }}>
+          {/* Sticker container that covers entire card for dragging (Desktop Only) */}
+          <div className="hidden md:block absolute inset-0 overflow-hidden pointer-events-none" style={{ zIndex: 5 }}>
             <div className="relative w-full h-full pointer-events-auto">
               {project.tech.filter(tech => !tech.isText && tech.icon).map((tech, index) => (
                 <StickerPeel

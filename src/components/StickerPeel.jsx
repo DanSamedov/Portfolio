@@ -185,7 +185,12 @@ const StickerPeel = ({
     clipPath: `polygon(var(--sticker-start) var(--sticker-start), var(--sticker-end) var(--sticker-start), var(--sticker-end) var(--sticker-end), var(--sticker-start) var(--sticker-end))`,
     transition: 'clip-path 0.6s ease-out',
     filter: 'url(#dropShadow)',
-    willChange: 'clip-path, transform'
+    willChange: 'clip-path, transform',
+    width: '100%',
+    height: '100%',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center'
   };
 
   const flapStyle = {
@@ -193,12 +198,21 @@ const StickerPeel = ({
     top: `calc(-100% - var(--sticker-p) - var(--sticker-p))`,
     transform: 'scaleY(-1)',
     transition: 'all 0.6s ease-out',
-    willChange: 'clip-path, transform'
+    willChange: 'clip-path, transform',
+    width: '100%',
+    height: '100%',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center'
   };
 
   const imageStyle = {
     transform: `rotate(calc(${rotate}deg - ${peelDirection}deg))`,
-    width: `${width}px`
+    width: '100%',
+    height: '100%',
+    objectFit: 'contain',
+    objectPosition: 'bottom',
+    padding: '10%'
   };
 
   const shadowImageStyle = {
@@ -208,7 +222,7 @@ const StickerPeel = ({
 
   return (
     <div
-      className={`absolute cursor-grab active:cursor-grabbing transform-gpu ${className}`}
+      className={`absolute cursor-grab active:cursor-grabbing transform-gpu flex flex-col items-center ${className}`}
       ref={dragTargetRef}
       style={cssVars}
     >
@@ -294,11 +308,13 @@ const StickerPeel = ({
           WebkitTouchCallout: 'none',
           WebkitTapHighlightColor: 'transparent',
           transform: `rotate(${peelDirection}deg)`,
-          transformOrigin: 'center'
+          transformOrigin: 'center',
+          width: 'var(--sticker-width)',
+          height: 'var(--sticker-width)'
         }}
       >
         <div className="sticker-main" style={stickerMainStyle}>
-          <div style={{ filter: 'url(#pointLight)' }}>
+          <div style={{ filter: 'url(#pointLight)', width: '100%', height: '100%' }}>
             <img
               src={imageSrc}
               alt=""

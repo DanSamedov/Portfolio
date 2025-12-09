@@ -93,6 +93,18 @@ const Keyboard = ({ onSkillChange }) => {
   const [hoveredKey, setHoveredKey] = useState(null);
   const containerRef = useRef();
 
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
+  const scale = isMobile ? 0.6 : 0.5;
+  const position = isMobile ? [-7, -5, -5] : [0, 0, 0];
+
   useEffect(() => {
     if (onSkillChange) {
       onSkillChange(activeSkill);
@@ -195,7 +207,7 @@ const Keyboard = ({ onSkillChange }) => {
         <ambientLight intensity={0.15} />
         <Suspense fallback={null}>
           <Center>
-            <group rotation={[Math.PI + 1, Math.PI * 2, Math.PI]} scale={0.5}>
+            <group rotation={[Math.PI + 1, Math.PI * 2, Math.PI]} scale={scale} position={position}>
               {keyboardBody && <primitive object={keyboardBody} />}
               {keys.map((keyNode) => (
                 <Key

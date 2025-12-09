@@ -208,12 +208,18 @@
   }
 
   /* Project card (gentle lift only) */
-  .project-card {
+  .project-card-container {
     /* unify size across cards (slightly smaller) */
     --project-card-h: 460px;
     --project-card-image-h: 240px;
+    min-height: var(--project-card-h);
+    height: var(--project-card-h);
+  }
+
+  .project-card {
     @apply flex flex-col gap-3 pb-0 transition-all duration-300 ease-in-out hover:shadow-xl;
     min-height: var(--project-card-h);
+    height: var(--project-card-h);
   }
 
   .project-card:hover {
@@ -297,10 +303,16 @@
     .project-card {
       --project-card-h: 400px;
     }
-    .project-card > :last-child {
+    .project-card-container {
+      min-height: 480px !important;
+      height: 480px !important;
+    }  .project-card > :last-child {
       --project-card-image-h: 200px;
     }
   }
+    .project-card > :last-child {
+      --project-card-image-h: 200px;
+    }
 
   /* Skill tag */
   .skill-tag {
@@ -332,6 +344,13 @@
     padding: 0.6rem 1.3rem; /* bigger pill */
     line-height: 1.1;
     min-height: 2.5rem; /* ensure height for icon-only on mobile */
+  }
+
+  @media (max-width: 640px) {
+    .nav-link {
+      padding: 0.5rem 1rem;
+      font-size: 0.9rem;
+    }
   }
 
   .nav-link:hover {

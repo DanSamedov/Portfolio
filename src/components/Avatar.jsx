@@ -1,4 +1,4 @@
-import { Suspense, useEffect } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls, useGLTF, useAnimations } from "@react-three/drei";
 
@@ -38,6 +38,18 @@ function Model(props) {
 }
 
 const Avatar = () => {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
+  const scale = isMobile ? 2 : 1.1;
+  const position = isMobile ? [-0.5, -0.75, 0] : [0, 0, 0];
+
   return (
     <Canvas
       camera={{ position: [0, 0, 5], fov: 35 }}
@@ -52,7 +64,7 @@ const Avatar = () => {
       <directionalLight position={[5, 8, 6]} intensity={1.3} />
       <directionalLight position={[-6, 7, -5]} intensity={1.0} />
       <Suspense fallback={null}>
-        <Model scale={1.1} rotation-y={Math.PI / -3} rotation-x={0.5} />
+        <Model scale={scale} rotation-y={Math.PI / -3} rotation-x={0.5} position={position} />
       </Suspense>
       <OrbitControls
         enableZoom={false}

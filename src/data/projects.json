@@ -33,10 +33,6 @@
       {
         "name": "React",
         "icon": "./src/assets/icons/react.svg"
-      },
-      {
-        "name": "Tailwind CSS",
-        "icon": "./src/assets/icons/tailwindcss.svg"
       }
     ]
   },

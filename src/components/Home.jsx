@@ -15,11 +15,11 @@ const Home = () => {
   return (
     <section id="home" className="relative w-full min-h-dvh scroll-mt-14 pt-16">
       <div className="mx-auto max-w-[960px] px-4 @container">
-        <div className="@[480px]:p-4 min-h-[calc(100dvh-4rem)] flex items-center translate-y-[-6vh] sm:translate-y-[-7vh] md:translate-y-[-8vh]">
-          <div className="flex flex-col md:flex-row items-center md:items-start justify-between gap-10 w-full py-2 -mt-8 sm:-mt-10 md:-mt-14">
-            <div className="flex-1">
+        <div className="@[480px]:p-4 min-h-[calc(100dvh-4rem)] flex items-center translate-y-[-2vh] sm:translate-y-[-7vh] md:translate-y-[-8vh]">
+          <div className="flex flex-col md:flex-row items-center md:items-start justify-between gap-4 sm:gap-10 w-full py-2 -mt-4 sm:-mt-10 md:-mt-14">
+            <div className="flex-1 z-10">
               <div className="flex items-center gap-3">
-                <h1 className="text-4xl sm:text-6xl font-bold text-foreground">
+                <h1 className="text-3xl sm:text-6xl font-bold text-foreground">
                   Hey, I'm <span className="text-accent">Danylo</span>
                 </h1>
                 <span
@@ -49,7 +49,7 @@ const Home = () => {
                 <span className="text-accent">Based in Poland</span>
               </p>
 
-              <div className="mt-4 text-lg sm:text-3xl font-medium block text-left text-foreground/90">
+              <div className="mt-4 text-xl sm:text-3xl font-medium block text-left text-foreground/90">
                 <RoleRotator phrases={phrases} />
               </div>
 
@@ -103,10 +103,12 @@ const Home = () => {
                 </a>
               </div>
             </div>
-            <Avatar />
+            <div className="w-full h-[350px] sm:h-[400px] relative z-0 -mt-2 sm:mt-0 md:absolute md:inset-0 md:h-full md:w-full md:mt-0">
+              <Avatar />
+            </div>
           </div>
         </div>
-        <div className="absolute bottom-4 sm:bottom-8 left-1/2 -translate-x-1/2">
+        <div className="absolute bottom-20 sm:bottom-8 left-1/2 -translate-x-1/2">
           <button
             id="scroll-cue"
             type="button"

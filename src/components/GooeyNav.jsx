@@ -132,7 +132,8 @@ const GooeyNav = ({
     };
     Object.assign(filterRef.current.style, styles);
     Object.assign(textRef.current.style, styles);
-    textRef.current.innerText = element.innerText;
+    // Copy innerHTML to support both text and icons
+    textRef.current.innerHTML = element.innerHTML;
   };
 
   const handleClick = (e, index, id) => {
@@ -316,7 +317,7 @@ const GooeyNav = ({
         <nav className="flex relative" style={{ transform: 'translate3d(0,0,0.01px)' }}>
           <ul
             ref={navRef}
-            className="gooey-nav flex gap-4 sm:gap-6 list-none py-1 px-3 m-0 relative z-[3]"
+            className="gooey-nav flex gap-2 sm:gap-6 list-none py-1 px-1 sm:px-3 m-0 relative z-[3]"
           >
             {items.map((item, index) => (
               <li
@@ -329,9 +330,24 @@ const GooeyNav = ({
                   onClick={e => handleClick(e, index, item.id)}
                   href={item.href}
                   onKeyDown={e => handleKeyDown(e, index, item.id)}
-                  className="outline-none py-2 px-4 inline-block font-semibold text-[1.05rem]"
+                  className="outline-none py-2 px-4 sm:py-2 sm:px-4 inline-flex items-center justify-center font-semibold text-sm sm:text-[1.05rem]"
+                  aria-label={item.label}
                 >
-                  {item.label}
+                  <span className="hidden sm:inline">{item.label}</span>
+                  <span className="sm:hidden inline-flex items-center justify-center">
+                    {item.id === 'home' && (
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                    )}
+                    {item.id === 'skills' && (
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+                    )}
+                    {item.id === 'projects' && (
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+                    )}
+                    {item.id === 'contact' && (
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="5" width="18" height="14" rx="2" ry="2"></rect><polyline points="22 6 12 13 2 6"></polyline></svg>
+                    )}
+                  </span>
                 </a>
               </li>
             ))}
