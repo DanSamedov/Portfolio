@@ -163,6 +163,7 @@ const Contact = () => {
                 value={formData.name}
                 onChange={handleChange}
                 disabled={status === "submitting"}
+                maxLength={200}
                 className="w-full h-12 rounded-xl bg-background border border-border px-4 text-base text-foreground placeholder:text-muted-foreground shadow-sm focus:outline-none focus:ring-4 focus:ring-primary/20 focus:border-primary transition disabled:opacity-50"
               />
             </label>
@@ -177,6 +178,8 @@ const Contact = () => {
                 value={formData.email}
                 onChange={handleChange}
                 disabled={status === "submitting"}
+                pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
+                title="Please enter a valid email address (e.g., user@example.com)"
                 className="w-full h-12 rounded-xl bg-background border border-border px-4 text-base text-foreground placeholder:text-muted-foreground shadow-sm focus:outline-none focus:ring-4 focus:ring-primary/20 focus:border-primary transition disabled:opacity-50"
               />
             </label>
