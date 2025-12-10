@@ -322,7 +322,7 @@ const GooeyNav = ({
             {items.map((item, index) => (
               <li
                 key={index}
-                className={`rounded-xl relative cursor-pointer transition-[background-color_color_box-shadow] duration-300 ease text-foreground/90 ${
+                className={`rounded-xl relative cursor-pointer transition-[background-color_color_box-shadow] duration-300 ease text-foreground ${
                   activeIndex === index ? 'active' : ''
                 }`}
               >
@@ -330,7 +330,7 @@ const GooeyNav = ({
                   onClick={e => handleClick(e, index, item.id)}
                   href={item.href}
                   onKeyDown={e => handleKeyDown(e, index, item.id)}
-                  className="outline-none py-2 px-4 sm:py-2 sm:px-4 inline-flex items-center justify-center font-semibold text-sm sm:text-[1.05rem]"
+                  className="outline-none py-2 px-4 sm:py-2 sm:px-4 inline-flex items-center justify-center font-extrabold text-sm sm:text-[1.05rem]"
                   aria-label={item.label}
                 >
                   <span className="hidden sm:inline">{item.label}</span>

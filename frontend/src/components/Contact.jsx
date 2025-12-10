@@ -3,6 +3,12 @@ import ResumeButton from "./ResumeButton";
 
 const Contact = () => {
   const [copyButtonText, setCopyButtonText] = useState("Copy");
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    message: "",
+  });
+  const [status, setStatus] = useState("idle");
 
   const handleCopyEmail = useCallback(() => {
     const email = "samedovdanylo@gmail.com";
@@ -19,9 +25,40 @@ const Contact = () => {
     );
   }, []);
 
-  const handleSubmit = (event) => {
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    // Handle form submission
+    setStatus("submitting");
+
+    try {
+      const response = await fetch("http://localhost:8000/api/contact/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        setStatus("success");
+        setFormData({ name: "", email: "", message: "" });
+        setTimeout(() => setStatus("idle"), 5000);
+      } else {
+        setStatus("error");
+        setTimeout(() => setStatus("idle"), 5000);
+      }
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      setStatus("error");
+      setTimeout(() => setStatus("idle"), 5000);
+    }
   };
 
   return (
@@ -123,7 +160,10 @@ const Contact = () => {
                 type="text"
                 placeholder="Name"
                 required
-                className="w-full h-12 rounded-xl bg-background border border-border px-4 text-base text-foreground placeholder:text-muted-foreground shadow-sm focus:outline-none focus:ring-4 focus:ring-primary/20 focus:border-primary transition"
+                value={formData.name}
+                onChange={handleChange}
+                disabled={status === "submitting"}
+                className="w-full h-12 rounded-xl bg-background border border-border px-4 text-base text-foreground placeholder:text-muted-foreground shadow-sm focus:outline-none focus:ring-4 focus:ring-primary/20 focus:border-primary transition disabled:opacity-50"
               />
             </label>
 
@@ -134,7 +174,10 @@ const Contact = () => {
                 type="email"
                 placeholder="Email"
                 required
-                className="w-full h-12 rounded-xl bg-background border border-border px-4 text-base text-foreground placeholder:text-muted-foreground shadow-sm focus:outline-none focus:ring-4 focus:ring-primary/20 focus:border-primary transition"
+                value={formData.email}
+                onChange={handleChange}
+                disabled={status === "submitting"}
+                className="w-full h-12 rounded-xl bg-background border border-border px-4 text-base text-foreground placeholder:text-muted-foreground shadow-sm focus:outline-none focus:ring-4 focus:ring-primary/20 focus:border-primary transition disabled:opacity-50"
               />
             </label>
 
@@ -144,37 +187,54 @@ const Contact = () => {
                 name="message"
                 placeholder="Message"
                 required
-                className="w-full min-h-36 rounded-xl bg-background border border-border p-4 text-base text-foreground placeholder:text-muted-foreground shadow-sm resize-y focus:outline-none focus:ring-4 focus:ring-primary/20 focus:border-primary transition"
+                value={formData.message}
+                onChange={handleChange}
+                disabled={status === "submitting"}
+                className="w-full min-h-36 rounded-xl bg-background border border-border p-4 text-base text-foreground placeholder:text-muted-foreground shadow-sm resize-y focus:outline-none focus:ring-4 focus:ring-primary/20 focus:border-primary transition disabled:opacity-50"
               ></textarea>
             </label>
 
-            <div className="flex justify-center pt-1">
+            <div className="flex flex-col items-center pt-1 gap-2">
               <button
                 type="submit"
-                className="group relative inline-flex items-center gap-2 rounded-xl h-12 px-6 bg-primary text-primary-foreground text-sm sm:text-base font-semibold overflow-hidden hover:bg-primary/90 active:translate-y-[1px] transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-primary/20"
+                disabled={status === "submitting"}
+                className="group relative inline-flex items-center gap-2 rounded-xl h-12 px-6 bg-primary text-primary-foreground text-sm sm:text-base font-semibold overflow-hidden hover:bg-primary/90 active:translate-y-[1px] transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-primary/20 disabled:opacity-70 disabled:cursor-not-allowed"
               >
                 <span className="absolute inset-0 bg-gradient-to-r from-primary/20 to-primary/40 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 ease-out"></span>
 
                 <span className="relative z-10 transition-all duration-300 group-hover:translate-x-1">
-                  Send Message
+                  {status === "submitting" ? "Sending..." : "Send Message"}
                 </span>
 
-                <svg
-                  className="relative z-10 w-5 h-5 transition-all duration-300 group-hover:translate-x-1 group-hover:scale-110 group-hover:rotate-12"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.8"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  aria-hidden="true"
-                >
-                  <path d="M22 2L11 13"></path>
-                  <path d="M22 2l-7 20-4-9-9-4 20-7z"></path>
-                </svg>
+                {status !== "submitting" && (
+                  <svg
+                    className="relative z-10 w-5 h-5 transition-all duration-300 group-hover:translate-x-1 group-hover:scale-110 group-hover:rotate-12"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.8"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M22 2L11 13"></path>
+                    <path d="M22 2l-7 20-4-9-9-4 20-7z"></path>
+                  </svg>
+                )}
 
                 <span className="absolute inset-0 rounded-full bg-white/20 scale-0 group-hover:scale-100 group-hover:opacity-0 transition-all duration-500 ease-out opacity-100"></span>
               </button>
+
+              {status === "success" && (
+                <p className="text-green-600 font-medium text-sm animate-fade-in-up">
+                  Message sent successfully!
+                </p>
+              )}
+              {status === "error" && (
+                <p className="text-red-600 font-medium text-sm animate-fade-in-up">
+                  Failed to send message. Please try again.
+                </p>
+              )}
             </div>
           </form>
         </div>

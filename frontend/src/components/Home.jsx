@@ -49,7 +49,7 @@ const Home = () => {
                 <span className="text-accent">Based in Poland</span>
               </p>
 
-              <div className="mt-4 text-xl sm:text-3xl font-medium block text-left text-foreground/90">
+              <div className="mt-4 text-xl sm:text-3xl font-medium block text-left text-foreground">
                 <RoleRotator phrases={phrases} />
               </div>
 
