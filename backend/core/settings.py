@@ -131,3 +131,14 @@ STATIC_URL = 'static/'
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173", # The default Vite port
 ]
+
+
+REST_FRAMEWORK = {
+    
+    'DEFAULT_THROTTLE_CLASSES': [
+        'rest_framework.throttling.ScopedRateThrottle',
+    ],
+    'DEFAULT_THROTTLE_RATES': {
+        'contact_email': '5/day',
+    }
+}
