@@ -61,6 +61,7 @@ const Avatar = () => {
         inset: 0,
         width: "100%",
         height: "100%",
+        pointerEvents: "none",
       }}
     >
       <ambientLight intensity={0.9} />

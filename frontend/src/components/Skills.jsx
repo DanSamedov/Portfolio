@@ -15,7 +15,7 @@ const Skills = () => {
       className="relative w-full min-h-dvh scroll-mt-24"
     >
       <div className="mx-auto px-4">
-        <div className="mb-2 min-h-[100px] flex items-center justify-center">
+        <div className="mb-2 min-h-[100px] flex items-center justify-center relative z-10">
           <TrueFocus 
             words={[skillTitle]} 
             manualMode={true} 
