@@ -1,0 +1,18 @@
+# Ignore Git files
+.git
+.github
+
+# Ignore Environment Files (CRITICAL)
+.env
+.env.*
+backend/.env
+backend/.env.*
+
+# Ignore Virtual Env & Node Modules
+venv
+node_modules
+backend/venv
+frontend/node_modules
+
+# Ignore Docker internals
+Dockerfile

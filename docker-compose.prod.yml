@@ -1,0 +1,31 @@
+services:
+  db:
+    image: postgres:15-alpine
+    restart: always
+    env_file: .env
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  backend:
+    image: ${DOCKER_USERNAME}/portfolio-backend:latest
+    restart: always
+    command: gunicorn core.wsgi:application --bind 0.0.0.0:8000
+    env_file: .env
+    depends_on:
+      - db
+    volumes:
+      - media_volume:/app/media
+
+  frontend:
+    image: ${DOCKER_USERNAME}/portfolio-frontend:latest
+    restart: always
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    volumes:
+      - media_volume:/usr/share/nginx/html/media
+
+volumes:
+  postgres_data:
+  media_volume:
