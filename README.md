@@ -47,7 +47,7 @@ A modern, interactive portfolio website showcasing my projects and skills as a F
 | Nginx | Reverse Proxy |
 | Hetzner VPS | Hosting |
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 portfolio/
@@ -69,13 +69,13 @@ portfolio/
     └── deploy.yml          # CI/CD pipeline
 ```
 
-## 📧 Contact
+## Contact
 
 - **Website:** [samedov.org](https://samedov.org)
 - **Email:** samedovdanylo@gmail.com
 - **LinkedIn:** [Danylo Samedov](https://www.linkedin.com/in/danylo-samedov-b557132b1/)
 - **GitHub:** [DanSamedov](https://github.com/DanSamedov)
 
-## 📄 License
+## License
 
 This project is open source and available under the [MIT License](LICENSE).
