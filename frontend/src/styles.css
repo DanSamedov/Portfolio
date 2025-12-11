@@ -71,8 +71,9 @@
   :root {
     --r: 60px;
   }
-  html:focus-within {
+  html {
     scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
   }
 
   /* Ensure full-height background paint */
@@ -220,6 +221,20 @@
     @apply flex flex-col gap-3 pb-0 transition-all duration-300 ease-in-out hover:shadow-xl;
     min-height: var(--project-card-h);
     height: var(--project-card-h);
+  }
+
+  /* Fix for 3D transforms on mobile landscape */
+  .project-card-container {
+    -webkit-transform-style: preserve-3d;
+    transform-style: preserve-3d;
+  }
+
+  .project-card-front,
+  .project-card-back {
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
   }
 
   .project-card:hover {
