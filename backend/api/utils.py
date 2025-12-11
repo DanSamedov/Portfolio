@@ -1,6 +1,9 @@
+import logging
 import threading
 from django.core.mail import send_mail
 from django.conf import settings
+
+logger = logging.getLogger(__name__)
 
 class EmailThread(threading.Thread):
     def __init__(self, subject, message, recipient_list):
@@ -19,4 +22,4 @@ class EmailThread(threading.Thread):
                 fail_silently=False, 
             )
         except Exception as e:
-            print(f"FAILED to send email: {e}")
+            logger.error(f"FAILED to send email: {e}")
