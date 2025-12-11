@@ -9,6 +9,8 @@ class ContactCreateView(generics.CreateAPIView):
     queryset = ContactMessage.objects.all()
     serializer_class = ContactMessageSerializer
     
+    throttle_scope = 'contact_email'
+    
     def perform_create(self, serializer):
         instance = serializer.save()
 
