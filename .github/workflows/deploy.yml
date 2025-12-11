@@ -39,14 +39,21 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Copy Docker Compose File
+      - name: Create .env file
+        run: |
+          cat << 'EOF' > .env
+          ${{ secrets.BACKEND_ENV }}
+          EOF
+          echo "DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }}" >> .env
+
+      - name: Copy files to VPS
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.SSH_KEY }}
           passphrase: ${{ secrets.SSH_PASSPHRASE }}
-          source: "docker-compose.prod.yml"
+          source: "docker-compose.prod.yml,.env"
           target: "~/portfolio"
 
       - name: Deploy via SSH
@@ -59,21 +66,17 @@ jobs:
           script: |
             cd ~/portfolio
 
-            # 1. Rename the file we just copied
+            # 1. Rename docker-compose file
             mv docker-compose.prod.yml docker-compose.yml
 
-            # 2. Create the .env file
-            echo "${{ secrets.BACKEND_ENV }}" > .env
-            echo "DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }}" >> .env
-
-            # 3. Login to Docker Hub
+            # 2. Login to Docker Hub
             echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
-            # 4. Pull and Restart
+            # 3. Pull and Restart
             docker-compose pull
             docker-compose up -d
             docker image prune -f
 
-            # 5. Run Migrations
+            # 4. Run Migrations
             docker-compose exec -T backend python manage.py migrate
             docker-compose exec -T backend python manage.py createcachetable
