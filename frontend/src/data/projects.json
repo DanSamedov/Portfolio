@@ -7,32 +7,32 @@
     "category": "websites",
     "liveUrl": "https://smartsave.samedov.org",
     "repoUrl": "https://github.com/DanSamedov/api-smart-savings",
-    "image": "./src/assets/static/smartsave_portfolio.png",
+    "image": "/assets/static/smartsave_portfolio.png",
     "background": "radial-gradient(circle at 50% 0%, rgb(99, 102, 241), rgb(13, 1, 60))",
     "tech": [
       {
         "name": "FastAPI",
-        "icon": "./src/assets/icons/fastapi.svg"
+        "icon": "/assets/icons/fastapi.svg"
       },
       {
         "name": "PostgreSQL",
-        "icon": "./src/assets/icons/postgresql.svg"
+        "icon": "/assets/icons/postgresql.svg"
       },
       {
         "name": "SQLAlchemy",
-        "icon": "./src/assets/icons/sqlalchemy.svg"
+        "icon": "/assets/icons/sqlalchemy.svg"
       },
       {
         "name": "Redis",
-        "icon": "./src/assets/icons/redis.svg"
+        "icon": "/assets/icons/redis.svg"
       },
       {
         "name": "Pytest",
-        "icon": "./src/assets/icons/pytest.svg"
+        "icon": "/assets/icons/pytest.svg"
       },
       {
         "name": "React",
-        "icon": "./src/assets/icons/react.svg"
+        "icon": "/assets/icons/react.svg"
       }
     ]
   },
@@ -44,28 +44,28 @@
     "category": "websites",
     "liveUrl": "https://codenames.samedov.org",
     "repoUrl": "https://github.com/DanSamedov/Codenames-Website",
-    "image": "./src/assets/static/codenames_portfolio.png",
+    "image": "/assets/static/codenames_portfolio.png",
     "background": "radial-gradient(circle at 50% 0%, rgb(81, 251, 251), rgb(13, 1, 60))",
     "tech": [
       {
         "name": "Django",
-        "icon": "./src/assets/icons/django.svg"
+        "icon": "/assets/icons/django.svg"
       },
       {
         "name": "Redis",
-        "icon": "./src/assets/icons/redis.svg"
+        "icon": "/assets/icons/redis.svg"
       },
       {
         "name": "MySQL",
-        "icon": "./src/assets/icons/mysql.svg"
+        "icon": "/assets/icons/mysql.svg"
       },
       {
         "name": "JavaScript",
-        "icon": "./src/assets/icons/javascript.svg"
+        "icon": "/assets/icons/javascript.svg"
       },
       {
         "name": "Tailwind CSS",
-        "icon": "./src/assets/icons/tailwindcss.svg"
+        "icon": "/assets/icons/tailwindcss.svg"
       }
     ]
   },
@@ -77,32 +77,32 @@
     "category": "programs",
     "liveUrl": "",
     "repoUrl": "https://github.com/DanSamedov/Ai-Job-Applier",
-    "image": "./src/assets/static/jobai_portfolio.png",
+    "image": "/assets/static/jobai_portfolio.png",
     "background": "radial-gradient(circle at 50% 0%, rgb(16, 185, 129), rgb(13, 1, 60))",
     "tech": [
       {
         "name": "Python",
-        "icon": "./src/assets/icons/python.svg"
+        "icon": "/assets/icons/python.svg"
       },
       {
         "name": "Celery",
-        "icon": "./src/assets/icons/celery.svg"
+        "icon": "/assets/icons/celery.svg"
       },
       {
         "name": "PostgreSQL",
-        "icon": "./src/assets/icons/postgresql.svg"
+        "icon": "/assets/icons/postgresql.svg"
       },
       {
         "name": "Redis",
-        "icon": "./src/assets/icons/redis.svg"
+        "icon": "/assets/icons/redis.svg"
       },
       {
         "name": "Selenium",
-        "icon": "./src/assets/icons/selenium.svg"
+        "icon": "/assets/icons/selenium.svg"
       },
       {
         "name": "Pytest",
-        "icon": "./src/assets/icons/pytest.svg"
+        "icon": "/assets/icons/pytest.svg"
       }
     ]
   },
@@ -113,28 +113,28 @@
     "category": "websites",
     "liveUrl": "https://www.samedov.org",
     "repoUrl": "",
-    "image": "./src/assets/static/portfolio_design.png",
+    "image": "/assets/static/portfolio_design.png",
     "background": "radial-gradient(circle at 50% 0%, rgb(20, 241, 149), rgb(13, 1, 60))",
     "tech": [
       {
         "name": "React",
-        "icon": "./src/assets/icons/react.svg"
+        "icon": "/assets/icons/react.svg"
       },
       {
         "name": "JavaScript",
-        "icon": "./src/assets/icons/javascript.svg"
+        "icon": "/assets/icons/javascript.svg"
       },
       {
         "name": "Tailwind CSS",
-        "icon": "./src/assets/icons/tailwindcss.svg"
+        "icon": "/assets/icons/tailwindcss.svg"
       },
       {
         "name": "DRF",
-        "icon": "./src/assets/icons/drf.svg"
+        "icon": "/assets/icons/drf.svg"
       },
       {
         "name": "PostgreSQL",
-        "icon": "./src/assets/icons/postgresql.svg"
+        "icon": "/assets/icons/postgresql.svg"
       }
     ]
   }

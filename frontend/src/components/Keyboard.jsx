@@ -3,7 +3,7 @@ import { Canvas, useFrame } from "@react-three/fiber";
 import { useGLTF, Center } from "@react-three/drei";
 import * as THREE from "three";
 
-const MODEL_URL = "./src/assets/models/keyboard.glb";
+const MODEL_URL = "/assets/models/keyboard.glb";
 useGLTF.preload(MODEL_URL);
 const PRESS_FRACTION = 5;
 
@@ -242,8 +242,8 @@ const Keyboard = ({ onSkillChange }) => {
   }, []);
 
   const modelUrl = isMobile || isTablet 
-    ? "./src/assets/models/keyboard_mobile.glb" 
-    : "./src/assets/models/keyboard.glb";
+    ? "/assets/models/keyboard_mobile.glb" 
+    : "/assets/models/keyboard.glb";
 
   return (
     <div ref={containerRef} className="relative w-full h-full touch-none">
@@ -284,5 +284,5 @@ const Keyboard = ({ onSkillChange }) => {
 
 export default Keyboard;
 
-useGLTF.preload("./src/assets/models/keyboard.glb");
-useGLTF.preload("./src/assets/models/keyboard_mobile.glb");
+useGLTF.preload("/assets/models/keyboard.glb");
+useGLTF.preload("/assets/models/keyboard_mobile.glb");

@@ -6,7 +6,7 @@ import * as THREE from "three";
 
 function Model(props) {
   const { scene, animations } = useGLTF(
-    "./src/assets/models/avatar_and_keyboard.glb"
+    "/assets/models/avatar_and_keyboard.glb"
   );
   const { ref, actions, names } = useAnimations(animations, scene);
 
@@ -80,6 +80,6 @@ const Avatar = () => {
   );
 };
 
-useGLTF.preload("./src/assets/models/avatar_and_keyboard.glb");
+useGLTF.preload("/assets/models/avatar_and_keyboard.glb");
 
 export default Avatar;
