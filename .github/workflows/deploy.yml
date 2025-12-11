@@ -3,6 +3,8 @@ name: Deploy
 on:
   push:
     branches: [ "main" ]
+  repository_dispatch:
+    types: [cv-updated]
   workflow_dispatch:
 
 jobs:
@@ -11,6 +13,12 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Fetch latest CV
+        run: |
+          git clone https://${{ secrets.CV_REPO_TOKEN }}@github.com/DanSamedov/cv.git cv-repo
+          cp cv-repo/Danylo_Samedov_CV.pdf frontend/public/assets/static/Danylo_Samedov_CV.pdf
+          rm -rf cv-repo
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v3

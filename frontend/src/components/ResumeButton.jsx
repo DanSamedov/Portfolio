@@ -1,8 +1,8 @@
 const ResumeButton = () => {
   return (
     <a
-      href="/assets/static/cv.pdf"
-      download="cv.pdf"
+      href="/assets/static/Danylo_Samedov_CV.pdf"
+      download="Danylo_Samedov_CV.pdf"
       aria-label="Download resume"
       className="group relative inline-flex justify-center items-center w-32 h-10 cursor-pointer overflow-hidden rounded-xl border border-border bg-muted shadow-sm p-2 text-center font-semibold no-underline text-foreground"
     >
