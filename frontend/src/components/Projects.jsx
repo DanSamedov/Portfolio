@@ -16,7 +16,7 @@ const Projects = () => {
   };
 
   return (
-    <section id="projects" className="w-full scroll-mt-14 py-12">
+    <section id="projects" className="w-full scroll-mt-14 py-0 lg:py-12">
       <div className="mx-auto max-w-[960px] px-4">
         <h2 className="section-header">Projects</h2>
 

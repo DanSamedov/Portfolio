@@ -12,7 +12,7 @@ const Skills = () => {
   return (
     <section
       id="skills"
-      className="relative w-full min-h-dvh scroll-mt-24 pt-16 mt-32"
+      className="relative w-full min-h-dvh scroll-mt-24"
     >
       <div className="mx-auto px-4">
         <div className="mb-2 min-h-[100px] flex items-center justify-center">
@@ -29,7 +29,7 @@ const Skills = () => {
         <p className="text-center text-gray-500 mt-2 text-sm animate-pulse">
           (Type on your keyboard or tap the keys)
         </p>
-        <div className="relative -mt-20 sm:-mt-40 aspect-video min-h-[300px] sm:min-h-[500px]">
+        <div className="relative -mt-20 sm:-mt-16 lg:-mt-10 h-[80vh] sm:h-[80vh] w-full">
           <Keyboard onSkillChange={setSkillTitle} />
         </div>
       </div>

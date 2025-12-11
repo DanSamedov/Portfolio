@@ -17,7 +17,8 @@ const StickerPeel = ({
   lightingIntensity = 0.1,
   initialPosition = 'center',
   peelDirection = 0,
-  className = ''
+  className = '',
+  hasBackground = false
 }) => {
   const containerRef = useRef(null);
   const dragTargetRef = useRef(null);
@@ -185,7 +186,6 @@ const StickerPeel = ({
     clipPath: `polygon(var(--sticker-start) var(--sticker-start), var(--sticker-end) var(--sticker-start), var(--sticker-end) var(--sticker-end), var(--sticker-start) var(--sticker-end))`,
     transition: 'clip-path 0.6s ease-out',
     filter: 'url(#dropShadow)',
-    willChange: 'clip-path, transform',
     width: '100%',
     height: '100%',
     display: 'flex',
@@ -198,7 +198,6 @@ const StickerPeel = ({
     top: `calc(-100% - var(--sticker-p) - var(--sticker-p))`,
     transform: 'scaleY(-1)',
     transition: 'all 0.6s ease-out',
-    willChange: 'clip-path, transform',
     width: '100%',
     height: '100%',
     display: 'flex',
@@ -208,11 +207,13 @@ const StickerPeel = ({
 
   const imageStyle = {
     transform: `rotate(calc(${rotate}deg - ${peelDirection}deg))`,
-    width: '100%',
-    height: '100%',
+    width: hasBackground ? '85%' : '100%',
+    height: hasBackground ? '85%' : '100%',
     objectFit: 'contain',
     objectPosition: 'bottom',
-    padding: '10%'
+    padding: '10%',
+    backgroundColor: hasBackground ? 'white' : 'transparent',
+    borderRadius: hasBackground ? '15%' : '0',
   };
 
   const shadowImageStyle = {
@@ -314,7 +315,7 @@ const StickerPeel = ({
         }}
       >
         <div className="sticker-main" style={stickerMainStyle}>
-          <div style={{ filter: 'url(#pointLight)', width: '100%', height: '100%' }}>
+          <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <img
               src={imageSrc}
               alt=""
@@ -340,7 +341,7 @@ const StickerPeel = ({
         </div>
 
         <div className="sticker-flap absolute w-full h-full left-0" style={flapStyle}>
-          <div style={{ filter: 'url(#pointLightFlipped)' }}>
+          <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <img
               src={imageSrc}
               alt=""

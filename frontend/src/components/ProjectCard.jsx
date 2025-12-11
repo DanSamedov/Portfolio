@@ -249,6 +249,7 @@ const ProjectCard = ({ project }) => {
                   peelBackHoverPct={25}
                   peelBackActivePct={35}
                   initialPosition={{ x: 24 + index * 110, y: 300 }}
+                  hasBackground={tech.name === "DRF"}
                 />
               ))}
             </div>

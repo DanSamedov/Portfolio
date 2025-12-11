@@ -84,26 +84,29 @@ const Key = ({ node, onHover, onLeave, isPressed }) => {
   );
 };
 
-const Keyboard = ({ onSkillChange }) => {
-  const { nodes } = useGLTF(MODEL_URL);
+const KeyboardContent = ({ url, onSkillChange, isMobile, isTablet }) => {
+  const { nodes } = useGLTF(url);
 
   const [activeSkill, setActiveSkill] = useState("Skills");
 
   const [pressedKeys, setPressedKeys] = useState(new Set());
   const [hoveredKey, setHoveredKey] = useState(null);
-  const containerRef = useRef();
 
-  const [isMobile, setIsMobile] = useState(false);
+  const scale = isMobile 
+    ? 0.4   // Mobile Scale (Vertical)
+    : isTablet 
+      ? 0.5 // Tablet Scale (Vertical)
+      : 0.6; // Desktop Scale
 
-  useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 768);
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
-  }, []);
+  const position = isMobile 
+    ? [0, 0, 0] // Mobile Position [x, y, z]
+    : isTablet 
+      ? [0, 0, 0] // Tablet Position [x, y, z]
+      : [0, 0, 0];   // Desktop Position [x, y, z]
 
-  const scale = isMobile ? 0.6 : 0.5;
-  const position = isMobile ? [-7, -5, -5] : [0, 0, 0];
+  const rotation = isMobile || isTablet
+    ? [Math.PI + 1.2, Math.PI * 1.5, Math.PI]
+    : [Math.PI + 1, Math.PI * 2, Math.PI]; // Desktop Rotation
 
   useEffect(() => {
     if (onSkillChange) {
@@ -121,35 +124,47 @@ const Keyboard = ({ onSkillChange }) => {
   );
 
   const keyMap = useMemo(() => {
-    if (keys.length !== 24) return {};
+    
+    if (keys.length === 0) return {};
+
+    // Sort by Z (rows) then X (cols)
     const items = keys.map((ctrl) => ({ ctrl, pos: ctrl.position.clone() }));
     items.sort((a, b) => b.pos.z - a.pos.z);
-    const rows = [
-      items.slice(0, 6),
-      items.slice(6, 12),
-      items.slice(12, 18),
-      items.slice(18, 24),
-    ];
-    const grid = rows.map((row) =>
-      row.sort((a, b) => b.pos.x - a.pos.x).map((o) => o.ctrl)
-    );
-    const keyMapByCode = {};
-    const colCodes = [
-      ["Digit1", "KeyQ", "KeyA", "KeyZ"],
-      ["Digit2", "KeyW", "KeyS", "KeyX"],
-      ["Digit3", "KeyE", "KeyD", "KeyC"],
-      ["Digit4", "KeyR", "KeyF", "KeyV"],
-      ["Digit5", "KeyT", "KeyG", "KeyB"],
-      ["Digit6", "KeyY", "KeyH", "KeyN"],
-    ];
-    for (let col = 0; col < 6; col++) {
-      for (let row = 0; row < 4; row++) {
-        const ctrl = grid[row][col];
-        const code = colCodes[col][row];
-        keyMapByCode[code] = ctrl.name;
-      }
+    
+    if (keys.length === 24) {
+        const rows = [
+        items.slice(0, 6),
+        items.slice(6, 12),
+        items.slice(12, 18),
+        items.slice(18, 24),
+        ];
+        const grid = rows.map((row) =>
+        row.sort((a, b) => b.pos.x - a.pos.x).map((o) => o.ctrl)
+        );
+        const keyMapByCode = {};
+        const colCodes = [
+        ["Digit1", "KeyQ", "KeyA", "KeyZ"],
+        ["Digit2", "KeyW", "KeyS", "KeyX"],
+        ["Digit3", "KeyE", "KeyD", "KeyC"],
+        ["Digit4", "KeyR", "KeyF", "KeyV"],
+        ["Digit5", "KeyT", "KeyG", "KeyB"],
+        ["Digit6", "KeyY", "KeyH", "KeyN"],
+        ];
+        for (let col = 0; col < 6; col++) {
+        for (let row = 0; row < 4; row++) {
+            const ctrl = grid[row][col];
+            // Safety check
+            if (ctrl && colCodes[col] && colCodes[col][row]) {
+                const code = colCodes[col][row];
+                keyMapByCode[code] = ctrl.name;
+            }
+        }
+        }
+        return keyMapByCode;
     }
-    return keyMapByCode;
+    
+    // Fallback or different mapping for mobile if keys count differs
+    return {};
   }, [keys]);
 
   useEffect(() => {
@@ -185,6 +200,52 @@ const Keyboard = ({ onSkillChange }) => {
   }, [keyMap, hoveredKey]);
 
   return (
+    <group rotation={rotation} scale={scale} position={position}>
+      {keyboardBody && <primitive object={keyboardBody} />}
+      {keys.map((keyNode) => (
+        <Key
+          key={keyNode.name}
+          node={keyNode}
+          onHover={(label) => {
+            setHoveredKey(label);
+            setActiveSkill(label);
+          }}
+          onLeave={() => {
+            setHoveredKey(null);
+            if (pressedKeys.size === 0) {
+              setActiveSkill("Skills");
+            }
+          }}
+          isPressed={
+            pressedKeys.has(keyNode.name) ||
+            hoveredKey === computeSkillLabel(keyNode.name)
+          }
+        />
+      ))}
+    </group>
+  );
+};
+
+const Keyboard = ({ onSkillChange }) => {
+  const [isMobile, setIsMobile] = useState(false);
+  const [isTablet, setIsTablet] = useState(false);
+  const containerRef = useRef();
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+      setIsTablet(window.innerWidth >= 768 && window.innerWidth < 1024);
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const modelUrl = isMobile || isTablet 
+    ? "./src/assets/models/keyboard_mobile.glb" 
+    : "./src/assets/models/keyboard.glb";
+
+  return (
     <div ref={containerRef} className="relative w-full h-full touch-none">
       <Canvas
         camera={{ position: [0, 0, 50], fov: 45, near: 0.1, far: 100 }}
@@ -207,29 +268,13 @@ const Keyboard = ({ onSkillChange }) => {
         <ambientLight intensity={0.15} />
         <Suspense fallback={null}>
           <Center>
-            <group rotation={[Math.PI + 1, Math.PI * 2, Math.PI]} scale={scale} position={position}>
-              {keyboardBody && <primitive object={keyboardBody} />}
-              {keys.map((keyNode) => (
-                <Key
-                  key={keyNode.name}
-                  node={keyNode}
-                  onHover={(label) => {
-                    setHoveredKey(label);
-                    setActiveSkill(label);
-                  }}
-                  onLeave={() => {
-                    setHoveredKey(null);
-                    if (pressedKeys.size === 0) {
-                      setActiveSkill("Skills");
-                    }
-                  }}
-                  isPressed={
-                    pressedKeys.has(keyNode.name) ||
-                    hoveredKey === computeSkillLabel(keyNode.name)
-                  }
-                />
-              ))}
-            </group>
+            <KeyboardContent 
+                key={modelUrl}
+                url={modelUrl} 
+                onSkillChange={onSkillChange} 
+                isMobile={isMobile}
+                isTablet={isTablet}
+            />
           </Center>
         </Suspense>
       </Canvas>
@@ -238,3 +283,6 @@ const Keyboard = ({ onSkillChange }) => {
 };
 
 export default Keyboard;
+
+useGLTF.preload("./src/assets/models/keyboard.glb");
+useGLTF.preload("./src/assets/models/keyboard_mobile.glb");

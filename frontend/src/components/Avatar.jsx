@@ -2,6 +2,8 @@ import { Suspense, useEffect, useState } from "react";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls, useGLTF, useAnimations } from "@react-three/drei";
 
+import * as THREE from "three";
+
 function Model(props) {
   const { scene, animations } = useGLTF(
     "./src/assets/models/avatar_and_keyboard.glb"
@@ -25,12 +27,9 @@ function Model(props) {
 
     if (actionName) {
       const action = actions[actionName];
+      action.getClip().duration = 188 / 30;
       action.reset().play();
-      const startAt = Math.min(
-        Math.max(0.01, action.getClip().duration * 0.25),
-        action.getClip().duration - 0.01
-      );
-      action.time = startAt;
+      action.setLoop(THREE.LoopRepeat);
     }
   }, [actions, names]);
 

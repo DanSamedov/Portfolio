@@ -133,8 +133,8 @@
         "icon": "./src/assets/icons/drf.svg"
       },
       {
-        "name": "MongoDB",
-        "icon": "./src/assets/icons/mongodb.svg"
+        "name": "PostgreSQL",
+        "icon": "./src/assets/icons/postgresql.svg"
       }
     ]
   }
